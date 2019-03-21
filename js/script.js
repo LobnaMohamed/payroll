@@ -1,15 +1,6 @@
 /*global $, alert, console*/
 $(document).ready(function(){
 
-
-	//var currentActivePage ;
-		 //   currentActivePage = document.location.href.match(/[^\/]+$/)[0];
-	 //   if(currentActivePage != null){
-		// $('a[href="'+currentActivePage+'"]').attr('id', 'activePage');
-	 //   }else{
-		//    console.log("error");
-	 //   }
-
 	'use strict';
 
 	//scroll down
@@ -127,46 +118,6 @@ $(document).ready(function(){
 	$( '#vacForm' ).each(function(){
 		this.reset();
 	});
-	$( '#permitForm' ).each(function(){
-		this.reset();
-	});
-
-	// $("#addEmpForm").on('submit',function(e){
-	// 	e.preventDefault();
-	// 	//alert("hi");
-	// 	if($('#empName').val()==''){
-	// 		alert ("Name is empty");
-	// 	}else if($('#empCode').val()==''){
-	// 		alert ("code is empty");
-	// 	}else if($('#contractType').val()==''){
-	// 		alert ("contract is empty");
-	// 	}else if($('#job').val()==''){
-	// 		alert ("job is empty");
-	// 	}else if($('#GManagement').val()==''){
-	// 		alert ("GManagement is empty");
-	// 	}else if($('#level').val()==''){
-	// 		alert ("level is empty");
-	// 	}else if($('#day_n').val()==''){
-	// 		alert ("day_n is empty");
-	// 	}else if($('#active').val()==''){
-	// 		alert ("active is empty");
-	// 	}else{
-	// 		$.ajax({
-	// 			url:"insertEmp.php",
-	// 			method:"POST",
-	// 			data:$('#addEmpForm').serialize(),
-	// 			success:function(data){
-	// 				$('#addEmpForm')[0].reset();
-	// 				$('#addEmpModal').modal('hide');
-	// 				$('#empData').html(data);
-	// 			} 
-	// 			// error: function(){ //makes error when uncommented
-	// 	  //           alert("Something went wrong!");
-	// 	  //       }
-	// 		});
-	// 	}
-	// });
-
 
 	//--------------get employee data in edit modal---------------
 	$(document).on('click','.editEmpData', function(){
@@ -341,74 +292,7 @@ $(document).ready(function(){
 			}
 		});	
  	});
- 	//------------search through emp data by code-----------------
- // 	$('#search').on('keyup',function(){
- // 		var value = $(this).val();
- // 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
- // 		// alert(currentURL);
-	// 	$.ajax({
-	// 		url:'searchAjax.php',
-	// 		method:"GET",
-	// 		data: {search:value,pageurl:currentURL},
-	// 		// dataType:"json",
-	// 		success:function(data){
-	// 			// console.log(data);
-				
-	// 			if(currentURL == 'empdata.php'){
-	// 				console.log(data);
-	// 				$('#empDatabody').html(data);
-	// 			}else if(currentURL == 'confirmed.php'){
-	// 				console.log(data);
-	// 				$('#confirmedVacbody').html(data);
-
-	// 			}else if(currentURL == 'pending.php'){
-	// 				$('#pendingVacbody').html(data);
-	// 			}
-				
-	// 		},
-	// 		error: function(error) {
- //            	console.log(error);
- //        	}
-	// 	});	
-	// });
-
- 	//------------search through emp vacation data by date from and to-----------------
- // 	$('#searchDateTo').datepicker({
- //     onSelect: function(){
- //     	var dateTo_value = $(this).val();
- // 		var dateFrom_value = $('#searchDateFrom').val();
- // 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
- // 		// alert(currentURL);
-	// 	$.ajax({
-	// 		url:'datesearchAjax.php',
-	// 		method:"GET",
-	// 		data: {dateFrom:dateFrom_value,
-	// 			    dateTo:dateTo_value,
-	// 			    pageurl:currentURL},
-	// 		// dataType:"json",
-	// 		success:function(data){
-	// 			// console.log(data);
-				
-	// 			if(currentURL == 'confirmed.php'){
-	// 				console.log(data);
-	// 				$('#confirmedVacbody').html(data);
-					
-	// 			}
-	// 			//else if(currentURL == 'empdata.php'){
-	// 			// 	console.log(data);
-	// 			// 	$('#empDatabody').html(data);
-
-	// 			// }else if(currentURL == 'pending.php'){
-	// 			// 	$('#pendingVacbody').html(data);
-	// 			// }
-				
-	// 		},
-	// 		error: function(error) {
- //            	console.log(error);
- //        	}
-	// 	});	
- //     }
-	// });
+ 
 	//-----------search confirmed vacs---------------------------- 
 	$('#searchDateTo,#searchDateFrom,#searchTo,#search').bind('change keyup',function(){
 		//get dates between 2 dates
@@ -554,20 +438,4 @@ $(document).ready(function(){
 		});		
 	});
 
-	//-------enable or disable detailed permit reason text according to permit reason choise-----
-	$('#permitReason').change(function() {
-		if( $(this).val() == 3) {
-			$('#permitReasonDetails').prop( "disabled", false );
-			$("label[for=permitReasonDetails]").css("color","black");
-		} else {       
-			$("label[for=permitReasonDetails]").css("color","grey");
-			$('#permitReasonDetails').prop( "disabled", true );
-		}
-	});
-	//-------enable or disable return time according to return check-------------------
-	$('#returnCheckbox').change(function(){
-		$("#returnTime").prop("disabled", !$(this).is(':checked'));
-		$("label[for=returnTime]").toggleClass("label-toggle",!$(this).is(':checked'));
-		
-	 });
 });

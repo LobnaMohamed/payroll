@@ -5,13 +5,13 @@
 
 <div class="container">	
     <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الوظائـــف</div>
-    <div class="job-container row">
+    <div class="timesheet-container row">
     
-			<?php getJob(); ?>
+			<?php gettimesheet(); ?>
 		
     </div>  
     <!-- add modal -->
-    <div id="addjobModal" class="modal fade" role="dialog">
+    <div id="addtimesheetModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-md">
             <!-- Modal content-->
             <div class="modal-content ">
@@ -19,13 +19,13 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="addjobForm" action="insert.php">	
+                    <form method="POST" id="addtimesheetForm" action="insert.php">	
                         <div class="form-group col-md-12 ">
-                            <label for= "job">الوظيفة:</label>
-                            <input type="text" class="form-control" id="job" name="job">
+                            <label for= "timesheet">الوظيفة:</label>
+                            <input type="text" class="form-control" id="timesheet" name="timesheet">
                         </div>
                         <div class="form-group col-md-12">
-                            <input type="submit" name="insertjob" class="btn btn-block btn-lg" value="حفظ">
+                            <input type="submit" name="inserttimesheet" class="btn btn-block btn-lg" value="حفظ">
                         </div>	
                     </form>
                 </div>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Edit Modal -->
-    <div id="editjobModal" class="modal fade" role="dialog">
+    <div id="edittimesheetModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-md">
             <!-- Modal content-->
             <div class="modal-content ">
@@ -42,16 +42,16 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editjobForm" action="insert.php">	
+                    <form method="POST" id="edittimesheetForm" action="insert.php">	
                         <div class="form-group col-md-12">
-                            <input type="hidden" name="job_id" id="job_id"> 
-                            <label for= "jobEdit">الوظيفة:</label>
-                            <input type="text" class="form-control" id="jobEdit" name="jobEdit">
+                            <input type="hidden" name="timesheet_id" id="timesheet_id"> 
+                            <label for= "timesheetEdit">الوظيفة:</label>
+                            <input type="text" class="form-control" id="timesheetEdit" name="timesheetEdit">
                             
                         </div>
 
                         <div class="form-group col-md-12">
-                            <input type="submit" name="updatejob" class="btn btn-block btn-lg" value="حفظ">
+                            <input type="submit" name="updatetimesheet" class="btn btn-block btn-lg" value="حفظ">
                         </div>	
                     </form>
                 </div>

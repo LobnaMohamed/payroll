@@ -18,7 +18,7 @@
 		    <form class="navbar-form row" role="search" id="searchEmp" method="GET">
 		    	<div class="col-md-2">
 			    	عدد العاملين:
-				    <?php  getEmpCount() ?>
+				    <?php  //getEmpCount() ?>
 			    </div>
 			    <div class="form-group add-on col-md-10">
 			    	<label for = "search">رقم القيد / الاسم :</label>
@@ -28,7 +28,7 @@
 					</div> -->
 			    </div>
 			    <button id="scroll_down" class="btn btn-lg btn-default form-control" type="button"><i class='fa fa-2x fa-angle-double-down '></i></button>
-				<button id="scroll_up" class="btn btn-lg btn-default form-control hide" type="button"><i class='fa fa-2x fa-angle-double-up '></i></button>
+					<button id="scroll_up" class="btn btn-lg btn-default form-control hide" type="button"><i class='fa fa-2x fa-angle-double-up '></i></button>
     
 		    </form>
 			<table id="empData" class="table table-striped table-bordered">
@@ -41,7 +41,7 @@
 				      <th>الحالة الاجتماعية</th>
 				      <th>المستوى</th>
 				      <th>النوع</th>
-				      <th>بالخدمة/خارج الخدمة</th>
+				      <th>النقـــابة</th>
 				      <th><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEmpModal">إضافة</button></th>
 				    </tr>
 			  	</thead>
@@ -147,13 +147,13 @@
 					    		<label for= "day_nEdit">نهارى/ورادى</label>
 					    		<select class="form-control" id="day_nEdit" name="day_nEdit">
 							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getDayN();   ?>
+						   		    <?php  //	getDayN();   ?>
 								</select>
 
 					    		<label for= "activeEdit">بالخدمة/خارج الخدمة</label>
 					    		<select class="form-control" id="activeEdit" name="activeEdit">
 							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getActive();   ?>
+						   		    <?php  	//getActive();   ?>
 								</select>
 								<input type="hidden" name="employee_id" id="employee_id"> 
 								<label for= "ResetPassword">اعادة ضبط كلمة المرور</label>
@@ -177,7 +177,7 @@
 								<label for= "userGrpEdit">درجة المستخدم</label>
 					    		<select class="form-control" id="userGrpEdit" name="userGrpEdit">
 							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getUserGroup();   ?>
+						   		    <?php  	//getUserGroup();   ?>
 								</select>
 							</div>
 							<div class="form-group col-md-4">
@@ -187,7 +187,7 @@
 					    		<label for= "GManagementEdit">الادارة العامة</label>
 					    		<select class="form-control" id="GManagementEdit" name="GManagementEdit">
 							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getManagement();   ?>
+						   		    <?php  	//getManagement();   ?>
 								</select>
 
 								<label for= "managementEdit">قطاع /ادارة</label>

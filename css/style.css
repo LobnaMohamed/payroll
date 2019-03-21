@@ -139,7 +139,8 @@ text-align: right;
 .delete_vacation,.delete_permit{
     color: #940308;
 }
-.managements-container,.MaritalStatus-container,.levels-container{
+.managements-container,.MaritalStatus-container,.levels-container,
+.timesheet-container,.job-container{
     margin: 0 auto;
 }
 .managements{
@@ -153,7 +154,7 @@ text-align: right;
     color: #f2f2f2;
 }
 #addManagementModal  input[type="submit"]:hover , #editManagementModal  input[type="submit"]:hover,
-#editLevelModal  input[type="submit"]:hover {
+#editLevelModal  input[type="submit"]:hover,#editsyndicateModal input[type="submit"]:hover{
     background-color: #940308;
     color: #fff;
 }

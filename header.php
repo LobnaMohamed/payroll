@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-	<title>الاجازات</title>
+	<title>الأجـــور</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -58,12 +58,23 @@
 							<li><a href="level.php">المستويــات</a></li>
 							<li><a href="contract.php">أنواع العقود</a></li>
 							<li><a href="maritalstatus.php">الحالة الاجتماعية</a></li>
-							<!-- <li><a href="level.php">المستويات</a></li> -->
-							
+							<li><a href="job.php">الوظــائف</a></li>
+							<li><a href="syndicates.php">النقــابات</a></li>
+
 						</ul>
 					</div>
-					
-					<a href="logout.php"  class="btn btn-primary dropdown-toggle">خــــروج</a>
+					<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">المـــرتب
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li><a href="wages.php">مـرتب 24 </a></li>
+							<li><a href="#">منحـــة 10</a></li>
+							<li><a href="#">مـجمع</a></li>
+						</ul>
+					</div>
+
+					<a href="#"  class="btn btn-primary dropdown-toggle">الحـــصر</a>
+					<a href="#"  class="btn btn-primary dropdown-toggle">خــــروج</a>
 
 			</ul>
 		</div>

@@ -8,7 +8,7 @@
         
         try {
 			//$con = new PDO("sqlsrvr:host=$servername;dbname=wages" );
-			$con = new PDO("sqlsrv:Server=$servername;Database=wages");
+			$con = new PDO("sqlsrv:Server=$servername;Database=payroll");
             // set the PDO error mode to exception
             $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             //echo "Connected successfully"; 
@@ -103,17 +103,6 @@
 			echo "<div class='btn  btn-lg managements well well-sm col-sm-4' data-toggle='modal' data-target='#addManagementModal'><i class='fa fa-plus-circle'></i></div>";
 	}
 
-	//---------------get case function-----------------------
-	function getCase(){
-		$con = connect();
-		$sql= "SELECT ID,case_desc FROM t_case" ;
-    	$stmt = $con->prepare($sql);
-		$stmt->execute();
-		$result = $stmt->fetchAll();
-	    	foreach($result as $row){
-			    echo "<option value=" .$row['ID'].">" . $row['case_desc'] . "</option>";
-			}
-	}
 	//---------------get active status function-----------------------
 	function getActive(){
 		$con = connect();
@@ -181,7 +170,7 @@
 	function get_marital_status(){
 		$con = connect();
 		$page =  basename($_SERVER['REQUEST_URI']);
-		$sql= "SELECT ID,maritalStatus,amount,medInsurance FROM maritalStatus" ;
+		$sql= "SELECT ID,maritalStatus,social_insurance,med_insurance FROM maritalStatus" ;
     	$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -209,7 +198,7 @@
 			    echo "<option value=" .$row['ID'].">" . $row['userGroup'] . "</option>";
 			}
 	}
-	//---------------get econtract type function-----------------------
+	//---------------get jobs type function-----------------------
 	function getJob(){
 		$page =  basename($_SERVER['REQUEST_URI']);
 		$con = connect();
@@ -230,19 +219,49 @@
 		}
 
 	}
+	//---------------get syndicates-----------------------
+	function getsyndicate(){
+		$page =  basename($_SERVER['REQUEST_URI']);
+		$con = connect();
+		$sql= "SELECT ID,syndicate,amount FROM syndicates" ;
+    	$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if($page == 'syndicates.php'){
+			foreach($result as $row){
+				echo '<button  class="btn  btn-lg managements editsyndicateData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editsyndicateModal" id="'.$row['ID'].'">'. $row['syndicate'] .'</button>';
+				}
+				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
+	
+		}elseif($page == 'empData.php'){
+	    	foreach($result as $row){
+			    echo "<option value=" .$row['ID'].">" . $row['syndicate'] . "</option>";
+			}
+		}
 
+	}
 	// --------------get Employee function-----------------------
 	function getAllEmp(){
 		$output="";
 		$con = connect();
 		$sql= '';		
 		if(!empty($_GET['search'])){
-			$sql = "SELECT * from empdata
-				    where empCode like '%". $_GET['search'] ."%' 
-					OR empName like '%". $_GET['search'] ."%' 
-					ORDER BY empCode";
+			$sql = "";
 		}else{
-			$sql = "SELECT * from empdata"; //view
+			$sql = "select e.ID,e.empName,e.gender,e.education,e.basicSalary,s.syndicate,ec.empCode,s.syndicate,
+							j.job,l.empLevel,c.contractType,ms.maritalStatus
+					
+					from employee e inner join emp_contract ec on e.ID = ec.emp_id
+						inner join emp_job ej on e.ID = ej.emp_id
+						inner join  emp_level el on e.ID = el.emp_id
+						inner join	syndicates s on e.syndicate_id = s.ID
+						inner join emp_maritalstatus ems on e.ID = ems.emp_id
+						,job j,level l,contract c,maritalStatus ms
+				
+					where j.id = ej.job_id
+						and l.id= el.level_id
+						and c.ID = ec.contract_id
+						and ms.ID = ems.marital_status_id"; 
 		}
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
@@ -255,11 +274,12 @@
 				<td>".  $row['contractType']. "</td>
 				<td>".  $row['job']. "</td>
 				<td>".  $row['maritalStatus']. "</td>
-				<td>".  $row['level']. "</td>
+				<td>".  $row['empLevel']. "</td>
 				<td>".  $row['gender']. "</td>
-				<td>".  $row['activeStatus']. '</td>
-				<td><button type="button" class="btn btn-primary btn-sm editEmpData" data-toggle="modal" data-target="#editEmpModal" id="'.$row['ID'].'">تعديل</button></td>
-			 </tr>';
+				<td>".  $row['syndicate']. "</td>
+				<td><button type='button' class='btn btn-primary btn-sm editEmpData' data-toggle='modal' 
+				data-target='#editEmpModal' id=".$row['ID'].">تعديل</button></td>
+				</tr>";
 		 }
 		echo $output;
 	}
