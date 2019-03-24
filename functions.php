@@ -246,22 +246,30 @@
 		$con = connect();
 		$sql= '';		
 		if(!empty($_GET['search'])){
-			$sql = "";
+			$sql = "select e.*,s.syndicate
+					from employee e,syndicates s 
+					where e.syndicate_id = s.ID
+						  and (currentCode like '%". $_GET['search'] ."%' 
+								OR empName like '%". $_GET['search'] ."%') 
+					ORDER BY currentCode";
 		}else{
-			$sql = "select e.ID,e.empName,e.gender,e.education,e.basicSalary,s.syndicate,ec.empCode,s.syndicate,
-							j.job,l.empLevel,c.contractType,ms.maritalStatus
+			// $sql = "select e.ID,e.empName,e.gender,e.education,e.basicSalary,s.syndicate,ec.empCode,s.syndicate,
+			// 				j.job,l.empLevel,c.contractType,ms.maritalStatus
 					
-					from employee e inner join emp_contract ec on e.ID = ec.emp_id
-						inner join emp_job ej on e.ID = ej.emp_id
-						inner join  emp_level el on e.ID = el.emp_id
-						inner join	syndicates s on e.syndicate_id = s.ID
-						inner join emp_maritalstatus ems on e.ID = ems.emp_id
-						,job j,level l,contract c,maritalStatus ms
+			// 		from employee e inner join emp_contract ec on e.ID = ec.emp_id
+			// 			inner join emp_job ej on e.ID = ej.emp_id
+			// 			inner join  emp_level el on e.ID = el.emp_id
+			// 			inner join	syndicates s on e.syndicate_id = s.ID
+			// 			inner join emp_maritalstatus ems on e.ID = ems.emp_id
+			// 			,job j,level l,contract c,maritalStatus ms
 				
-					where j.id = ej.job_id
-						and l.id= el.level_id
-						and c.ID = ec.contract_id
-						and ms.ID = ems.marital_status_id"; 
+			// 		where j.id = ej.job_id
+			// 			and l.id= el.level_id
+			// 			and c.ID = ec.contract_id
+			// 			and ms.ID = ems.marital_status_id"; 
+			$sql=" select e.*,s.syndicate
+				   from employee e,syndicates s 
+				   where e.syndicate_id = s.ID";
 		}
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
@@ -269,12 +277,12 @@
 		foreach($result as $row){
 			$output .= 
 			"<tr>
-				<td>".  $row['empCode']. "</td>
+				<td>".  $row['currentCode']. "</td>
 				<td>".  $row['empName']. "</td>
-				<td>".  $row['contractType']. "</td>
-				<td>".  $row['job']. "</td>
-				<td>".  $row['maritalStatus']. "</td>
-				<td>".  $row['empLevel']. "</td>
+				<td>".  $row['currentContract']. "</td>
+				<td>".  $row['currentJob']. "</td>
+				<td>".  $row['currentMS']. "</td>
+				<td>".  $row['currentLevel']. "</td>
 				<td>".  $row['gender']. "</td>
 				<td>".  $row['syndicate']. "</td>
 				<td><button type='button' class='btn btn-primary btn-sm editEmpData' data-toggle='modal' 

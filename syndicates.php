@@ -4,7 +4,7 @@
 ?>
 
 <div class="container">	
-    <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الوظائـــف</div>
+    <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>النقـــابات</div>
     <div class="syndicate-container row">
     
 			<?php getsyndicate(); ?>

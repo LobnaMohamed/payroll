@@ -140,7 +140,7 @@ text-align: right;
     color: #940308;
 }
 .managements-container,.MaritalStatus-container,.levels-container,
-.timesheet-container,.job-container{
+.timesheet-container,.job-container,.empdata-container{
     margin: 0 auto;
 }
 .managements{

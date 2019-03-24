@@ -12,8 +12,9 @@
 	<div class="container">
 	    <header class="row text-center">
 	    	<!-- <img class= "col-lg-2 logo" src="images/amoc2.png"> -->
-	  	    <h1 class="col-lg-12">بيانات العاملين</h1>  
+				<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>بيانات العاملين</div>  
 	    </header>
+			<div class="empdata-container row">
 	    <div class="table-responsive row">
 		    <form class="navbar-form row" role="search" id="searchEmp" method="GET">
 		    	<div class="col-md-2">
@@ -50,7 +51,8 @@
 				</tbody>
 			</table>
 			<div id="endOfEmpData"></div>	
-	    </div>	  
+	    </div>	
+			</div>  
 		<!-- add Modal -->
 		<div id="addEmpModal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-lg">
