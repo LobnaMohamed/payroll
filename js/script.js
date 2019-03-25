@@ -347,6 +347,32 @@ $(document).ready(function(){
 		   }
 	   });	
    });
+   //------------search timesheet by date----------------------------
+   $('#timesheetDate,#search').bind('change keyup',function(){
+			//get timesheet of specific date
+		
+		var timesheet_date = $('#timesheetDate').val();
+		var emp = $('#search').val();
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		$.ajax({
+			url:'searchAjax.php',
+			method:"GET",
+			data: {timesheetDate:timesheet_date,
+				   search:emp,
+				   pageurl:currentURL},
+			// dataType:"json",
+			success:function(data){
+				if(currentURL == 'timesheet.php'){
+					console.log(data);
+					$('#timesheetbody').html(data);
+				
+				}		
+			},
+			error: function(error) {
+				//console.log(error);
+			}
+		});	
+	});
 	//delete vacation
 	$('.delete_vacation').on('click',function(){
 		if(confirm("سيتم حذف الاجازة نهائياً .. هل أنت متأكد؟")){
@@ -372,70 +398,6 @@ $(document).ready(function(){
 		}
 
 	});
-	//--------------------get data for edit vacation------------------------
-	$(document).on('click','.editVacData', function(){
-		var vac_id=$(this).closest('tr').attr('id');
-		
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data:{vacID:vac_id},
-			dataType:"json",
-			success:function(data){
-				$('#vac_id').val(data.ID);
-				$('#vacTypeEdit').val(data.id_case);
-				$('#topManagerEdit').val(data.top_manager_id);
-				$('#managerEdit').val(data.manager_id);
-				$('#dateEdit').val(data.start_date);
-				$('#dateToEdit').val(data.end_date);
-				$('#durationEdit').val(data.duration);
-				if(data.Manager_agree <3){
-					$('#managerEdit').prop('disabled', true);
-				}
-			},
-			error:function(error) {
-            	alert(error);
-        	}
-		});
-	});
-	//--------------onsubmit edit emp form-----------------------------
-	$(document).on('submit','#editEmpForm', function(){
-		//alert("hi");
-		//e.preventDefault();
-		var $form = $('#editEmpForm');
-
-		$.ajax({
-			url:"insert.php",
-			method:"POST",
-			data: $('form#editEmpForm').serialize(),
-			//dataType:"json",
-
-			success:function(data){
-				//console.log(data);
-				$("#editEmpModal").modal('hide');	
-			},
-			error: function(error) {
-            	alert(error);
-        	}
-		});		
-	});
-
-	//--------------onsubmit edit vacation form-----------------------------
-	$(document).on('submit','#editVacForm', function(){
-		var $form = $('#editVacForm');
-		$.ajax({
-			url:"insert.php",
-			method:"POST",
-			data: $('form#editVacForm').serialize(),
-			//dataType:"json",
-			success:function(data){
-				//console.log(data);
-				$("#editVacationModal").modal('hide');	
-			},
-			error: function(error) {
-				//console.log(error);
-			}
-		});		
-	});
+	
 
 });

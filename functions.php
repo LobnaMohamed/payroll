@@ -421,3 +421,47 @@
 				$stmt->execute();
 				echo "done";
 	}
+	//---------------get timesheet function------------------------
+	function getTimesheet(){
+		$output="";	
+		$con = connect();
+		$sql= '';		
+		$sql="select t.*,e.currentCode,e.empName
+			  from employee e,timesheet t
+			  where t.emp_id = e.ID
+			  		and month(t.sheetDate) = month(getdate())";
+		
+		if(!empty($_GET['timesheetDate'])){
+			$sql = "select t.*,e.currentCode,e.empName
+					from employee e,timesheet t
+					where t.emp_id = e.ID
+					  	and month(t.sheetDate)= month('".$_GET['timesheetDate']."')";	
+		}
+		if(!empty($_GET['search'])){
+			$sql .= " and (e.currentCode like '%". $_GET['search'] ."%' OR e.empName like '%". $_GET['search'] ."%')";	
+		}
+		
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		
+		foreach($result as $row){
+			//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
+			$output .=
+			"<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<td>".  $row['presence_days']. "</td>
+				<td>".  $row['absence_days']. "</td>
+				<td>".  $row['casual_days']. "</td>
+				<td>".  $row['sickLeave_days']. "</td>
+				<td>".  $row['deduction_days']. "</td>
+				<td>".  $row['annual_days']. "</td>
+				<td>".  $row['production_days']. "</td>
+				<td>".  $row['notes']. "</td>
+
+			</tr>";
+		 }
+		echo $output;
+	}
+	

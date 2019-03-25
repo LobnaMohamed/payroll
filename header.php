@@ -18,9 +18,8 @@
 </head>
 <body>
 	<nav class="navbar navbar-inverse fixed-top">
-
 		<div class="container-fluid">
-			<div class="navbar-header ">
+			<div class="navbar-header">
 		  		<!-- <a class="navbar-brand" href="#">Computer Name: <?php  
 						if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
 					    {
@@ -35,18 +34,17 @@
 					      $ip=$_SERVER['REMOTE_ADDR'];
 					    }
 					    echo $ip;   
-		  		 ?></a> -->
-				<span class="navbar-brand">Computer Name: <?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?>
-				<br>
-			    <?php if (isset($_SESSION['Username'])){ 
-						echo $_SESSION['UserFullName'] ;
-					  } 
-				?>
-			    </span>
+					 ?></a> -->
+				<div class="navbar-brand">
+					<span >
+						Computer Name: <?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?>
+						<img class= "logo col-sm-1" src="images/amoc2.png"> 
+					</span>
+				</div>
 			</div>
 			
-			<div class="navbar-header navbar-right">
-			  <span class="navbar-brand">شركة الأسكندرية للزيوت المعدنية ( أموك )</span>  
+			<div class="navbar-header navbar-right navbar-brand">
+			  <span>شركة الأسكندرية للزيوت المعدنية ( أموك )</span>  
 			</div>
 			<ul class="nav navbar-nav pull-right">
 			
@@ -60,7 +58,6 @@
 							<li><a href="maritalstatus.php">الحالة الاجتماعية</a></li>
 							<li><a href="job.php">الوظــائف</a></li>
 							<li><a href="syndicates.php">النقــابات</a></li>
-
 						</ul>
 					</div>
 					<div class="dropdown">
@@ -73,7 +70,7 @@
 						</ul>
 					</div>
 
-					<a href="#"  class="btn btn-primary dropdown-toggle">الحـــصر</a>
+					<a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a>
 					<a href="#"  class="btn btn-primary dropdown-toggle">خــــروج</a>
 
 			</ul>
