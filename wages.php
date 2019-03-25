@@ -2,8 +2,7 @@
 
 <div class="container">
     <header class="row text-center">
-    	<img class= "col-sm-2" src="images/amoc2.png">
-  	    <h1 class="col-sm-4 col-sm-offset-2 ">مرتب 24</h1>	    
+        <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>مرتب 24</div>   
     </header>	  
     <form  method="POST" action="#" >
         <div class="form-group  row">

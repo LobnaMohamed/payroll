@@ -464,4 +464,42 @@
 		 }
 		echo $output;
 	}
-	
+	//---------------calculate benifits of salary------------------
+	function getBenifits(){
+		$con = connect();		
+		$sql = "select e.ID	,e.currentSalary,e.currentLevel,ts.presence_days,ms.social_insurance,s.amount,
+						ts.manufacturing_days,l.incentivePercent
+				from employee e,timesheet ts,maritalStatus ms,syndicates s,level l
+				where e.ID = ts.emp_id
+					  and e.currentMS = ms.ID
+					  and e.syndicate_id = s.ID
+					  and e.currentLevel = l.ID";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$currentsalary = ($row['currentSalary'])/30; // الاساسى/30
+			$attendancePay = $row['presence_days'] * $currentsalary;//اجر الحضور
+			$natureOfworkAllowance = 12 * $currentsalary; // بدل طبيعة
+			$socialAid = $row['social_insurance'] ; //م.اجتماعية
+			//$representation = ; // تمثيل
+			if($row['syndicate_id'] == 2){
+				$chemistIncentive = $row['amount'];//حافز علميين
+				$occupationalAllowance = 0;
+			}
+			else{
+				$occupationalAllowance = $row['amount'] ; // بدل مهنى
+				$chemistIncentive = 0 ;
+			}
+			$manufacturingAllowance = 8 * $row['manufacturing_days']; // بدل تصنيع
+			// $experience = ; // خبرة
+			// $specialBonus = ; // علاوات خاصة
+			// $overnightShift = ; // نوباتجية
+			$labordayGrant = (10/30) *  $row['presence_days'] ; // منحة عيد العمال
+			$tiffinAllowance = (450/30) *  $row['presence_days'] ; // وجبات نقدية
+		    $incentive = $row['presence_days'] * $row['incentivePercent'] * 0.75 * $currentsalary;//الحافز
+			// $shift = ; // وردية
+			// $specializationAllowance = ; // بدل تخصص
+			// $otherDues = ; // استحقاق
+		}
+	}
