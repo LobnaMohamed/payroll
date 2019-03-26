@@ -246,30 +246,26 @@
 		$con = connect();
 		$sql= '';		
 		if(!empty($_GET['search'])){
-			$sql = "select e.*,s.syndicate
-					from employee e,syndicates s 
-					where e.syndicate_id = s.ID
+			$sql = "select e.ID,e.empName,e.currentCode,e.gender,c.contractType,l.empLevel,ms.maritalStatus,s.syndicate,j.job
+					from employee e,syndicates s,contract c,level l,maritalstatus ms, job j
+					where     e.syndicate_id = s.ID
+						  and e.currentJob = j.ID
+						  and e.currentLevel = l.ID
+						  and e.currentContract = c.ID
+						  and e.currentMS = ms.ID 
 						  and (currentCode like '%". $_GET['search'] ."%' 
 								OR empName like '%". $_GET['search'] ."%') 
-					ORDER BY currentCode";
+					ORDER BY e.currentCode";
 		}else{
-			// $sql = "select e.ID,e.empName,e.gender,e.education,e.basicSalary,s.syndicate,ec.empCode,s.syndicate,
-			// 				j.job,l.empLevel,c.contractType,ms.maritalStatus
-					
-			// 		from employee e inner join emp_contract ec on e.ID = ec.emp_id
-			// 			inner join emp_job ej on e.ID = ej.emp_id
-			// 			inner join  emp_level el on e.ID = el.emp_id
-			// 			inner join	syndicates s on e.syndicate_id = s.ID
-			// 			inner join emp_maritalstatus ems on e.ID = ems.emp_id
-			// 			,job j,level l,contract c,maritalStatus ms
-				
-			// 		where j.id = ej.job_id
-			// 			and l.id= el.level_id
-			// 			and c.ID = ec.contract_id
-			// 			and ms.ID = ems.marital_status_id"; 
-			$sql=" select e.*,s.syndicate
-				   from employee e,syndicates s 
-				   where e.syndicate_id = s.ID";
+			$sql=" select e.ID,e.empName,e.currentCode,e.gender,c.contractType,l.empLevel,ms.maritalStatus,s.syndicate,j.job
+					from employee e,syndicates s,contract c,level l,maritalstatus ms, job j
+					where     e.syndicate_id = s.ID
+						and e.currentJob = j.ID
+						and e.currentLevel = l.ID
+						and e.currentContract = c.ID
+						and e.currentMS = ms.ID 
+						 
+					ORDER BY e.currentCode";
 		}
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
@@ -279,10 +275,10 @@
 			"<tr>
 				<td>".  $row['currentCode']. "</td>
 				<td>".  $row['empName']. "</td>
-				<td>".  $row['currentContract']. "</td>
-				<td>".  $row['currentJob']. "</td>
-				<td>".  $row['currentMS']. "</td>
-				<td>".  $row['currentLevel']. "</td>
+				<td>".  $row['contractType']. "</td>
+				<td>".  $row['job']. "</td>
+				<td>".  $row['maritalStatus']. "</td>
+				<td>".  $row['empLevel']. "</td>
 				<td>".  $row['gender']. "</td>
 				<td>".  $row['syndicate']. "</td>
 				<td><button type='button' class='btn btn-primary btn-sm editEmpData' data-toggle='modal' 
@@ -457,7 +453,7 @@
 				<td>".  $row['sickLeave_days']. "</td>
 				<td>".  $row['deduction_days']. "</td>
 				<td>".  $row['annual_days']. "</td>
-				<td>".  $row['production_days']. "</td>
+				<td>".  $row['manufacturing_days']. "</td>
 				<td>".  $row['notes']. "</td>
 
 			</tr>";
@@ -465,22 +461,22 @@
 		echo $output;
 	}
 	//---------------calculate benifits of salary------------------
-	function getBenifits(){
+	function calculateBenifits(){
 		$con = connect();		
-		$sql = "select e.ID	,e.currentSalary,e.currentLevel,ts.presence_days,ms.social_insurance,s.amount,
-						ts.manufacturing_days,l.incentivePercent
-				from employee e,timesheet ts,maritalStatus ms,syndicates s,level l
-				where e.ID = ts.emp_id
-					  and e.currentMS = ms.ID
-					  and e.syndicate_id = s.ID
-					  and e.currentLevel = l.ID";
+		$sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,s.amount,
+					   e.currentWorkAllowanceNature,ts.manufacturing_days,l.incentivePercent
+				from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l
+				where  e.ID = ts.emp_id
+					   and e.currentMS = ms.ID
+					   and e.syndicate_id = s.ID
+					   and e.currentLevel = l.ID";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		foreach($result as $row){
-			$currentsalary = ($row['currentSalary'])/30; // الاساسى/30
-			$attendancePay = $row['presence_days'] * $currentsalary;//اجر الحضور
-			$natureOfworkAllowance = 12 * $currentsalary; // بدل طبيعة
+			$currentDays = ($row['presence_days'])/30; // عدد أيام الحضور/30
+			$attendancePay = $row['currentSalary'] * $currentDays;//اجر الحضور
+			$natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
 			$socialAid = $row['social_insurance'] ; //م.اجتماعية
 			//$representation = ; // تمثيل
 			if($row['syndicate_id'] == 2){
@@ -491,15 +487,43 @@
 				$occupationalAllowance = $row['amount'] ; // بدل مهنى
 				$chemistIncentive = 0 ;
 			}
-			$manufacturingAllowance = 8 * $row['manufacturing_days']; // بدل تصنيع
-			// $experience = ; // خبرة
+			$manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
+			// $experience = ($currentDays) * number; // خبرة
 			// $specialBonus = ; // علاوات خاصة
 			// $overnightShift = ; // نوباتجية
-			$labordayGrant = (10/30) *  $row['presence_days'] ; // منحة عيد العمال
-			$tiffinAllowance = (450/30) *  $row['presence_days'] ; // وجبات نقدية
-		    $incentive = $row['presence_days'] * $row['incentivePercent'] * 0.75 * $currentsalary;//الحافز
+			$labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
+			$tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
+		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * $currentDays;//الحافز
 			// $shift = ; // وردية
-			// $specializationAllowance = ; // بدل تخصص
+			$specializationAllowance = ($currentDays) * $row['currentSpecialization'] ; // بدل تخصص
 			// $otherDues = ; // استحقاق
+			// $totalBenifits = ; // اجمالى الاستحقاق
+		}
+	}
+	//---------------calculate benifits of salary------------------
+	function calculateDeductions(){
+		$con = connect();		
+		$sql = "select  e.ID,e.currentSalary,ts.presence_days,ms.med_insurance
+				from    employee e,timesheet ts,maritalStatus ms
+				where   e.ID = ts.emp_id
+						and e.currentMS = ms.ID";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$sanction_days =0;
+			$pastPeriod = 0;//مدة سابقة
+			$perimiumCard =0 ; 
+			$familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
+			$otherDeduction = 0; // استقطاع اخر
+			$petroleumSyndicate= 10; // ن.بترول
+			$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
+			$mobil = 0; // نوباتجية
+			$loan =0; //قرض
+			$empServiceFund = 20; // صندوق خدمات عاملين
+			$socialInsurances = 0;//تأمينات
+			$etisalatNet =  0; 
+			//$totalDeductions = ; // اجمالى الاستقطاع
+
 		}
 	}
