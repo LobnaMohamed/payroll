@@ -454,8 +454,9 @@
 				<td>".  $row['deduction_days']. "</td>
 				<td>".  $row['annual_days']. "</td>
 				<td>".  $row['manufacturing_days']. "</td>
+				<td>".  $row['shift_days']. "</td>
+				<td>".  $row['overnight_days']. "</td>
 				<td>".  $row['notes']. "</td>
-
 			</tr>";
 		 }
 		echo $output;
@@ -464,40 +465,49 @@
 	function calculateBenifits(){
 		$con = connect();		
 		$sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,s.amount,
-					   e.currentWorkAllowanceNature,ts.manufacturing_days,l.incentivePercent
-				from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l
+					   e.currentWorkAllowanceNature,ts.manufacturing_days,ts.overnight_days,ts.shift_days,l.incentivePercent,
+					   j.specialization_amount,j.experience_amount,j.representation_amount
+				from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l,job j
 				where  e.ID = ts.emp_id
 					   and e.currentMS = ms.ID
 					   and e.syndicate_id = s.ID
-					   and e.currentLevel = l.ID";
+					   and e.currentLevel = l.ID
+					   and e.currentJob = j.ID";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		foreach($result as $row){
 			$currentDays = ($row['presence_days'])/30; // عدد أيام الحضور/30
+
 			$attendancePay = $row['currentSalary'] * $currentDays;//اجر الحضور
 			$natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
 			$socialAid = $row['social_insurance'] ; //م.اجتماعية
-			//$representation = ; // تمثيل
-			if($row['syndicate_id'] == 2){
-				$chemistIncentive = $row['amount'];//حافز علميين
-				$occupationalAllowance = 0;
-			}
-			else{
-				$occupationalAllowance = $row['amount'] ; // بدل مهنى
-				$chemistIncentive = 0 ;
-			}
+			$representation = $row['representation_amount']; // تمثيل
+			// if($row['syndicate_id'] == 2){
+			// 	$chemistIncentive = $row['amount'];//حافز علميين
+			// 	$occupationalAllowance = 0;
+			// }
+			// else{
+			// 	$occupationalAllowance = $row['amount'] ; // بدل مهنى
+			// 	$chemistIncentive = 0 ;
+			// }
+			$occupationalAllowance = $row['amount'];
 			$manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
-			// $experience = ($currentDays) * number; // خبرة
-			// $specialBonus = ; // علاوات خاصة
-			// $overnightShift = ; // نوباتجية
+			$experience = ($currentDays) * $row['experience_amount']; // خبرة
+			$overnightShift = ($overnightShift * 2) * ($row['currentSalary']/30) ; // نوباتجية
 			$labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
 			$tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
 		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * $currentDays;//الحافز
-			// $shift = ; // وردية
-			$specializationAllowance = ($currentDays) * $row['currentSpecialization'] ; // بدل تخصص
+		    $shift = 75 * $row['shift_days']; // وردية
+			$specializationAllowance = $currentDays * ($row['specialization_amount']+ ($row['currentSalary']/4)) ; // بدل تخصص
+			// $specialBonus = ; // علاوات خاصة
 			// $otherDues = ; // استحقاق
 			// $totalBenifits = ; // اجمالى الاستحقاق
+
+			//-----------insert into salary table---------------- 
+			$sql2 ="insert into salary(attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
+					experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance)
+					values()"
 		}
 	}
 	//---------------calculate benifits of salary------------------
@@ -519,7 +529,7 @@
 			$petroleumSyndicate= 10; // ن.بترول
 			$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
 			$mobil = 0; // نوباتجية
-			$loan =0; //قرض
+			$loan = 0; //قرض
 			$empServiceFund = 20; // صندوق خدمات عاملين
 			$socialInsurances = 0;//تأمينات
 			$etisalatNet =  0; 
