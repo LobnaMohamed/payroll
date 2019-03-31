@@ -52,28 +52,6 @@ $(document).ready(function(){
 	 	}
 	 	checkErrors();
 	});
-	//get duration between 2 dates in vacation submittion form
-	$('#dateTo').change(function(){
-		var startDate = $('#date').val();
-		var endDate = $(this).val();
-		// end - start returns difference in milliseconds 
-		var diff = new Date(endDate) - new Date(startDate);
-		// console.log( diff);
-		// get days
-		var days = (diff/1000/60/60/24)+1;
-		// console.log(days);
-		$('#duration').val(days);
-	});
-	//get duration between 2 dates in vacation EDIT submittion form
-	$('#dateToEdit').change(function(){
-		var startDate = $('#dateEdit').val();
-		var endDate = $(this).val();
-		// end - start returns difference in milliseconds 
-		var diff = new Date(endDate) - new Date(startDate);
-		// get days
-		var days = (diff/1000/60/60/24)+1;
-		$('#durationEdit').val(days);
-	});
 
 	// edit employees info modal
 	$('a.edit').on('click', function() {
@@ -121,27 +99,27 @@ $(document).ready(function(){
 
 	//--------------get employee data in edit modal---------------
 	$(document).on('click','.editEmpData', function(){
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		var employee_id=$(this).attr("id");
-		// console.log(employee_id);
+		console.log(employee_id);
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
 			data:{empID:employee_id},
 			dataType:"json",
 			success:function(data){
-				// console.log(data);
+				console.log(data);
 				$('#employee_id').val(data.ID);
-				$('#empNameEdit').val(data.emp_name);
-				$('#empCodeEdit').val(data.emp_code);
-				$('#managementEdit').val(data.management);
-				$('#desc_jobEdit').val(data.desc_job);
-				$('#levelEdit').val(data.level_id);
-				$('#activeEdit').val(data.active);
-				$('#GManagementEdit').val(data.g_management_id);
-				$('#contractTypeEdit').val(data.contract_type);
-				$('#jobEdit').val(data.id_job);
-				$('#day_nEdit').val(data.day_night);
-				$('#userGrpEdit').val(data.id_userGroup);
+				$('#empNameEdit').val(data.empName);
+				$('#empCodeEdit').val(data.currentCode);
+				$('#genderEdit').val(data.gender);
+				//$('#desc_jobEdit').val(data.desc_job);
+				$('#levelEdit').val(data.empLevel);
+				$('#contractTypeEdit').val(data.contractType);
+				$('#jobEdit').val(data.currentJob);
+				$('#syndicateEdit').val(data.syndicate_id);
+			},error:function(error){
+				console.log(error);
 			}
 		});
 	});

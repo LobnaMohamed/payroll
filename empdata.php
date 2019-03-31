@@ -140,71 +140,66 @@
 					<div class="modal-body">
 						<form method="POST" id="editEmpForm" name="editEmpForm" action="insert.php">
 							<div class="form-group col-md-4">
-					    		<label for= "levelEdit">المستوى الوظيفى</label>
-					    		<select class="form-control" id="levelEdit" name="levelEdit" >
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getLevel();   ?>
+								<label for= "genderEdit">النوع</label>
+								<select class="form-control" id="genderEdit" name="genderEdit" >
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  
+											echo"<option value='male'>male</option>"; 
+										  echo"<option value='female'>female</option>"; 
+										?>
 								</select>
-
-					    		<label for= "day_nEdit">نهارى/ورادى</label>
-					    		<select class="form-control" id="day_nEdit" name="day_nEdit">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  //	getDayN();   ?>
+								<label for= "levelEdit">الحالة الاجتماعية</label>
+								<select class="form-control" id="levelEdit" name="levelEdit" >
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	get_marital_status();   ?>
 								</select>
-
-					    		<label for= "activeEdit">بالخدمة/خارج الخدمة</label>
-					    		<select class="form-control" id="activeEdit" name="activeEdit">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	//getActive();   ?>
-								</select>
-								<input type="hidden" name="employee_id" id="employee_id"> 
-								<label for= "ResetPassword">اعادة ضبط كلمة المرور</label>
-								<input type="submit" name="ResetPassword" id="ResetPassword" class="btn btn-warning form-control" value="اعادة ضبط كلمة المرور" onclick ="return confirm('تأكيد اعادة ضبط كلمة المرور؟');">							
-							</div>	
+								<label for= "desc_jobEdit">الوظيفة الحالية</label>
+					    	<input type="text" class="form-control" id="desc_jobEdit" name="desc_jobEdit">
+								<input type="hidden" name="employee_id" id="employee_id">  
+								<label for= "shiftEdit">نهارى/ورادى</label>
+								<input type="text" class="form-control" id="shiftEdit" name="shiftEdit">
+									 
+							</div>	 
 							<div class="form-group col-md-4">
 								<label for= "empNameEdit">اسم الموظف</label>
-					    		<input type="text" class="form-control" id="empNameEdit" name="empNameEdit" >
+								<input type="text" class="form-control" id="empNameEdit" name="empNameEdit" >
 
-								<label for= "contractTypeEdit">نوع العقد</label>
-					    		<select class="form-control" id="contractTypeEdit" name="contractTypeEdit">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getContract();   ?>
-								</select>	
-					    		<label for= "jobEdit">الوظيفة</label>
-					    		<select class="form-control" id="jobEdit" name="jobEdit">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getJob();   ?>
+								<label for= "levelEdit">المستوى</label>
+								<select class="form-control" id="levelEdit" name="levelEdit" >
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	getLevel();   ?>
 								</select>
-								
-								<label for= "userGrpEdit">درجة المستخدم</label>
-					    		<select class="form-control" id="userGrpEdit" name="userGrpEdit">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	//getUserGroup();   ?>
+								<label for= "jobEdit">الوظيفة</label>
+								<select class="form-control" id="jobEdit" name="jobEdit">
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	getJob();   ?>
 								</select>
+								<label for= "educationEdit">المؤهل</label>
+								<input type="text" class="form-control" id="educationEdit" name="educationEdit" >
 							</div>
 							<div class="form-group col-md-4">
 								<label for= "empCodeEdit">رقم قيد الموظف</label>
 					    		<input type="text" class="form-control" id="empCodeEdit" name="empCodeEdit">
-
-					    		<label for= "GManagementEdit">الادارة العامة</label>
-					    		<select class="form-control" id="GManagementEdit" name="GManagementEdit">
+									<label for= "contractTypeEdit">نوع العقد</label>
+					    		<select class="form-control" id="contractTypeEdit" name="contractTypeEdit">
 							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	//getManagement();   ?>
-								</select>
-
-								<label for= "managementEdit">قطاع /ادارة</label>
-					    		<input type="text" class="form-control" id="managementEdit" name="managementEdit">
-
-					    		<label for= "desc_jobEdit">الوظيفة الحالية</label>
-					    		<input type="text" class="form-control" id="desc_jobEdit" name="desc_jobEdit">
+						   		    <?php  	getContract();   ?>
+									</select>	
+									<label for= "basicsalaryEdit">المرتب الاساسى</label>
+					    		<input type="text" class="form-control" id="basicsalaryEdit" name="basicsalaryEdit">
+									
+									<label for= "syndicateEdit">النقابة</label>
+											<select class="form-control" id="syndicateEdit" name="syndicateEdit">
+												<option selected disabled hidden style='display: none' value=''></option>
+													<?php  	getsyndicate();   ?>
+										</select>
 							</div>
 							<div class="form-group col-md-3 col-md-offset-4 ">
 								<input type="submit" name="UpdateEmp" class="btn btn-success" value="حفظ" >
 							</div>	
 						</form>
 					</div>
-					<div class="modal-footer">
-						
+					<div class="modal-footer">	
 					</div>
 				</div>
 			</div>

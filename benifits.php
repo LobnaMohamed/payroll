@@ -1,3 +1,5 @@
 <?php 
-    getBenifits();
+require 'functions.php';
+include 'header.php';
+ calculateBenifits();
 ?>

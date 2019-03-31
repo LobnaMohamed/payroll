@@ -139,7 +139,7 @@
 					// echo "<div class='managements well well-sm col-sm-4'><span>". $row['Management'] ."</span></div>";
 				}
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addLevelModal'><i class='fa fa-plus-circle'></i></div>";
-		}elseif($page == 'empData.php'){
+		}elseif($page == 'empdata.php'){
 			foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['empLevel'] . "</option>";
 			}
@@ -159,7 +159,7 @@
 				}
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addcontractModal'><i class='fa fa-plus-circle'></i></div>";
 	
-		}elseif($page == 'empData.php'){
+		}elseif($page == 'empdata.php'){
 			foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['contractType'] . "</option>";
 			}
@@ -180,7 +180,7 @@
 				}
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addMaritalStatusModal'><i class='fa fa-plus-circle'></i></div>";
 	
-		}elseif($page == 'empData.php'){
+		}elseif($page == 'empdata.php'){
 	    	foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['maritalStatus'] . "</option>";
 			}
@@ -212,7 +212,7 @@
 				}
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addjobModal'><i class='fa fa-plus-circle'></i></div>";
 	
-		}elseif($page == 'empData.php'){
+		}elseif($page == 'empdata.php'){
 	    	foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['job'] . "</option>";
 			}
@@ -233,7 +233,7 @@
 				}
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
 	
-		}elseif($page == 'empData.php'){
+		}elseif($page == 'empdata.php'){
 	    	foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['syndicate'] . "</option>";
 			}
@@ -466,7 +466,7 @@
 		$con = connect();		
 		$sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,s.amount,
 					   e.currentWorkAllowanceNature,ts.manufacturing_days,ts.overnight_days,ts.shift_days,l.incentivePercent,
-					   j.specialization_amount,j.experience_amount,j.representation_amount
+					   j.specialization_amount,j.experience_amount,j.representation_amount,ts.ID as timesheetID
 				from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l,job j
 				where  e.ID = ts.emp_id
 					   and e.currentMS = ms.ID
@@ -494,7 +494,7 @@
 			$occupationalAllowance = $row['amount'];
 			$manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
 			$experience = ($currentDays) * $row['experience_amount']; // خبرة
-			$overnightShift = ($overnightShift * 2) * ($row['currentSalary']/30) ; // نوباتجية
+			$overnightShift = ($row['overnight_days'] * 2) * ($row['currentSalary']/30) ; // نوباتجية
 			$labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
 			$tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
 		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * $currentDays;//الحافز
@@ -505,9 +505,13 @@
 			// $totalBenifits = ; // اجمالى الاستحقاق
 
 			//-----------insert into salary table---------------- 
-			$sql2 ="insert into salary(attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
+			$sql2 ="insert into salary(emp_id,TS_id,attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
 					experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance)
-					values()"
+					values(".$row['ID'].",".$row['timesheetID'].",".$attendancePay.",".$natureOfworkAllowance.",".$socialAid.",".$representation.",".$occupationalAllowance.",
+					".$experience.",".$overnightShift.",".$labordayGrant.",".$tiffinAllowance.",".$incentive.",".$specializationAllowance.")";
+			$stmt = $con->prepare($sql2);
+			$stmt->execute();
+			echo $sql2;
 		}
 	}
 	//---------------calculate benifits of salary------------------
@@ -521,9 +525,9 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		foreach($result as $row){
-			$sanction_days =0;
+			$sanction_days = 0;
 			$pastPeriod = 0;//مدة سابقة
-			$perimiumCard =0 ; 
+			$perimiumCard = 0 ; 
 			$familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
 			$otherDeduction = 0; // استقطاع اخر
 			$petroleumSyndicate= 10; // ن.بترول
