@@ -240,6 +240,7 @@
 		}
 
 	}
+
 	// --------------get Employee function-----------------------
 	function getAllEmp(){
 		$output="";

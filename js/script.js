@@ -85,8 +85,7 @@ $(document).ready(function(){
  					$('#day_n').val(data.day_night);
  					$('#Management').val(data.g_manag);
 					$('#ManagementName').val(data.g_manag_name);  
-					$('#job').val(data.job);  
-					 				
+					$('#job').val(data.job);   				
  				}
  			},"json");
  		}
@@ -114,10 +113,13 @@ $(document).ready(function(){
 				$('#empCodeEdit').val(data.currentCode);
 				$('#genderEdit').val(data.gender);
 				//$('#desc_jobEdit').val(data.desc_job);
-				$('#levelEdit').val(data.empLevel);
-				$('#contractTypeEdit').val(data.contractType);
+				$('#levelEdit').val(data.currentLevel);
+				$('#contractTypeEdit').val(data.currentContract);
 				$('#jobEdit').val(data.currentJob);
 				$('#syndicateEdit').val(data.syndicate_id);
+				$('#maritalstatusEdit').val(data.currentMS);
+				$('#basicsalaryEdit').val(data.currentSalary);
+				$('#educationEdit').val(data.education);
 			},error:function(error){
 				console.log(error);
 			}

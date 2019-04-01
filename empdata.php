@@ -141,17 +141,18 @@
 						<form method="POST" id="editEmpForm" name="editEmpForm" action="insert.php">
 							<div class="form-group col-md-4">
 								<label for= "genderEdit">النوع</label>
-								<select class="form-control" id="genderEdit" name="genderEdit" >
-									<option selected disabled hidden style='display: none' value=''></option>
+								<select class="form-control" id="genderEdit" name="genderEdit">
+									<option selected disabled hidden style='display: none' ></option>
 										<?php  
-											echo"<option value='male'>male</option>"; 
+										 	echo"<option value='male'>male</option>"; 
 										  echo"<option value='female'>female</option>"; 
+											
 										?>
 								</select>
-								<label for= "levelEdit">الحالة الاجتماعية</label>
-								<select class="form-control" id="levelEdit" name="levelEdit" >
+								<label for= "maritalstatusEdit">الحالة الاجتماعية</label>
+								<select class="form-control" id="maritalstatusEdit" name="maritalstatusEdit">
 									<option selected disabled hidden style='display: none' value=''></option>
-										<?php  	get_marital_status();   ?>
+										<?php  	get_marital_status(); ?>
 								</select>
 								<label for= "desc_jobEdit">الوظيفة الحالية</label>
 					    	<input type="text" class="form-control" id="desc_jobEdit" name="desc_jobEdit">
