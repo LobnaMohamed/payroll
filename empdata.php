@@ -43,7 +43,7 @@
 									<th>المستوى</th>
 									<th>النوع</th>
 									<th>النقـــابة</th>
-									<th><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEmpModal">إضافة</button></th>
+									<th><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addEmpModal"><i class='fa fa-plus-circle'></button></th>
 								</tr>
 							</thead>
 						<tbody id="empDatabody">
@@ -63,62 +63,66 @@
 						<h4 class="modal-title"> إضافة عامل جديد </h4>
 					</div>
 					<div class="modal-body row">
-						<form method="POST" id="addEmpForm" action="#">
+						<form method="POST" id="addEmpForm" action="fetch.php">
 							<div class="form-group col-md-4">
-					    		<label for= "level">المستوى الوظيفى</label>
-					    		<select class="form-control" id="level" name="level">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getLevel();   ?>
+								<label for= "addgender">النوع</label>
+								<select class="form-control" id="addgender" name="addgender">
+									<option selected disabled hidden style='display: none' ></option>
+										<?php  
+										 	echo"<option value='ذكر'> ذكر</option>"; 
+										  echo"<option value='أنثى'>أنثى</option>"; 	
+										?>
 								</select>
-
-					    		<label for= "day_n">نهارى/ورادى</label>
-					    		<select class="form-control" id="day_n" name="day_n">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  //	getDayN();   ?>
+								<label for= "addmaritalstatus">الحالة الاجتماعية</label>
+								<select class="form-control" id="addmaritalstatus" name="addmaritalstatus">
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	get_marital_status(); ?>
 								</select>
-
-					    		<label for= "active">بالخدمة/خارج الخدمة</label>
-					    		<select class="form-control" id="active" name="active">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  //	getActive();   ?>
-								</select>							
-							</div>	
+								<label for= "adddesc_job">الوظيفة الحالية</label>
+					    	<input type="text" class="form-control" id="adddesc_job" name="adddesc_job">
+								<input type="hidden" name="employee_id" id="employee_id">  
+								<label for= "addshift">نهارى/ورادى</label>
+								<select class="form-control" id="addshift" name="addshift">
+									<option selected disabled hidden style='display: none' ></option>
+										<?php  
+										 	echo"<option value='نهارى'>نهارى</option>"; 
+										  echo"<option value='ورادى'>ورادى</option>"; 	
+										?>
+								</select>	 
+							</div>	 
 							<div class="form-group col-md-4">
-								<label for= "empName">اسم الموظف</label>
-					    		<input type="text" class="form-control" id="empName" name="empName">
+								<label for= "addempName">اسم الموظف</label>
+								<input type="text" class="form-control" id="addempName" name="addempName" >
 
-								<label for= "contractType">نوع العقد</label>
-					    		<select class="form-control" id="contractType" name="contractType">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getContract();   ?>
-								</select>	
-					    		<label for= "job">الوظيفة</label>
-					    		<select class="form-control" id="job" name="job">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  	getJob();   ?>
+								<label for= "addlevel">المستوى</label>
+								<select class="form-control" id="addlevel" name="addlevel" >
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	getLevel();   ?>
 								</select>
-								
-								<label for= "userGrp">درجة المستخدم</label>
-					    		<select class="form-control" id="userGrp" name="userGrp">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  //	getUserGroup();   ?>
+								<label for= "addjob">الوظيفة</label>
+								<select class="form-control" id="addjob" name="addjob">
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	getJob();   ?>
 								</select>
+								<label for= "addeducation">المؤهل</label>
+								<input type="text" class="form-control" id="addeducation" name="addeducation" >
 							</div>
 							<div class="form-group col-md-4">
-								<label for= "empCode">رقم قيد الموظف</label>
-					    		<input type="text" class="form-control" id="empCode" name="empCode">
-
-					    		<label for= "GManagement">الادارة العامة</label>
-					    		<select class="form-control" id="GManagement" name="GManagement">
-							    	<option selected disabled hidden style='display: none' value=''></option>
-						   		    <?php  //	getManagement();   ?>
+								<label for= "addempCode">رقم قيد الموظف</label>
+					    	<input type="number" class="form-control" id="addempCode" name="addempCode">
+								<label for= "addcontractType">نوع العقد</label>
+					    	<select class="form-control" id="addcontractType" name="addcontractType">
+							   	<option selected disabled hidden style='display: none' value=''></option>
+						   	    <?php  	getContract();   ?>
+								</select>	
+								<label for= "addbasicsalary">المرتب الاساسى</label>
+					    	<input type="text" class="form-control" id="addbasicsalary" name="addbasicsalary">
+									
+								<label for= "addsyndicate">النقابة</label>
+								<select class="form-control" id="addsyndicate" name="addsyndicate">
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	getsyndicate();   ?>
 								</select>
-
-								<label for= "management">قطاع /ادارة</label>
-					    		<input type="text" class="form-control" id="management" name="management">
-
-					    		<label for= "desc_job">الوظيفة الحالية</label>
-					    		<input type="text" class="form-control" id="desc_job" name="desc_job">
 							</div>
 							<div class="form-group col-md-3 col-md-offset-4 ">
 								<input type="submit" name="insertEmp" class="btn btn-success" value="حفظ">
@@ -144,8 +148,8 @@
 								<select class="form-control" id="genderEdit" name="genderEdit">
 									<option selected disabled hidden style='display: none' ></option>
 										<?php  
-										 	echo"<option value='male'>male</option>"; 
-										  echo"<option value='female'>female</option>"; 
+										 	echo"<option value='ذكر'> ذكر</option>"; 
+										  echo"<option value='أنثى'>أنثى</option>"; 
 											
 										?>
 								</select>
@@ -180,7 +184,7 @@
 							</div>
 							<div class="form-group col-md-4">
 								<label for= "empCodeEdit">رقم قيد الموظف</label>
-					    		<input type="text" class="form-control" id="empCodeEdit" name="empCodeEdit">
+					    		<input type="number" class="form-control" id="empCodeEdit" name="empCodeEdit">
 									<label for= "contractTypeEdit">نوع العقد</label>
 					    		<select class="form-control" id="contractTypeEdit" name="contractTypeEdit">
 							    	<option selected disabled hidden style='display: none' value=''></option>

@@ -112,7 +112,7 @@ $(document).ready(function(){
 				$('#empNameEdit').val(data.empName);
 				$('#empCodeEdit').val(data.currentCode);
 				$('#genderEdit').val(data.gender);
-				//$('#desc_jobEdit').val(data.desc_job);
+				$('#desc_jobEdit').val(data.job_description);
 				$('#levelEdit').val(data.currentLevel);
 				$('#contractTypeEdit').val(data.currentContract);
 				$('#jobEdit').val(data.currentJob);
@@ -120,6 +120,7 @@ $(document).ready(function(){
 				$('#maritalstatusEdit').val(data.currentMS);
 				$('#basicsalaryEdit').val(data.currentSalary);
 				$('#educationEdit').val(data.education);
+				$('#shiftEdit').val(data.currentShift);
 			},error:function(error){
 				console.log(error);
 			}
