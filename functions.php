@@ -297,142 +297,22 @@
 		$result = $stmt->fetchColumn();
 		echo $result;
 	}
-	// --------------Add Employee function-----------------------
-	function addEmp(){
-		//check if user comming from a request
-		 // $_SERVER['REQUEST_METHOD'] == 'POST'
-		if(isset($_POST['insertEmp'])){
-			//assign variables
-			
-			$addempName= isset($_POST['addempName'])? filter_var($_POST['addempName'],FILTER_SANITIZE_STRING) : '';
-			$addempCode= isset($_POST['addempCode'])? filter_var($_POST['addempCode'],FILTER_SANITIZE_NUMBER_INT):'';
-			$addcontractType= isset($_POST['addcontractType'])? filter_var($_POST['addcontractType'],FILTER_SANITIZE_NUMBER_INT):'';
-			$addjob= isset($_POST['addjob'])? filter_var($_POST['addjob'],FILTER_SANITIZE_NUMBER_INT):'';
-			$addlevel = isset($_POST['addlevel'])? filter_var($_POST['addlevel'],FILTER_SANITIZE_NUMBER_INT):'';
-			$addshift= isset($_POST['addshift'])? filter_var($_POST['addshift'],FILTER_SANITIZE_STRING) :'';
-			$addmaritalstatus= isset($_POST['addmaritalstatus'])? filter_var($_POST['addmaritalstatus'],FILTER_SANITIZE_NUMBER_INT) :'';
-			$adddesc_job= isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : '';
-			$addeducation = isset($_POST['addeducation'])? filter_var($_POST['addeducation'],FILTER_SANITIZE_STRING) : '';
-			$addbasicsalary = isset($_POST['addbasicsalary'])? filter_var($_POST['addbasicsalary'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
-			$addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_INT):'';
-			$addgender = isset($_POST['addgender'])? filter_var($_POST['addgender'],FILTER_SANITIZE_STRING) : '';
-			// creating array of errors
-			$formErrors = array();
-
-			if (empty($addempName) || empty($addempCode) ){
-				//$formErrors[] = 'username must be larger than  chars';
-				echo "name and code cant be empty";
-				// print_r($formErrors) ;
-			} else {
-				$con = connect();
-				$sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
-							currentSalary,syndicate_id) 
-					   VALUES ('".$addempCode."','".$addempName."','".$addcontractType."','".$addjob."','".$addlevel."','".$addshift."',
-					   '".$addmaritalstatus."','".$addgender."','".$addbasicsalary."','".$addsyndicate."')" ;
-		        $stmt = $con->prepare($sql);
-				$stmt->execute();
-				echo "done";
-			}
-		}
-	}	
 	
-	// --------------Edit Employee function-----------------------
-	function editEmp(){
-		$empID=isset($_POST['employee_id'])? filter_var($_POST['employee_id'],FILTER_SANITIZE_NUMBER_INT):'';
-		$empName= isset($_POST['empNameEdit'])? filter_var($_POST['empNameEdit'],FILTER_SANITIZE_STRING) : '';
-		$empCode= isset($_POST['empCodeEdit'])? filter_var($_POST['empCodeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		$contractType= isset($_POST['contractTypeEdit'])? filter_var($_POST['contractTypeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		$job= isset($_POST['jobEdit'])? filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		$GManagement= isset($_POST['GManagementEdit'])? filter_var($_POST['GManagementEdit'],FILTER_SANITIZE_NUMBER_INT) :'';
-		$level = isset($_POST['levelEdit'])? filter_var($_POST['levelEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		$day_n= isset($_POST['day_nEdit'])? filter_var($_POST['day_nEdit'],FILTER_SANITIZE_NUMBER_INT) :'';
-		$active= isset($_POST['activeEdit'])? filter_var($_POST['activeEdit'],FILTER_SANITIZE_NUMBER_INT) :'';
-		$management= isset($_POST['managementEdit'])? filter_var($_POST['managementEdit'],FILTER_SANITIZE_STRING) :'';
-		$jobDesc= isset($_POST['desc_jobEdit'])? filter_var($_POST['desc_jobEdit'],FILTER_SANITIZE_STRING) : '';
-		$userGroup=isset($_POST['userGrpEdit'])? filter_var($_POST['userGrpEdit'],FILTER_SANITIZE_NUMBER_INT):'';		
-		$con = connect();
-		$sql= '';
-		$sql .= "UPDATE t_data
-				 SET emp_code = '$empCode' ,
-					 emp_name = '$empName',
-					 contract_type = '$contractType',
-					 id_job = '$job',
-					 desc_job = '$jobDesc',
-					 level_id = '$level',
-					 management = '$management',
-					 g_management_id = '$GManagement',
-					 day_night = '$day_n',
-					 active = '$active',
-					 id_userGroup= '$userGroup'
-				 WHERE ID= '$empID'";
-		$stmt = $con->prepare($sql);
-		$stmt->execute();
-	}	
-	//---------------get managments function-----------------------
-	function getManagement(){
-		$con = connect();
-		$sql= "SELECT ID,Management FROM managements" ;
-    	$stmt = $con->prepare($sql);
-		$stmt->execute();
-		$result = $stmt->fetchAll();
-	    	foreach($result as $row){
-			    echo "<option value=" .$row['ID'].">" . $row['Management'] . "</option>";
-			}		
-	}
-		//---------------add new managment function-----------------------
-	function addManagement(){
-		if(isset($_POST['insertManagement'])){
-			//assign variables
-
-			$managementName= isset($_POST['managementName'])? filter_var($_POST['managementName'],FILTER_SANITIZE_STRING) : '';
-
-			// creating array of errors
-			$formErrors = array();
-
-			if (empty($managementName) ){
-				//$formErrors[] = 'username must be larger than  chars';
-				echo "management cant be empty";
-				// print_r($formErrors) ;
-			} else {
-				$con = connect();
-				$sql= "INSERT INTO managements(Management)VALUES ('".$managementName."')" ;
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
-				echo "done";
-			}
-		}
-	}
-	//---------------edit managment function-----------------------
-	function editManagement(){
-
-			//assign variables
-			$managementID=isset($_POST['management_id'])? filter_var($_POST['management_id'],FILTER_SANITIZE_NUMBER_INT):'';
-			$managementName= isset($_POST['managementEdit'])? filter_var($_POST['managementEdit'],FILTER_SANITIZE_STRING) : '';
-			echo $managementID;
-			echo $managementName;
-				$con = connect();
-				$sql =     "UPDATE managements
-							SET Management = '$managementName'
-							WHERE ID= '$managementID'";
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
-				echo "done";
-	}
 	//---------------get timesheet function------------------------
 	function getTimesheet(){
 		$output="";	
 		$con = connect();
 		$sql= '';		
 		$sql="select t.*,e.currentCode,e.empName
-			  from employee e,timesheet t
-			  where t.emp_id = e.ID
-			  		and month(t.sheetDate) = month(getdate())";
+				from employee e,timesheet t
+				where t.emp_id = e.ID
+						and month(t.sheetDate) = month(getdate())";
 		
 		if(!empty($_GET['timesheetDate'])){
 			$sql = "select t.*,e.currentCode,e.empName
 					from employee e,timesheet t
 					where t.emp_id = e.ID
-					  	and month(t.sheetDate)= month('".$_GET['timesheetDate']."')";	
+							and month(t.sheetDate)= month('".$_GET['timesheetDate']."')";	
 		}
 		if(!empty($_GET['search'])){
 			$sql .= " and (e.currentCode like '%". $_GET['search'] ."%' OR e.empName like '%". $_GET['search'] ."%')";	
@@ -459,8 +339,102 @@
 				<td>".  $row['overnight_days']. "</td>
 				<td>".  $row['notes']. "</td>
 			</tr>";
-		 }
+			}
 		echo $output;
+	}
+	// --------------Add Employee function-----------------------
+	function addEmp(){
+		//check if user comming from a request
+			// $_SERVER['REQUEST_METHOD'] == 'POST'
+			//assign variables
+			
+			$addempName= isset($_POST['addempName'])? filter_var($_POST['addempName'],FILTER_SANITIZE_STRING) : '';
+			$addempCode= isset($_POST['addempCode'])? filter_var($_POST['addempCode'],FILTER_SANITIZE_NUMBER_INT):'';
+			$addcontractType= isset($_POST['addcontractType'])? filter_var($_POST['addcontractType'],FILTER_SANITIZE_NUMBER_INT):'';
+			$addjob= isset($_POST['addjob'])? filter_var($_POST['addjob'],FILTER_SANITIZE_NUMBER_INT):'';
+			$addlevel = isset($_POST['addlevel'])? filter_var($_POST['addlevel'],FILTER_SANITIZE_NUMBER_INT):'';
+			$addshift= isset($_POST['addshift'])? filter_var($_POST['addshift'],FILTER_SANITIZE_STRING) :'';
+			$addmaritalstatus= isset($_POST['addmaritalstatus'])? filter_var($_POST['addmaritalstatus'],FILTER_SANITIZE_NUMBER_INT) :'';
+			$adddesc_job= isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : '';
+			$addeducation = isset($_POST['addeducation'])? filter_var($_POST['addeducation'],FILTER_SANITIZE_STRING) : '';
+			$addbasicsalary = isset($_POST['addbasicsalary'])? filter_var($_POST['addbasicsalary'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
+			$addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_INT):'';
+			$addgender = isset($_POST['addgender'])? filter_var($_POST['addgender'],FILTER_SANITIZE_STRING) : '';
+			// creating array of errors
+			$formErrors = array();
+
+			if (empty($addempName) || empty($addempCode) ){
+				//$formErrors[] = 'username must be larger than  chars';
+				echo "name and code cant be empty";
+				// print_r($formErrors) ;
+			} else {
+				$con = connect();
+				$sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
+							currentSalary,syndicate_id) 
+						VALUES ('".$addempCode."','".$addempName."','".$addcontractType."','".$addjob."','".$addlevel."','".$addshift."',
+						'".$addmaritalstatus."','".$addgender."','".$addbasicsalary."','".$addsyndicate."')" ;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				
+				echo "done";
+			}
+	}
+	// --------------Edit Employee function-----------------------
+	function editEmp(){
+		$employye_ID = isset($_POST['employee_id'])? filter_var($_POST['employee_id'],FILTER_SANITIZE_NUMBER_INT):'';
+		$empNameEdit= isset($_POST['empNameEdit'])? filter_var($_POST['empNameEdit'],FILTER_SANITIZE_STRING) : '';
+		$empCodeEdit= isset($_POST['empCodeEdit'])? filter_var($_POST['empCodeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$contractTypeEdit= isset($_POST['addcontractType'])? filter_var($_POST['addcontractType'],FILTER_SANITIZE_NUMBER_INT):'';
+		$jobEdit= isset($_POST['jobEdit'])? filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$levelEdit = isset($_POST['levelEdit'])? filter_var($_POST['levelEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$shiftEdit= isset($_POST['shiftEdit'])? filter_var($_POST['shiftEdit'],FILTER_SANITIZE_STRING) :'';
+		$maritalstatusEdit= isset($_POST['maritalstatusEdit'])? filter_var($_POST['maritalstatusEdit'],FILTER_SANITIZE_NUMBER_INT) :'';
+		$desc_jobEdit= isset($_POST['desc_jobEdit'])? filter_var($_POST['desc_jobEdit'],FILTER_SANITIZE_STRING) : '';
+		$educationEdit = isset($_POST['educationEdit'])? filter_var($_POST['educationEdit'],FILTER_SANITIZE_STRING) : '';
+		$basicsalaryEdit = isset($_POST['basicsalaryEdit'])? filter_var($_POST['basicsalaryEdit'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
+		$syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
+		
+		$con = connect();
+		
+		$job_sql = "insert into emp_job(emp_id,job_id,job_description,shift)values('$employye_ID','$job','$desc_jobEdit','$shiftEdit')";
+		$MS_sql = "insert into emp_maritalstatus(emp_id,marital_status_id)values('$employye_ID','$maritalstatusEdit')";
+		$level_sql = "insert into emp_level(emp_id,level_id)values('$employye_ID','$levelEdit')";
+		$contract_sql = "insert into emp_contract(emp_id,contract_id,empCode)values('$employye_ID','$contractTypeEdit','$empCodeEdit')";
+		$basicSalary_sql = "insert into emp_basicsalary(emp_id,basicSalary)values('$employye_ID','$basicsalaryEdit')";
+		$emp_sql = "UPDATE employee
+					SET currentCode = '$empCode' ,
+						empName = '$empName',
+						currentContract = '$contractType',
+						currentJob = '$job',
+						currentMS = '$maritalstatusEdit',
+						currentLevel = '$level',
+						currentShift = '$shiftEdit',
+						currentSalary = '$basicsalaryEdit',
+						gender = '$genderEdit'
+					WHERE ID= '$employye_ID'";
+
+		
+
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+	}
+	//---------------edit levels function-------------------------
+	//---------------edit contracts function----------------------
+	//---------------edit marital status function-----------------
+	//---------------edit jobs function---------------------------
+	//---------------edit syndicates function---------------------
+	 
+	//---------------get managments function-----------------------
+	function getManagement(){
+		$con = connect();
+		$sql= "SELECT ID,Management FROM managements" ;
+    	$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+	    	foreach($result as $row){
+			    echo "<option value=" .$row['ID'].">" . $row['Management'] . "</option>";
+			}		
 	}
 	//---------------calculate benifits of salary------------------
 	function calculateBenifits(){

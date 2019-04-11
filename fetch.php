@@ -23,5 +23,8 @@
 		elseif(isset($_POST["insertEmp"])){
 			addEmp();
 		}
+		elseif(isset($_POST["UpdateEmp"])){
+			editEmp();
+		}
 	
 	?>

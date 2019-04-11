@@ -54,50 +54,25 @@ $(document).ready(function(){
 	});
 
 	// edit employees info modal
-	$('a.edit').on('click', function() {
-	    var myModal = $('#editEmp');
+	// $('a.edit').on('click', function() {
+	//     var myModal = $('#editEmp');
 
-	    // now get the values from the table
-	    var firstName = $(this).closest('tr').find('td.firstName').html();
-	    var lastName = $(this).closest('tr').find('td.lastName').html();
-	    // and set them in the modal:
-	    $('.firstName', myModal).val(firstName);
-	    $('.lastNameName', myModal).val(lastName);
+	//     // now get the values from the table
+	//     var firstName = $(this).closest('tr').find('td.firstName').html();
+	//     var lastName = $(this).closest('tr').find('td.lastName').html();
+	//     // and set them in the modal:
+	//     $('.firstName', myModal).val(firstName);
+	//     $('.lastNameName', myModal).val(lastName);
 
-	    // and finally show the modal
-	    myModal.modal({ show: true });
+	//     // and finally show the modal
+	//     myModal.modal({ show: true });
 
-	    return false;
-	});	
-
- 	$("input#code").bind("change", function(){
- 		var empCode=$("#code").val();
- 		// alert(empCode);
- 		if($.trim(empCode) != ''){
- 			// alert("hi");
- 			$.post('ajax.php',{code:empCode}, function(data){
- 				if(data == "notfound"){
- 					alert("رقم القيد غير مسجل \n من فضلك ادخل رقم صحيح!");
- 				}else{
- 					$('#name').val(data.empName);
- 					$('#emp').val(data.empID); 	
- 					$('#subManagment').val(data.subManagemnet); 
- 					$('#day_n').val(data.day_night);
- 					$('#Management').val(data.g_manag);
-					$('#ManagementName').val(data.g_manag_name);  
-					$('#job').val(data.job);   				
- 				}
- 			},"json");
- 		}
-
-	});
-
-	$( '#vacForm' ).each(function(){
-		this.reset();
-	});
+	//     return false;
+	// });	
 
 	//--------------get employee data in edit modal---------------
 	$(document).on('click','.editEmpData', function(){
+		$('.nav-tabs a[href="#tab1"]').tab('show')
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		var employee_id=$(this).attr("id");
 		console.log(employee_id);
@@ -147,6 +122,26 @@ $(document).ready(function(){
         	}
 		});		
 	});
+	//--------------get level data in edit modal---------------
+	$(document).on('click','.editLevelData', function(){
+	});
+	//--------------get contracts data in edit modal---------------
+	//--------------get marital status data in edit modal---------------
+	//--------------get jobs data in edit modal---------------
+	//--------------get syndicates data in edit modal---------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//--------------get management data in edit modal---------------
 	$(document).on('click','.editManagementData', function(){
 		var management_id=$(this).attr("id");
@@ -354,31 +349,5 @@ $(document).ready(function(){
 			}
 		});	
 	});
-	//delete vacation
-	$('.delete_vacation').on('click',function(){
-		if(confirm("سيتم حذف الاجازة نهائياً .. هل أنت متأكد؟")){
-			//var vac_id=$(this).attr("id");
-			var vac_id=$(this).closest('tr').attr('id');
-			
-			$.ajax({
-				url:"done.php",
-				method:"POST",
-				data: {vac_id:vac_id},
-				success:function(data){
-				},
-				error: function(error) {
-					alert(" لم يتم حذف الاجازة بنجاح..حاول مرة أخرى ");
-					//console.log(error);
-				}
-			});	
-			$(this).closest('tr').css("text-decoration", "line-through");
-			$(this).closest('tr').fadeOut(1200,function(){
-				$(this).closest('tr').remove();
-			});
-			
-		}
-
-	});
-	
 
 });

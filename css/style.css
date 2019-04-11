@@ -207,3 +207,11 @@ text-align: right;
     font-size: 40px;
     font-weight: bold;
 }
+.modal-content{
+    background-color: #a5a1a1;
+}
+.nav-tabs>li>a {
+    background-color: #333333; 
+    border-color: #777777;
+    color:#fff;
+  }
