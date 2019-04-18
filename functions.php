@@ -247,26 +247,15 @@
 		$con = connect();
 		$sql= '';		
 		if(!empty($_GET['search'])){
-			$sql = "select e.ID,e.empName,e.currentCode,e.gender,c.contractType,l.empLevel,ms.maritalStatus,s.syndicate,j.job
-					from employee e,syndicates s,contract c,level l,maritalstatus ms, job j
-					where     e.syndicate_id = s.ID
-						  and e.currentJob = j.ID
-						  and e.currentLevel = l.ID
-						  and e.currentContract = c.ID
-						  and e.currentMS = ms.ID 
-						  and (currentCode like '%". $_GET['search'] ."%' 
+			$sql = "select ID,empName,currentCode
+					from employee 
+					where  (currentCode like '%". $_GET['search'] ."%' 
 								OR empName like '%". $_GET['search'] ."%') 
-					ORDER BY e.currentCode";
+					ORDER BY currentCode";
 		}else{
-			$sql=" select e.ID,e.empName,e.currentCode,e.gender,c.contractType,l.empLevel,ms.maritalStatus,s.syndicate,j.job
-					from employee e,syndicates s,contract c,level l,maritalstatus ms, job j
-					where     e.syndicate_id = s.ID
-						and e.currentJob = j.ID
-						and e.currentLevel = l.ID
-						and e.currentContract = c.ID
-						and e.currentMS = ms.ID 
-						 
-					ORDER BY e.currentCode";
+			$sql=" select ID,empName,currentCode
+					from employee 
+					ORDER BY currentCode";
 		}
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
@@ -276,17 +265,32 @@
 			"<tr>
 				<td>".  $row['currentCode']. "</td>
 				<td>".  $row['empName']. "</td>
-				<td>".  $row['contractType']. "</td>
-				<td>".  $row['job']. "</td>
-				<td>".  $row['maritalStatus']. "</td>
-				<td>".  $row['empLevel']. "</td>
-				<td>".  $row['gender']. "</td>
-				<td>".  $row['syndicate']. "</td>
-				<td><button type='button' class='btn btn-primary btn-sm editEmpData' data-toggle='modal' 
-				data-target='#editEmpModal' id=".$row['ID']."><i class='fa fa-edit fa-lg'></button></td>
-				</tr>";
+				<td>
+					<button type='button' class='btn btn-primary btn-sm editEmpData' data-toggle='modal' 
+					data-target='#editEmpModal' id=".$row['ID']."><i class='fa fa-edit fa-lg' aria-hidden='true'></i></button>
+				</td>
+				<td>
+					<button type='button' class='btn btn-primary btn-sm viewcurrentEmp' data-toggle='modal' 
+					data-target='#viewcurrentEmpModal' id=".$row['ID']."><i class='fa fa-address-card-o fa-lg' aria-hidden='true'></i></button>
+				</td>
+				<td>
+					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
+					data-target='#viewEmphistoryModal' id=".$row['ID']."><i class='fa fa-history fa-lg' aria-hidden='true'></i></button>
+				</td>
+			</tr>";
 		 }
 		echo $output;
+	}
+	// --------------get Employee current profile function-----------------------
+	function getEmpCurrentProfile(){
+		//$output="";
+		$con = connect();		
+		$sql="select * from empCurrentProfile where ID = ".$_POST['currentProfileEmpID']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
+
 	}
 	//---------------get number of Employees---------------------
 	function getEmpCount(){
@@ -381,7 +385,11 @@
 	}
 	// --------------Edit Employee function-----------------------
 	function editEmp(){
-		$employye_ID = isset($_POST['employee_id'])? filter_var($_POST['employee_id'],FILTER_SANITIZE_NUMBER_INT):'';
+		$employee_ID = isset($_POST['employee_idEdit'])? filter_var($_POST['employee_idEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$contractDate = isset($_POST['contractDate'])? $_POST['contractDate']:'';
+		$levelDate = isset($_POST['levelDate'])? $_POST['levelDate']:'';
+		$jobDate = isset($_POST['jobDate'])? $_POST['jobDate']:'';
+		$basicSalaryDate = isset($_POST['basicSalaryDate'])? $_POST['basicSalaryDate']:'';
 		$empNameEdit= isset($_POST['empNameEdit'])? filter_var($_POST['empNameEdit'],FILTER_SANITIZE_STRING) : '';
 		$empCodeEdit= isset($_POST['empCodeEdit'])? filter_var($_POST['empCodeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$contractTypeEdit= isset($_POST['addcontractType'])? filter_var($_POST['addcontractType'],FILTER_SANITIZE_NUMBER_INT):'';
@@ -394,37 +402,70 @@
 		$basicsalaryEdit = isset($_POST['basicsalaryEdit'])? filter_var($_POST['basicsalaryEdit'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
 		$syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
-		
-		$con = connect();
-		
-		$job_sql = "insert into emp_job(emp_id,job_id,job_description,shift)values('$employye_ID','$job','$desc_jobEdit','$shiftEdit')";
-		$MS_sql = "insert into emp_maritalstatus(emp_id,marital_status_id)values('$employye_ID','$maritalstatusEdit')";
-		$level_sql = "insert into emp_level(emp_id,level_id)values('$employye_ID','$levelEdit')";
-		$contract_sql = "insert into emp_contract(emp_id,contract_id,empCode)values('$employye_ID','$contractTypeEdit','$empCodeEdit')";
-		$basicSalary_sql = "insert into emp_basicsalary(emp_id,basicSalary)values('$employye_ID','$basicsalaryEdit')";
-		$emp_sql = "UPDATE employee
-					SET currentCode = '$empCode' ,
-						empName = '$empName',
-						currentContract = '$contractType',
-						currentJob = '$job',
-						currentMS = '$maritalstatusEdit',
-						currentLevel = '$level',
-						currentShift = '$shiftEdit',
-						currentSalary = '$basicsalaryEdit',
-						gender = '$genderEdit'
-					WHERE ID= '$employye_ID'";
-
-		
-
-		$stmt = $con->prepare($sql);
-		$stmt->execute();
+		//sql statements to be executed
+		if (isset($jobEdit)){
+			$job_sql = "insert into emp_job(emp_id,job_id,job_date,job_description,shift)
+						values('$employee_ID','$jobEdit','$jobDate','$desc_jobEdit','$shiftEdit')";
+			$emp_sql = "UPDATE employee SET currentJob = '$jobEdit'	WHERE ID= '$employee_ID'";		
+			$con = connect();
+			$stmt = $con->prepare($job_sql);
+			$stmt2 = $con->prepare($emp_sql);
+			$stmt->execute();
+			$stmt2->execute();	
+		}
+		if(isset($maritalstatusEdit)){
+			$MS_sql = "insert into emp_maritalstatus(emp_id,marital_status_id)values('$employee_ID','$maritalstatusEdit')";
+			$emp_sql = "UPDATE employee SET currentMS = '$maritalstatusEdit' WHERE ID= '$employee_ID'";		
+			$stmt = $con->prepare($MS_sql);
+			$stmt2 = $con->prepare($emp_sql);
+			$stmt->execute();
+			$stmt2->execute();
+		}
+		if(isset($levelEdit)){
+		    $level_sql = "insert into emp_level(emp_id,level_id)values('$employee_ID','$levelEdit')";
+			$emp_sql = "UPDATE employee SET currentLevel = '$levelEdit' WHERE ID= '$employee_ID'";		
+			$stmt = $con->prepare($level_sql);
+			$stmt2 = $con->prepare($emp_sql);
+			$stmt->execute();
+			$stmt2->execute();
+		}
+		if(isset($contractTypeEdit)){
+		    $contract_sql = "insert into emp_contract(emp_id,contract_id,empCode,contract_date)values('$employee_ID','$contractTypeEdit','$empCodeEdit')";
+			$emp_sql = "UPDATE employee SET currentContract = '$contractType' WHERE ID= '$employee_ID'";		
+			$stmt = $con->prepare($contract_sql);
+			$stmt2 = $con->prepare($emp_sql);
+			$stmt->execute();
+			$stmt2->execute();
+		}
+		if(isset($basicsalaryEdit)){
+		    $basicSalary_sql = "insert into emp_basicsalary(emp_id,basicSalary,salaryDate)values('$employee_ID','$basicsalaryEdit')";
+			$emp_sql = "UPDATE employee SET currentSalary = '$basicsalaryEdit' WHERE ID= '$employee_ID'";		
+			$stmt = $con->prepare($basicSalary_sql);
+			$stmt2 = $con->prepare($emp_sql);
+			$stmt->execute();
+			$stmt2->execute();
+		}
+		// $emp_sql = "UPDATE employee
+		// 			SET currentCode = '$empCode',
+		// 				empName = '$empName',
+		// 				currentContract = '$contractType',
+		// 				currentJob = '$job',
+		// 				currentMS = '$maritalstatusEdit',
+		// 				currentLevel = '$level',
+		// 				currentShift = '$shiftEdit',
+		// 				currentSalary = '$basicsalaryEdit',
+		// 				gender = '$genderEdit'
+		// 			WHERE ID= '$employee_ID'";
+		// $con = connect();
+		// $stmt = $con->prepare($sql);
+		// $stmt->execute();
+		//echo json_encode($result); 
 	}
 	//---------------edit levels function-------------------------
 	//---------------edit contracts function----------------------
 	//---------------edit marital status function-----------------
 	//---------------edit jobs function---------------------------
 	//---------------edit syndicates function---------------------
-	 
 	//---------------get managments function-----------------------
 	function getManagement(){
 		$con = connect();

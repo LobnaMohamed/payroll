@@ -72,7 +72,7 @@ $(document).ready(function(){
 
 	//--------------get employee data in edit modal---------------
 	$(document).on('click','.editEmpData', function(){
-		$('.nav-tabs a[href="#tab1"]').tab('show')
+		$('.nav-tabs a[href="#tab5"]').tab('show')
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		var employee_id=$(this).attr("id");
 		console.log(employee_id);
@@ -83,7 +83,7 @@ $(document).ready(function(){
 			dataType:"json",
 			success:function(data){
 				console.log(data);
-				$('#employee_id').val(data.ID);
+				$('#employee_idEdit').val(data.ID);
 				$('#empNameEdit').val(data.empName);
 				$('#empCodeEdit').val(data.currentCode);
 				$('#genderEdit').val(data.gender);
@@ -108,19 +108,48 @@ $(document).ready(function(){
 		var $form = $('#editEmpForm');
 
 		$.ajax({
-			url:"insert.php",
+			url:"fetch.php",
 			method:"POST",
 			data: $('form#editEmpForm').serialize(),
 			//dataType:"json",
 
 			success:function(data){
-				//console.log(data);
+				console.log(data);
 				$("#editEmpModal").modal('hide');	
 			},
 			error: function(error) {
             	alert(error);
         	}
 		});		
+	});
+	//--------------view emp current profile------------------
+	$(document).on('click','.viewcurrentEmp', function(){
+		var employee_id=$(this).attr("id");
+		console.log(employee_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{currentProfileEmpID:employee_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#currentProfileEmp_code').text(data.currentCode);
+				$('#currentProfileEmp_level').text(data.empLevel);
+				$('#currentProfileEmp_job').text(data.job);
+				$('#currentProfileEmp_syndicate').text(data.syndicate);
+				$('#currentProfileEmp_name').text(data.empName);
+				$('#currentProfileEmp_MS').text(data.maritalStatus);
+				$('#currentProfileEmp_contract').text(data.contractType);
+				$('#currentProfileEmp_shift').text(data.currentShift);
+				$('#currentProfileEmp_hireDate').text(data.hireDate);				
+				$('#currentProfileEmp_DOB').text(data.DOB);
+				$('#currentProfileEmp_salary').text(data.currentSalary);
+
+				
+			},error:function(error){
+				console.log(error);
+			}
+		});
 	});
 	//--------------get level data in edit modal---------------
 	$(document).on('click','.editLevelData', function(){

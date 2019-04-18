@@ -4,33 +4,17 @@
     <header class="row text-center">
         <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>مرتب 24</div>   
     </header>	  
+    <form class="navbar-form row" id="Salary" method="POST" action="fetch.php">
+        <div class="form-group add-on col-md-10">
+            <label for = "search">رقم القيد / الاسم :</label>
+            <!-- <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text"> -->
+            <div class="input-group-btn">
+                <button class="btn btn-primary" type="submit">calculate salary</button>
+            </div>
+        </div>
+    </form>
     <form  method="POST" action="#" >
         <div class="form-group  row">
-            <div class="col-md-2">
-                <label for="emplevel">المستوى</label>
-			    <select class="form-control" id="emplevel" name="emplevel">
-			    	<!-- <option selected disabled hidden style='display: none' value=''></option> -->
-		   		    
-				</select>
-            </div>
-            <div class="col-md-2">
-                <label for="empcontract">نوع العقد</label>
-			    <select class="form-control" id="empcontract" name="empcontract">
-			    	<!-- <option selected disabled hidden style='display: none' value=''></option> -->
-		   		    
-				</select>
-            </div>
-            <div class="col-md-2">
-                <label for="empMaritalStatus">الحالة الاجتماعية</label>
-			    <select class="form-control" id="empMaritalStatus" name="empMaritalStatus">
-			    	<!-- <option selected disabled hidden style='display: none' value=''></option> -->
-    
-				</select>
-            </div>
-            <div class="col-md-2">
-                <label for="empgender" >النـــوع</label>
-	    		<input type="text" class="form-control" id="empgender" name="empgender" >
-            </div>
             <div class="col-md-3">
                 <label for="empname" >الاســـــم</label>
 	    		<input type="text" class="form-control" id="empname" name="empname" >
@@ -42,19 +26,24 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-md-3">
-                <label for="empeducation" >المؤهل الدراسى</label>
-	    		<input type="text" class="form-control" id="empeducation" name="empeducation" >
-            </div>
-            <div class="col-md-3">
-                <label for="empjob" >الوظيفة</label>
-	    		<input type="text" class="form-control" id="empjob" name="empjob" >
-            </div>
             <div class="col-md-2">
                 <label for="empmainSalary" >المرتب الأساسى</label>
 	    		<input type="number" class="form-control" id="empmainSalary" name="empmainSalary" >
             </div>
         </div>
     </form>
+    <table id="empData" class="table table-striped table-bordered">
+            <thead >
+                <tr>
+                    <th>رقم القيد</th>
+                    <th>الاسم</th>
+                    <th colspan=3><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEmpModal"><i class='fa fa-plus-circle'></button></th>
+                
+                </tr>
+            </thead>
+        <tbody id="empDatabody">
+            <?php getAllEmp(); ?>
+        </tbody>
+    </table>
 </div>
 	<?php include 'footer.php'; ?>

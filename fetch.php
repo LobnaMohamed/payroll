@@ -3,6 +3,7 @@
 	include 'functions.php';
 		if(isset($_POST["empID"]))  
 		{  
+			//show data in emp modal
 			$con = connect();			
 			$sql = "select ID,empName,currentCode,gender,currentLevel,syndicate_id,currentMS,currentContract,
 						   currentSalary,currentJob,education,currentShift,shift,job_description,ej.MaxDate
@@ -19,6 +20,8 @@
 			//print_r($result) ;
 			echo json_encode($result); 
 
+		}elseif(isset($_POST["currentProfileEmpID"])){
+			getEmpCurrentProfile(); 
 		}
 		elseif(isset($_POST["insertEmp"])){
 			addEmp();

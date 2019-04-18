@@ -2,6 +2,7 @@
 body{
     background-color: #e0d9d9;
     font-size: 17px;
+    font-family: 'Droid Arabic Naskh', serif;
 }
 h1{
     text-align: center;  
@@ -16,7 +17,7 @@ h1{
 label{
     font-weight : bold;
     font-size: 110%;
-    
+    /* display:block; */
 }
 /* .form-wages *{
     direction: rtl;
@@ -30,7 +31,7 @@ label{
     /* margin-bottom: 20px; */
 }
 .form-control input[type="text"], input[type="date"]{
-text-align: right;
+    text-align: right;
 }
 #search,#searchTo,#searchDateFrom,#searchDateTo,#year,#month{
     margin-bottom:3px;
