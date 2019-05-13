@@ -148,7 +148,22 @@
 								</ul>
 								<div class="tab-content">	
 									<div class="tab-pane" id="tab5">
-										<div class="form-group col-md-4 col-md-offset-4">
+										
+										<div class="form-group col-md-4 col-md-offset-1 ">
+											<label for= "maritalstatusEdit">الحالة الاجتماعية</label>
+											<select class="form-control" id="maritalstatusEdit" name="maritalstatusEdit">
+												<option selected disabled hidden style='display: none' value=''></option>
+													<?php  	get_marital_status(); ?>
+											</select>
+											<label for= "MSDate">تاريخ الحالة الاجتماعية</label>
+											<input type="date" class="form-control" id="MSDate" name="MSDate">
+											<label for= "syndicateEdit">النقابة</label>
+											<select class="form-control" id="syndicateEdit" name="syndicateEdit">
+												<option selected disabled hidden style='display: none' value=''></option>
+													<?php  	getsyndicate();   ?>
+											</select>
+										</div>
+										<div class="form-group col-md-4 ">
 											<label for= "empNameEdit">اسم الموظف</label>
 											<input type="text" class="form-control" id="empNameEdit" name="empNameEdit" >
 											<label for= "genderEdit">النوع</label>
@@ -161,18 +176,7 @@
 											</select>
 											<label for= "educationEdit">المؤهل</label>
 											<input type="text" class="form-control" id="educationEdit" name="educationEdit" >	
-											<label for= "maritalstatusEdit">الحالة الاجتماعية</label>
-											<select class="form-control" id="maritalstatusEdit" name="maritalstatusEdit">
-												<option selected disabled hidden style='display: none' value=''></option>
-													<?php  	get_marital_status(); ?>
-											</select>
-											<label for= "MSDate">التاريخ</label>
-											<input type="date" class="form-control" id="MSDate" name="MSDate">
-											<label for= "syndicateEdit">النقابة</label>
-													<select class="form-control" id="syndicateEdit" name="syndicateEdit">
-														<option selected disabled hidden style='display: none' value=''></option>
-															<?php  	getsyndicate();   ?>
-													</select>
+
 										</div>
 									</div>							
 									<div class="tab-pane" id="tab1">

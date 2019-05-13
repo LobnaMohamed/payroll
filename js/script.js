@@ -82,7 +82,7 @@ $(document).ready(function(){
 			data:{empID:employee_id},
 			dataType:"json",
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				$('#employee_idEdit').val(data.ID);
 				$('#empNameEdit').val(data.empName);
 				$('#empCodeEdit').val(data.currentCode);
@@ -102,11 +102,11 @@ $(document).ready(function(){
 		});
 	});
 	//--------------onsubmit edit form-----------------------------
-	$(document).on('submit','#editEmpForm', function(){
-		//alert("hi");
-		//e.preventDefault();
+	$(document).on('submit','#editEmpForm', function(e){
+		alert("hi");
+		e.preventDefault();
 		var $form = $('#editEmpForm');
-
+		console.log( $( this ).serialize() );
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
@@ -122,6 +122,14 @@ $(document).ready(function(){
         	}
 		});		
 	});
+	//-----------------------------------------------------------
+	// $('form#editEmpForm').each(function(){
+  //       $(this).data('serialized', $(this).serialize())
+  //   }).on('change input', function(){
+  //       $(this) .find('input:submit, button:submit').prop('disabled', $(this).serialize() == $(this).data('serialized'));
+	// 	 }).find('input:submit, button:submit').prop('disabled', true);
+		 
+
 	//--------------view emp current profile------------------
 	$(document).on('click','.viewcurrentEmp', function(){
 		var employee_id=$(this).attr("id");
@@ -152,153 +160,16 @@ $(document).ready(function(){
 		});
 	});
 	//--------------get level data in edit modal---------------
-	$(document).on('click','.editLevelData', function(){
-	});
+	// $(document).on('click','.editLevelData', function(){
+	// });
 	//--------------get contracts data in edit modal---------------
 	//--------------get marital status data in edit modal---------------
 	//--------------get jobs data in edit modal---------------
 	//--------------get syndicates data in edit modal---------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-	//--------------get management data in edit modal---------------
-	$(document).on('click','.editManagementData', function(){
-		var management_id=$(this).attr("id");
-		// console.log(management_id);
-		$.ajax({
-			url:"fetch_Mang.php",
-			method:"POST",
-			data:{managementID:management_id},
-			dataType:"json",
-			success:function(data){
-				// console.log(data);
-				$('#management_id').val(data.ID);
-				$('#managementEdit').val(data.Management);
-			},
-			error:function(data){
-				//console.log( data);
-			}
-		});
-	});
-	//--------------onsubmit edit management form-----------------------------
-	$(document).on('submit','#editManagementForm', function(){
-		//alert("hi");
-		//e.preventDefault();
-		var $form = $('#editManagementForm');
-
-		$.ajax({
-			url:"insert.php",
-			method:"POST",
-			data: $('form#editManagementForm').serialize(),
-			//dataType:"json",
-
-			success:function(data){
-				//console.log(data);
-				$("#editManagementModal").modal('hide');	
-			},
-			error: function(error) {
-				//console.log(error);
-			}
-		});		
-	});
 	
-	//--------------check in change password modal------------------
-	$('#changePassModal').on('show.bs.modal', function(e) {
-		//alert ("hi");
-		var username = $('input[name="username"]').val();
-		var password = $('input[name="password"]').val();
-		//check if username or password are empty
-		if(username == "" || password == ""){
-			alert ("أدخل بياناتك!");
-			e.preventDefault();//stop modal from showing
-		}else{
-		    $(e.currentTarget).find('input[name="user"]').val(username);
-		    $(e.currentTarget).find('input[name="oldPass"]').val(password);
-		    // on form submit
-		    $('#changePassForm').on('submit', function(e){
-		    	//e.preventDefault();
-		    	var newPass = $.trim($(e.currentTarget).find('input[name="newpassword"]').val());
-			    var confirmPass = $.trim($(e.currentTarget).find('input[name="confirmpassword"]').val());
-			    if(newPass == confirmPass && newPass.length >= 7 && newPass != 1234567){
-					//ajax to update password:
-				    $.ajax({
-				    	url:document.location.url,
-						method:"POST",
-						data: $('form#changePassForm').serialize(),
-						success:function(data){
-							 alert("تم تغيير كلمة السر بنجاح");
-							 // console.log(data.result);
-						},
-						error: function(error) {
-			            	// alert("error");
-			            	// console.log(error);
-			        	}
-					});	
-			    }else{
-			    	e.preventDefault();
-			    	//console.log("slidedown");
-			    	$('#modalAlert').removeClass("hide");
-			    	$('#changePassForm')[0].reset();
-			    }
-			    $('#changePassForm').on('keyup',function(){
-			    	$('#modalAlert').addClass("hide");
-			    });
-		    });
-		}
-	});
- 	
- 	//---------------check if pass = 1234567 on login----------------
-
- 	$('#signin').on('submit', function(e){
-
- 		//var password = $("input[name=password]");
- 		//check if pass == 1234567
- 		e.preventDefault();
-		$.ajax({
-			url:'checkpassAjax.php',
-			method:"POST",
-			data: $('form#signin').serialize(),
-			dataType:"json",
-			success:function(data){
-				//console.log(data);			
-				if(data.response == "changePass"){
-					alert("يجب تغيير كلمة السر!");
-					$("#changePassModal").modal('show');					
-				}
-				if(data.response == "noouser"){
-					alert ("من فضلك أدخل بيانات صحيحة");
-					$( 'input[name=password]' ).val('');
-					// $( '#signin' ).each(function(){
-					// 	this.reset();
-					// });
-				}
-				if(data.response == "nothing3" || data.response == "nothing"){
-					 window.location.replace(data.redirect) ; 
-				}
-				//define it as global
-				// currentActivePage = document.location.href.match(/[^\/]+$/)[0];
-				// currentActivePage ;
-				//$('a[href="'+currentActivePage+'"]').attr('id', 'activePage');
-
-			},
-			error: function(error) {
-				//alert("error");
-				//console.log(error);
-			}
-		});	
- 	});
  
-	//-----------search confirmed vacs---------------------------- 
+	//-----------search forms---------------------------- 
 	$('#searchDateTo,#searchDateFrom,#searchTo,#search').bind('change keyup',function(){
 		//get dates between 2 dates
 	   var value = $('#search').val();
@@ -306,49 +177,32 @@ $(document).ready(function(){
 		var dateTo_value = $('#searchDateTo').val();
 		var dateFrom_value = $('#searchDateFrom').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log(currentURL);
 	   $.ajax({
 		   url:'searchAjax.php',
 		   method:"GET",
 		   data: {search:value,
-				   searchTo:valueTo,
-				   dateFrom:dateFrom_value,
-				   dateTo:dateTo_value,
-				   pageurl:currentURL},
+							searchTo:valueTo,
+							dateFrom:dateFrom_value,
+							dateTo:dateTo_value,
+							pageurl:currentURL},
 		   // dataType:"json",
 		   success:function(data){
-			   // console.log(data);
-			   
-			   if(currentURL == 'confirmed.php'){
-				   //console.log(data);
-				   $('#confirmedVacbody').html(data);
-				   
-			   }
-			   else if(currentURL == 'pending.php'){
-				   //console.log(data);
-				   $('#pendingVacbody').html(data);
-				   
-			   }
-			   else if(currentURL == 'empdata.php'){
+			   console.log(data);
+
+        if(currentURL == 'empdata.php'){
 				   //console.log(data);
 				   $('#empDatabody').html(data);
 
-				}
-				else if(currentURL == 'myvacationstatus.php'){
-				   $('#VacStatusbody').html(data);
-			    }
-			   else if(currentURL == 'pendingPermit.php'){
-					$('#pendingPermitbody').html(data);
-				}
-				else if(currentURL == 'confirmedPermit.php'){
-					$('#confirmedPermitbody').html(data);
-				}
-				else if(currentURL == 'pendingAtTopmgr.php'){
-					$('#pendingVacAtTopmgrbody').html(data);
+				}else if(currentURL == 'wages.php'){
+					
+					$('#wagesDatabody').html(data);
+
 				}
 			   
 		   },
 		   error: function(error) {
-			   //console.log(error);
+			   console.log(error);
 		   }
 	   });	
    });

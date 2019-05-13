@@ -392,8 +392,10 @@
 		$basicSalaryDate = isset($_POST['basicSalaryDate'])? $_POST['basicSalaryDate']:'';
 		$empNameEdit= isset($_POST['empNameEdit'])? filter_var($_POST['empNameEdit'],FILTER_SANITIZE_STRING) : '';
 		$empCodeEdit= isset($_POST['empCodeEdit'])? filter_var($_POST['empCodeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		$contractTypeEdit= isset($_POST['addcontractType'])? filter_var($_POST['addcontractType'],FILTER_SANITIZE_NUMBER_INT):'';
-		$jobEdit= isset($_POST['jobEdit'])? filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$contractTypeEdit= isset($_POST['contractTypeEdit'])? filter_var($_POST['contractTypeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		//$jobEdit= isset($_POST['jobEdit'])? filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		$jobEdit=  filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT);
+		
 		$levelEdit = isset($_POST['levelEdit'])? filter_var($_POST['levelEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$shiftEdit= isset($_POST['shiftEdit'])? filter_var($_POST['shiftEdit'],FILTER_SANITIZE_STRING) :'';
 		$maritalstatusEdit= isset($_POST['maritalstatusEdit'])? filter_var($_POST['maritalstatusEdit'],FILTER_SANITIZE_NUMBER_INT) :'';
@@ -402,8 +404,23 @@
 		$basicsalaryEdit = isset($_POST['basicsalaryEdit'])? filter_var($_POST['basicsalaryEdit'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
 		$syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
+		
+		echo "job:";
+		echo $jobEdit;
+		echo "level:";
+
+		echo $levelEdit;
+		echo "ms:";
+
+		echo $maritalstatusEdit;
+		echo "contract:";
+
+		echo $contractTypeEdit;
+
+		echo "<br>";
+		
 		//sql statements to be executed
-		if (isset($jobEdit)){
+		if(isset($jobEdit)){
 			$job_sql = "insert into emp_job(emp_id,job_id,job_date,job_description,shift)
 						values('$employee_ID','$jobEdit','$jobDate','$desc_jobEdit','$shiftEdit')";
 			$emp_sql = "UPDATE employee SET currentJob = '$jobEdit'	WHERE ID= '$employee_ID'";		
@@ -413,7 +430,7 @@
 			$stmt->execute();
 			$stmt2->execute();	
 		}
-		if(isset($maritalstatusEdit)){
+		elseif(isset($maritalstatusEdit)){
 			$MS_sql = "insert into emp_maritalstatus(emp_id,marital_status_id)values('$employee_ID','$maritalstatusEdit')";
 			$emp_sql = "UPDATE employee SET currentMS = '$maritalstatusEdit' WHERE ID= '$employee_ID'";		
 			$stmt = $con->prepare($MS_sql);
@@ -421,7 +438,7 @@
 			$stmt->execute();
 			$stmt2->execute();
 		}
-		if(isset($levelEdit)){
+		elseif(isset($levelEdit)){
 		    $level_sql = "insert into emp_level(emp_id,level_id)values('$employee_ID','$levelEdit')";
 			$emp_sql = "UPDATE employee SET currentLevel = '$levelEdit' WHERE ID= '$employee_ID'";		
 			$stmt = $con->prepare($level_sql);
@@ -429,7 +446,7 @@
 			$stmt->execute();
 			$stmt2->execute();
 		}
-		if(isset($contractTypeEdit)){
+		elseif(isset($contractTypeEdit)){
 		    $contract_sql = "insert into emp_contract(emp_id,contract_id,empCode,contract_date)values('$employee_ID','$contractTypeEdit','$empCodeEdit')";
 			$emp_sql = "UPDATE employee SET currentContract = '$contractType' WHERE ID= '$employee_ID'";		
 			$stmt = $con->prepare($contract_sql);
@@ -437,13 +454,16 @@
 			$stmt->execute();
 			$stmt2->execute();
 		}
-		if(isset($basicsalaryEdit)){
+		elseif(isset($basicsalaryEdit)){
 		    $basicSalary_sql = "insert into emp_basicsalary(emp_id,basicSalary,salaryDate)values('$employee_ID','$basicsalaryEdit')";
 			$emp_sql = "UPDATE employee SET currentSalary = '$basicsalaryEdit' WHERE ID= '$employee_ID'";		
 			$stmt = $con->prepare($basicSalary_sql);
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();
+		}
+		else{
+			echo "nothing to edit";
 		}
 		// $emp_sql = "UPDATE employee
 		// 			SET currentCode = '$empCode',
@@ -556,4 +576,49 @@
 			//$totalDeductions = ; // اجمالى الاستقطاع
 
 		}
+	}
+	//---------get totals of benefits and deductions and netsalary-------
+	function getWagesTotals(){
+		$output="";
+		$con = connect();
+		if(!empty($_GET['dateFrom'])){		
+			$sql = "select  e.empName,e.currentCode,s.totalBenefits,s.totalDeductions,s.netSalary,
+							s.emp_id,s.TS_id
+					from    employee e inner join timesheet ts 
+							on e.ID = ts.emp_id inner join salary s 
+							on ts.ID = s.TS_id
+					where  ts.sheetDate = '" . $_GET['dateFrom'] ."'";
+		}else{
+			$sql = "select  e.empName,e.currentCode,s.totalBenefits,s.totalDeductions,s.netSalary,
+							s.emp_id,s.TS_id
+					from    employee e inner join timesheet ts 
+							on e.ID = ts.emp_id inner join salary s 
+							on ts.ID = s.TS_id
+					where  month(ts.sheetDate) = month(getDate()) and year(ts.sheetDate)= year(getDate())";
+		}
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$output .= 
+			"<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<td>".  $row['totalBenefits']. "</td>
+				<td>".  $row['totalDeductions']. "</td>
+				<td>".  $row['netSalary']. "</td>
+				<td>
+					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
+					data-target='#WagesDetailsModal' id=".array($row['emp_id'],$row['TS_id']).">
+					<i class='fa fa-info fa-lg' aria-hidden='true'></i>
+					</button>
+				</td>
+			</tr>";
+			
+		}
+		echo $output;
+	}
+	//----------get wage details-----------------------------
+	function viewWagesDetails(){
+		
 	}
