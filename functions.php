@@ -498,7 +498,7 @@
 			}		
 	}
 	//---------------calculate benifits of salary------------------
-	function calculateBenifits(){
+	function calculateBenefits(){
 		$con = connect();		
 		$sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,s.amount,
 					   e.currentWorkAllowanceNature,ts.manufacturing_days,ts.overnight_days,ts.shift_days,l.incentivePercent,
@@ -594,7 +594,7 @@
 					from    employee e inner join timesheet ts 
 							on e.ID = ts.emp_id inner join salary s 
 							on ts.ID = s.TS_id
-					where  month(ts.sheetDate) = month(getDate()) and year(ts.sheetDate)= year(getDate())";
+					where  month(ts.sheetDate) = month(getDate())-1 and year(ts.sheetDate)= year(getDate())";
 		}
 		$stmt = $con->prepare($sql);
 		$stmt->execute();

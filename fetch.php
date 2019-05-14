@@ -28,6 +28,21 @@
 		}
 		elseif(isset($_POST["UpdateEmp"])){
 			editEmp();
+		}elseif(isset($_POST["calculateSalary24"])){
+			//check timesheet for the month
+			$sql=  "select distinct t.sheetDate,e.currentCode,e.empName
+					from employee e,timesheet t
+					where t.emp_id = e.ID
+					and month(t.sheetDate) = month(getdate())-1
+					and year(t.sheetDate) = year(getdate())";
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			if($stmt->rowCount() > 0){
+				calculateBenefits();
+				calculateDeductions();
+			}else{
+				echo 'لم يتم ادخال الحصر ';
+			}
 		}
 	
 	?>

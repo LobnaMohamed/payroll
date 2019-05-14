@@ -122,6 +122,27 @@ $(document).ready(function(){
         	}
 		});		
 	});
+
+	//--------------onsubmit calculate salary form-----------------------------
+	$(document).on('submit','#SalaryCalculation', function(e){
+		alert("hi");
+		e.preventDefault();
+		var $form = $('#SalaryCalculation');
+		console.log( $( this ).serialize() );
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data: $('form#SalaryCalculation').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);	
+			},
+			error: function(error) {
+				alert(error);
+			}
+		});		
+	});
 	//-----------------------------------------------------------
 	// $('form#editEmpForm').each(function(){
   //       $(this).data('serialized', $(this).serialize())
