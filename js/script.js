@@ -133,8 +133,6 @@ $(document).ready(function(){
 			url:"fetch.php",
 			method:"POST",
 			data: $('form#SalaryCalculation').serialize(),
-			//dataType:"json",
-
 			success:function(data){
 				console.log(data);	
 			},
@@ -203,15 +201,15 @@ $(document).ready(function(){
 		   url:'searchAjax.php',
 		   method:"GET",
 		   data: {search:value,
-							searchTo:valueTo,
-							dateFrom:dateFrom_value,
-							dateTo:dateTo_value,
-							pageurl:currentURL},
+				searchTo:valueTo,
+				dateFrom:dateFrom_value,
+				dateTo:dateTo_value,
+				pageurl:currentURL},
 		   // dataType:"json",
 		   success:function(data){
 			   console.log(data);
 
-        if(currentURL == 'empdata.php'){
+        		if(currentURL == 'empdata.php'){
 				   //console.log(data);
 				   $('#empDatabody').html(data);
 
@@ -220,7 +218,6 @@ $(document).ready(function(){
 					$('#wagesDatabody').html(data);
 
 				}
-			   
 		   },
 		   error: function(error) {
 			   console.log(error);
@@ -245,7 +242,6 @@ $(document).ready(function(){
 				if(currentURL == 'timesheet.php'){
 					console.log(data);
 					$('#timesheetbody').html(data);
-				
 				}		
 			},
 			error: function(error) {

@@ -607,12 +607,7 @@
 				<td>".  $row['totalBenefits']. "</td>
 				<td>".  $row['totalDeductions']. "</td>
 				<td>".  $row['netSalary']. "</td>
-				<td>
-					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
-					data-target='#WagesDetailsModal' id=".array($row['emp_id'],$row['TS_id']).">
-					<i class='fa fa-info fa-lg' aria-hidden='true'></i>
-					</button>
-				</td>
+
 			</tr>";
 			
 		}
@@ -620,5 +615,10 @@
 	}
 	//----------get wage details-----------------------------
 	function viewWagesDetails(){
-		
+	// 	<td>
+	// 	<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
+	// 	data-target='#WagesDetailsModal' id=".array($row['emp_id'],$row['TS_id']).">
+	// 	<i class='fa fa-info fa-lg' aria-hidden='true'></i>
+	// 	</button>
+	// </td>
 	}
