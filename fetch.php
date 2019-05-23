@@ -28,20 +28,28 @@
 		}
 		elseif(isset($_POST["UpdateEmp"])){
 			editEmp();
-		}elseif(isset($_POST["calculateSalary24"])){
+		}
+		elseif(isset($_POST["calculateSalary24"])){
 			//check timesheet for the month
-			$sql=  "select distinct t.sheetDate,e.currentCode,e.empName
-					from employee e,timesheet t
-					where t.emp_id = e.ID
-					and month(t.sheetDate) = month(getdate())-1
-					and year(t.sheetDate) = year(getdate())";
+			$con = connect();
+			$sql=  "select count(s.TS_id)
+					from timesheet t,salary s
+					where t.ID=s.TS_id and t.emp_id = s.emp_id
+					and t.sheetDate = '" . $_POST['searchDateFrom'] ."'";
 			$stmt = $con->prepare($sql);
-			$stmt->execute();
-			if($stmt->rowCount() > 0){
-				calculateBenefits();
-				calculateDeductions();
-			}else{
-				echo 'لم يتم ادخال الحصر ';
+			$stmt->execute(array($_POST["searchDateFrom"]));
+			$result = $stmt->fetchColumn();
+			//echo $result;
+			if($result <= 0){   //if this date already exists in salary table
+				calculateSalary24();
+				//getWagesTotals();
+				header("location:wages.php");
+			}
+			else{
+			// 	//calculateSalary24();
+			// 	//header("location : wages.php");	
+				//getWagesTotals();
+				
 			}
 		}
 	

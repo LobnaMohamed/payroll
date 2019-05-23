@@ -102,9 +102,9 @@ $(document).ready(function(){
 		});
 	});
 	//--------------onsubmit edit form-----------------------------
-	$(document).on('submit','#editEmpForm', function(e){
+	$(document).on('submit','#editEmpForm', function(){
 		alert("hi");
-		e.preventDefault();
+		//e.preventDefault();
 		var $form = $('#editEmpForm');
 		console.log( $( this ).serialize() );
 		$.ajax({
@@ -124,22 +124,25 @@ $(document).ready(function(){
 	});
 
 	//--------------onsubmit calculate salary form-----------------------------
-	$(document).on('submit','#SalaryCalculation', function(e){
-		alert("hi");
-		e.preventDefault();
-		var $form = $('#SalaryCalculation');
-		console.log( $( this ).serialize() );
+	$(document).on('submit','#SalaryCalculation', function(){
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
-			data: $('form#SalaryCalculation').serialize(),
+			data:$('form#SalaryCalculation').serialize(),
+			
 			success:function(data){
-				console.log(data);	
+				console.log(data);
+				if(currentURL == 'wages.php'){
+					
+					$('#wagesDatabody').html(data);
+ 
+				 }
 			},
 			error: function(error) {
 				alert(error);
 			}
-		});		
+		});	
 	});
 	//-----------------------------------------------------------
 	// $('form#editEmpForm').each(function(){
@@ -191,15 +194,15 @@ $(document).ready(function(){
 	//-----------search forms---------------------------- 
 	$('#searchDateTo,#searchDateFrom,#searchTo,#search').bind('change keyup',function(){
 		//get dates between 2 dates
-	   var value = $('#search').val();
-	   var valueTo =  $('#searchTo').val();
+		var value = $('#search').val();
+		var valueTo =  $('#searchTo').val();
 		var dateTo_value = $('#searchDateTo').val();
 		var dateFrom_value = $('#searchDateFrom').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		console.log(currentURL);
 	   $.ajax({
 		   url:'searchAjax.php',
-		   method:"GET",
+		   method:"POST",
 		   data: {search:value,
 				searchTo:valueTo,
 				dateFrom:dateFrom_value,
@@ -215,7 +218,7 @@ $(document).ready(function(){
 
 				}else if(currentURL == 'wages.php'){
 					
-					$('#wagesDatabody').html(data);
+				   $('#wagesDatabody').html(data);
 
 				}
 		   },
