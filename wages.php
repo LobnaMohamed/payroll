@@ -10,8 +10,8 @@
             <!-- <label for = "search">رقم القيد :</label>
             <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text"> -->
             <label for = "searchDateFrom">التاريخ :</label>
-            <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" >
-            <input class="btn btn-primary form-control" type="submit" name="calculateSalary24" value="calculate salary">
+            <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
+            <!-- <input class="btn btn-primary form-control" type="submit" name="calculateSalary24" value="calculate salary" /> -->
         </div>
     </form>
     <hr>

@@ -136,7 +136,7 @@ $(document).ready(function(){
 				if(currentURL == 'wages.php'){
 					
 					$('#wagesDatabody').html(data);
- 
+
 				 }
 			},
 			error: function(error) {
@@ -146,7 +146,7 @@ $(document).ready(function(){
 	});
 	//-----------------------------------------------------------
 	// $('form#editEmpForm').each(function(){
-  //       $(this).data('serialized', $(this).serialize())
+//   $(this).data('serialized', $(this).serialize())
   //   }).on('change input', function(){
   //       $(this) .find('input:submit, button:submit').prop('disabled', $(this).serialize() == $(this).data('serialized'));
 	// 	 }).find('input:submit, button:submit').prop('disabled', true);
@@ -234,9 +234,10 @@ $(document).ready(function(){
 		var timesheet_date = $('#timesheetDate').val();
 		var emp = $('#search').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log(currentURL);
 		$.ajax({
 			url:'searchAjax.php',
-			method:"GET",
+			method:"POST",
 			data: {timesheetDate:timesheet_date,
 				   search:emp,
 				   pageurl:currentURL},

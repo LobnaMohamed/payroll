@@ -312,14 +312,14 @@
 				where t.emp_id = e.ID
 						and month(t.sheetDate) = month(getdate())";
 		
-		if(!empty($_GET['timesheetDate'])){
+		if(!empty($_POST['timesheetDate'])){
 			$sql = "select t.*,e.currentCode,e.empName
 					from employee e,timesheet t
 					where t.emp_id = e.ID
-							and month(t.sheetDate)= month('".$_GET['timesheetDate']."')";	
+							and month(t.sheetDate)= month('".$_POST['timesheetDate']."')";	
 		}
-		if(!empty($_GET['search'])){
-			$sql .= " and (e.currentCode like '%". $_GET['search'] ."%' OR e.empName like '%". $_GET['search'] ."%')";	
+		if(!empty($_POST['search'])){
+			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
 		}
 		
 		$stmt = $con->prepare($sql);
@@ -509,10 +509,12 @@
 					   and e.syndicate_id = s.ID
 					   and e.currentLevel = l.ID
 					   and e.currentJob = j.ID
-					   and ts.sheetDate = '" . $_POST['searchDateFrom'] ."'";
+					   and ts.sheetDate = '" . $_POST['dateFrom'] ."'";
 					   //and ts.sheetDate ='2019-04-01'
+					   
 		$stmt = $con->prepare($sql);
-		$stmt->execute(array($_POST["searchDateFrom"]));
+		$stmt->execute();
+		//$stmt->execute(array($_POST["searchDateFrom"]));
 		$result = $stmt->fetchAll();
 		foreach($result as $row){
 			$currentDays = ($row['presence_days'])/30; // عدد أيام الحضور/30
@@ -620,6 +622,13 @@
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
+		if(! $result ){
+			$output = "
+			<tr >
+			<td colspan='6' class='alert alert-warning'> 
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
+			</td></tr>";
+		}
 		foreach($result as $row){
 			$output .= 
 			"<tr>
@@ -628,6 +637,12 @@
 				<td>".  $row['totalBenefits']. "</td>
 				<td>".  $row['totalDeductions']. "</td>
 				<td>".  $row['netSalary']. "</td>
+				<td>
+					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
+					data-target='#WagesDetailsModal' id=".$row['TS_id'] . $row['emp_id'].">
+					<i class='fa fa-info fa-lg' aria-hidden='true'></i>
+					</button>
+				</td>
 			</tr>";
 			
 		}

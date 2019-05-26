@@ -69,8 +69,17 @@
 							<li><a href="#">مـجمع</a></li>
 						</ul>
 					</div>
-
-					<a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a>
+					<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">ادخال الحــصر
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-menu-right">
+						  <li><a href="#">ادخال الحــصر </a></li>
+							<li><a href="timesheet.php">الحـــصر</a></li>
+							
+							
+						</ul>
+					</div>
+					<!-- <a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a> -->
 					<a href="#"  class="btn btn-primary dropdown-toggle">خــــروج</a>
 
 			</ul>

@@ -42,13 +42,11 @@
 			//echo $result;
 			if($result <= 0){   //if this date already exists in salary table
 				calculateSalary24();
-				//getWagesTotals();
-				header("location:wages.php");
+				getWagesTotals();
+				
 			}
 			else{
-			// 	//calculateSalary24();
-			// 	//header("location : wages.php");	
-				//getWagesTotals();
+				getWagesTotals();
 				
 			}
 		}
