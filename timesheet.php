@@ -36,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody id="timesheetbody">
-                    <?php getTimesheet(); ?>
+                    <?php // getTimesheet(); ?>
                 </tbody>
             </table>
         </div>

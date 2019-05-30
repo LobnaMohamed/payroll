@@ -5,7 +5,7 @@
     <header class="row text-center">
         <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>مرتب 24</div>   
     </header>	  
-    <form class="navbar-form row" id="SalaryCalculation"  method="POST">
+    <form class="navbar-form row" id="searchEmp"  method="POST">
         <div class="form-group add-on ">
             <!-- <label for = "search">رقم القيد :</label>
             <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text"> -->

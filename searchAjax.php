@@ -31,4 +31,8 @@
 		}
 		
 	}
+	elseif($currentURL == 'Deductions.php'){
+
+		getDeductions();
+	}
 	?>

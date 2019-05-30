@@ -221,6 +221,11 @@ $(document).ready(function(){
 				   $('#wagesDatabody').html(data);
 
 				}
+				else if(currentURL == 'otherDeduction.php'){
+					
+					$('#Deductionsbody').html(data);
+ 
+				 }
 		   },
 		   error: function(error) {
 			   console.log(error);

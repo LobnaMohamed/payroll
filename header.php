@@ -70,13 +70,30 @@
 						</ul>
 					</div>
 					<div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">ادخال الحــصر
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> الحــصر
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
 						  <li><a href="#">ادخال الحــصر </a></li>
 							<li><a href="timesheet.php">الحـــصر</a></li>
-							
-							
+	
+						</ul>
+					</div>
+					<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> إدخالات الاستقطاعات
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-menu-right">
+						  <li><a href="Deductions.php">إستقطاع أخر</a></li>
+						  <li><a href="#">كارت بريميوم</a></li>
+						  <li><a href="#">موبايل</a></li>
+						  <li><a href="#">قرض بنك</a></li>
+						  <li><a href="#">اتصالات إنترنت</a></li>
+						</ul>
+					</div>
+					<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> إدخالات الاستحقاقات
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-menu-right">
+						  <li><a href="#">إستحقاق</a></li>
 						</ul>
 					</div>
 					<!-- <a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a> -->

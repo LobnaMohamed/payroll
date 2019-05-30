@@ -307,10 +307,10 @@
 		$output="";	
 		$con = connect();
 		$sql= '';		
-		$sql="select t.*,e.currentCode,e.empName
-				from employee e,timesheet t
-				where t.emp_id = e.ID
-						and month(t.sheetDate) = month(getdate())";
+		// $sql="select t.*,e.currentCode,e.empName
+		// 		from employee e,timesheet t
+		// 		where t.emp_id = e.ID
+		// 				and month(t.sheetDate) = month(getdate())";
 		
 		if(!empty($_POST['timesheetDate'])){
 			$sql = "select t.*,e.currentCode,e.empName
@@ -325,25 +325,33 @@
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
-		
-		foreach($result as $row){
-			//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
-			$output .=
-			"<tr>
-				<td>".  $row['currentCode']. "</td>
-				<td>".  $row['empName']. "</td>
-				<td>".  $row['presence_days']. "</td>
-				<td>".  $row['absence_days']. "</td>
-				<td>".  $row['casual_days']. "</td>
-				<td>".  $row['sickLeave_days']. "</td>
-				<td>".  $row['deduction_days']. "</td>
-				<td>".  $row['annual_days']. "</td>
-				<td>".  $row['manufacturing_days']. "</td>
-				<td>".  $row['shift_days']. "</td>
-				<td>".  $row['overnight_days']. "</td>
-				<td>".  $row['notes']. "</td>
-			</tr>";
+		if(! $result ){
+			$output = "
+			<tr >
+			<td colspan='12' class='alert alert-warning'> 
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
+			</td></tr>";
+		}else{
+			foreach($result as $row){
+				//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
+				$output .=
+				"<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>".  $row['presence_days']. "</td>
+					<td>".  $row['absence_days']. "</td>
+					<td>".  $row['casual_days']. "</td>
+					<td>".  $row['sickLeave_days']. "</td>
+					<td>".  $row['deduction_days']. "</td>
+					<td>".  $row['annual_days']. "</td>
+					<td>".  $row['manufacturing_days']. "</td>
+					<td>".  $row['shift_days']. "</td>
+					<td>".  $row['overnight_days']. "</td>
+					<td>".  $row['notes']. "</td>
+				</tr>";
 			}
+		}
+
 		echo $output;
 	}
 	// --------------Add Employee function-----------------------
@@ -497,6 +505,65 @@
 			    echo "<option value=" .$row['ID'].">" . $row['Management'] . "</option>";
 			}		
 	}
+	//---------------get other deductions--------------------
+	function getDeductions(){
+		$output ="";
+		if(isset($_POST['dateFrom'])){
+			$date = $_POST['dateFrom'];
+			echo $date;
+		}	
+		$con = connect();
+		$sql = "select  e.empName,e.currentCode,ts.sheetDate
+				from    employee e inner join timesheet ts 
+						on e.ID = ts.emp_id 
+				where ts.sheetDate ='$date'";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if(! $result ){
+			$output = "<tr><td colspan='7' class='alert alert-warning'> 
+						<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
+						</td></tr>";
+		}else{
+			$sql ="select  e.empName,e.currentCode,s.otherDeduction,s.mobil,s.etisalatNet,s.perimiumCard,
+						s.emp_id,s.TS_id,ts.sheetDate
+					from    employee e inner join timesheet ts 
+							on e.ID = ts.emp_id inner join salary s 
+							on ts.ID = s.TS_id
+					where  ts.emp_id = s.emp_id";
+				if(!empty($_POST['dateFrom'])){
+					$sql .= " and ts.sheetDate = '". $_POST['dateFrom']."'";	
+				}
+				if(!empty($_POST['search'])){
+
+				$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
+
+				}
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+
+			foreach($result as $row){
+				$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>".  $row['sheetDate']. "</td>
+					<td>
+						<input type='number' class='form-control' name='otherDeductionText' value=".$row['otherDeduction'].">
+					</td>  
+					<td>
+						<input type='number' class='form-control' name='mobilText' value=".$row['mobil'].">
+					</td>
+					<td>
+						<input type='number' class='form-control' name='etisalatNetText' value=".$row['etisalatNet'].">
+					</td>
+					<td>
+						<input type='number' class='form-control' name='perimiumCardText' value=".$row['perimiumCard'].">
+					</td>
+				</tr>";
+			}
+		}
+	}
 	//---------------calculate benifits of salary------------------
 	function calculateSalary24(){
 		$con = connect();		
@@ -509,9 +576,7 @@
 					   and e.syndicate_id = s.ID
 					   and e.currentLevel = l.ID
 					   and e.currentJob = j.ID
-					   and ts.sheetDate = '" . $_POST['dateFrom'] ."'";
-					   //and ts.sheetDate ='2019-04-01'
-					   
+					   and ts.sheetDate = '" . $_POST['dateFrom'] ."'";					   
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		//$stmt->execute(array($_POST["searchDateFrom"]));
@@ -569,41 +634,7 @@
 			//echo $sql2;
 		}
 	}
-	//---------------calculate deductions of salary------------------
-	function calculateDeductions(){
-		// $con = connect();		
-		// $sql = "select  e.ID,e.currentSalary,ts.presence_days,ms.med_insurance
-		// 		from    employee e,timesheet ts,maritalStatus ms
-		// 		where   e.ID = ts.emp_id
-		// 				and e.currentMS = ms.ID";
-		// $stmt = $con->prepare($sql);
-		// $stmt->execute();
-		// $result = $stmt->fetchAll();
-		// foreach($result as $row){
-		// 	$sanction_days = 0;
-		// 	$pastPeriod = 0;//مدة سابقة
-		// 	$perimiumCard = 0 ; 
-		// 	$familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
-		// 	$otherDeduction = 0; // استقطاع اخر
-		// 	$petroleumSyndicate= 10; // ن.بترول
-		// 	$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
-		// 	$mobil = 0; // نوباتجية
-		// 	$loan = 0; //قرض
-		// 	$empServiceFund = 20; // صندوق خدمات عاملين
-		// 	$socialInsurances = 0;//تأمينات
-		// 	$etisalatNet =  0; 
-		// 	//$totalDeductions = ; // اجمالى الاستقطاع
 
-		// 	//-----------insert into salary table---------------- 
-		// 	$sql2 ="insert into salary(pastPeriod,perimiumCard,familyHealthInsurance,otherDeduction,petroleumSyndicate,
-		// 	sanctions,mobil,loan,empServiceFund,socialInsurances,etisalatNet)
-		// 			values(".$pastPeriod.",".$perimiumCard.",".$familyHealthInsurance.",".$otherDeduction.",".$petroleumSyndicate.",
-		// 			".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.")";
-		// 	$stmt = $con->prepare($sql2);
-		// 	$stmt->execute();
-		// 	echo $sql2;
-		// }
-	}
 	//---------get totals of benefits and deductions and netsalary-------
 	function getWagesTotals(){
 		$output="";
@@ -628,24 +659,26 @@
 			<td colspan='6' class='alert alert-warning'> 
 			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
 			</td></tr>";
+		}else{
+			foreach($result as $row){
+				$output .= 
+				"<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>".  $row['totalBenefits']. "</td>
+					<td>".  $row['totalDeductions']. "</td>
+					<td>".  $row['netSalary']. "</td>
+					<td>
+						<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
+						data-target='#WagesDetailsModal' id=".$row['TS_id'] . $row['emp_id'].">
+						<i class='fa fa-info fa-lg' aria-hidden='true'></i>
+						</button>
+					</td>
+				</tr>";
+				
+			}
 		}
-		foreach($result as $row){
-			$output .= 
-			"<tr>
-				<td>".  $row['currentCode']. "</td>
-				<td>".  $row['empName']. "</td>
-				<td>".  $row['totalBenefits']. "</td>
-				<td>".  $row['totalDeductions']. "</td>
-				<td>".  $row['netSalary']. "</td>
-				<td>
-					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
-					data-target='#WagesDetailsModal' id=".$row['TS_id'] . $row['emp_id'].">
-					<i class='fa fa-info fa-lg' aria-hidden='true'></i>
-					</button>
-				</td>
-			</tr>";
-			
-		}
+
 		echo $output;
 	}
 	//----------get wage details-----------------------------
