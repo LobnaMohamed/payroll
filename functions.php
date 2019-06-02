@@ -510,7 +510,6 @@
 		$output ="";
 		if(isset($_POST['dateFrom'])){
 			$date = $_POST['dateFrom'];
-			echo $date;
 		}	
 		$con = connect();
 		$sql = "select  e.empName,e.currentCode,ts.sheetDate
@@ -526,25 +525,25 @@
 						</td></tr>";
 		}else{
 			$sql ="select  e.empName,e.currentCode,s.otherDeduction,s.mobil,s.etisalatNet,s.perimiumCard,
-						s.emp_id,s.TS_id,ts.sheetDate
-					from    employee e inner join timesheet ts 
-							on e.ID = ts.emp_id inner join salary s 
-							on ts.ID = s.TS_id
-					where  ts.emp_id = s.emp_id";
-				if(!empty($_POST['dateFrom'])){
-					$sql .= " and ts.sheetDate = '". $_POST['dateFrom']."'";	
-				}
-				if(!empty($_POST['search'])){
+			s.emp_id,s.TS_id,ts.sheetDate
+			from    employee e inner join timesheet ts 
+					on e.ID = ts.emp_id inner join salary s 
+					on ts.ID = s.TS_id
+			where  ts.emp_id = s.emp_id";
+			if(!empty($_POST['dateFrom'])){
+				$sql .= " and ts.sheetDate = '$date'";	
+			}
+			if(!empty($_POST['search'])){
 
 				$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
 
-				}
+			}
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetchAll();
-
-			foreach($result as $row){
-				$output .= "<tr>
+			if( $result ){
+				foreach($result as $row){
+					$output .= "<tr>
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
 					<td>".  $row['sheetDate']. "</td>
@@ -561,8 +560,49 @@
 						<input type='number' class='form-control' name='perimiumCardText' value=".$row['perimiumCard'].">
 					</td>
 				</tr>";
+				}
+
+			}else{
+				$sql ="select  e.empName,e.currentCode,ts.sheetDate
+						from    employee e inner join timesheet ts 
+						on e.ID = ts.emp_id 
+						where ts.sheetDate ='$date'";
+				if(!empty($_POST['dateFrom'])){
+					$sql .= " and ts.sheetDate = '$date'";	
+				}
+				if(!empty($_POST['search'])){
+
+					$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
+
+				}
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				$result = $stmt->fetchAll();
+				foreach($result as $row){
+					$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>".  $row['sheetDate']. "</td>
+					
+						<td>
+							<input type='number' class='form-control' name='otherDeductionText'>
+						</td>  
+						<td>
+							<input type='number' class='form-control' name='mobilText'>
+						</td>
+						<td>
+							<input type='number' class='form-control' name='etisalatNetText' >
+						</td>
+						<td>
+							<input type='number' class='form-control' name='perimiumCardText' >
+						</td>
+					</tr>";
+				
+				}
 			}
+
 		}
+		echo $output;
 	}
 	//---------------calculate benifits of salary------------------
 	function calculateSalary24(){
@@ -634,7 +674,10 @@
 			//echo $sql2;
 		}
 	}
+	//-------------update deductions----------------------
+	function updateDeductions(){
 
+	}
 	//---------get totals of benefits and deductions and netsalary-------
 	function getWagesTotals(){
 		$output="";

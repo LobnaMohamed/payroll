@@ -15,8 +15,8 @@
 		</form>
 
 		<!-- form to show pending vacations and confirm them -->
-	    <form class="form-horizontal row" method="POST" action=""> 
-	    	<table id="empData" class="table table-striped table-bordered table-responsive">		
+	    <form class="form-horizontal row" method="POST" action="fetch.php"> 
+	    	<table id="deductions" class="table table-striped table-bordered table-responsive">		
 				<thead>
 					<tr>
 						<th>رقم القيد</th>
@@ -30,25 +30,11 @@
 				    </tr>		
 				</thead>
 				<tbody id="Deductionsbody">
-					<td></td>
-                    <td></td>
-					<td></td>  
-					<td>
-						<input type='number' class='form-control' name='otherDeductionText' >
-					</td>  
-					<td>
-						<input type='number' class='form-control' name='mobilText' >
-					</td>
-					<td>
-						<input type='number' class='form-control' name='etisalatNetText' >
-					</td>
-					<td>
-						<input type='number' class='form-control' name='perimiumCardText' >
-					</td>
+
 				</tbody>
 			</table>
 			<div>
-				<input type="submit" name="updateOtherDeduction" value="إعتمــــاد" class="btn btn-success col-sm-2 col-sm-offset-5">
+				<input type="submit" name="updateDeductions" value="إعتمــــاد" class="btn btn-success col-sm-2 col-sm-offset-5">
 			</div>			
 		 </form>		
 	</div> 

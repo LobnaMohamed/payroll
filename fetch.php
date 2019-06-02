@@ -50,5 +50,8 @@
 				
 			}
 		}
+		elseif(isset($_POST["updateDeductions"])){
+			updateDeductions();
+		}
 	
 	?>

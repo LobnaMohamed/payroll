@@ -221,7 +221,7 @@ $(document).ready(function(){
 				   $('#wagesDatabody').html(data);
 
 				}
-				else if(currentURL == 'otherDeduction.php'){
+				else if(currentURL == 'Deductions.php'){
 					
 					$('#Deductionsbody').html(data);
  
@@ -257,6 +257,26 @@ $(document).ready(function(){
 				//console.log(error);
 			}
 		});	
+	});
+	//-------------------submit deductions form--------------
+	$(document).on('submit','#deductions', function(){
+		//alert("hi");
+		//e.preventDefault();
+		//var $form = $('#deductions');
+
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data: $('form#deductions').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);
+			},
+			error: function(error) {
+            	alert(error);
+        	}
+		});		
 	});
 
 });
