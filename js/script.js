@@ -259,15 +259,15 @@ $(document).ready(function(){
 		});	
 	});
 	//-------------------submit deductions form--------------
-	$(document).on('submit','#deductions', function(){
-		//alert("hi");
+	$(document).on('submit','#updateDeductionsFrom', function(){
+		alert("hi");
 		//e.preventDefault();
 		//var $form = $('#deductions');
 
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
-			data: $('form#deductions').serialize(),
+			data: $('form#updateDeductionsFrom').serialize(),
 			//dataType:"json",
 
 			success:function(data){

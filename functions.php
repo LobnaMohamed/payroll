@@ -543,27 +543,34 @@
 			$result = $stmt->fetchAll();
 			if( $result ){
 				foreach($result as $row){
+					$empindex = $row['emp_id'];
+					$tsindex = $row['TS_id'];
+					
 					$output .= "<tr>
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
 					<td>".  $row['sheetDate']. "</td>
+					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+					<input name='tsID' type='hidden' value=".$row['TS_id'].">
 					<td>
-						<input type='number' class='form-control' name='otherDeductionText' value=".$row['otherDeduction'].">
+						<input type='number' class='form-control' name='otherDeductionText['.$tsindex.']['.$empindex.']' value=".$row['otherDeduction'].">
 					</td>  
 					<td>
-						<input type='number' class='form-control' name='mobilText' value=".$row['mobil'].">
+						<input type='number' class='form-control' name='mobilText['.$tsindex.']['.$empindex.']' value=".$row['mobil'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='etisalatNetText' value=".$row['etisalatNet'].">
+						<input type='number' class='form-control' name='etisalatNetText['.$tsindex.']['.$empindex.']' value=".$row['etisalatNet'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='perimiumCardText' value=".$row['perimiumCard'].">
+						<input type='number' class='form-control' name='perimiumCardText['.$tsindex.']['.$empindex.']' value=".$row['perimiumCard'].">
 					</td>
+				
 				</tr>";
 				}
 
-			}else{
-				$sql ="select  e.empName,e.currentCode,ts.sheetDate
+			}
+			else{
+				$sql ="select  e.empName,e.currentCode,ts.sheetDate,ts.emp_id ,ts.ID
 						from    employee e inner join timesheet ts 
 						on e.ID = ts.emp_id 
 						where ts.sheetDate ='$date'";
@@ -583,7 +590,8 @@
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
 					<td>".  $row['sheetDate']. "</td>
-					
+					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+					<input name='tsID' type='hidden' value=".$row['ID'].">
 						<td>
 							<input type='number' class='form-control' name='otherDeductionText'>
 						</td>  
@@ -676,7 +684,36 @@
 	}
 	//-------------update deductions----------------------
 	function updateDeductions(){
+		// $employee_ID = isset($_POST['emp_id'])? filter_var($_POST['emp_id'],FILTER_SANITIZE_NUMBER_INT):'';
+		// $timesheet_ID = isset($_POST['tsID'])? filter_var($_POST['tsID'],FILTER_SANITIZE_NUMBER_INT):'';
+		$otherDeductionText = isset($_POST['otherDeductionText'])? $_POST['otherDeductionText']:'';
+		$mobilText = isset($_POST['mobilText'])? $_POST['mobilText']:'';
+		$etisalatNetText = isset($_POST['etisalatNetText'])? $_POST['etisalatNetText']:'';
+		$perimiumCardText = isset($_POST['perimiumCardText'])? $_POST['perimiumCardText']:'';
 
+		echo $otherDeductionText;
+		echo"<br>";
+		echo $mobilText;
+		// foreach($otherDeductionText as $otherDeductionkey => $otherDeductionvalue) {
+		// 	echo $otherDeductionkey;
+		// 	echo"<br>";
+		// 	echo  $otherDeductionvalue;
+		// 	$sql = "UPDATE salary 
+		// 			SET otherDeduction ='$otherDeductionvalue', 
+		// 			where emp_id= '$otherDeductionkey'
+		// 			and TS_id ='$otherDeductionkey' ";
+		// 	$stmt = $con->prepare($sql);
+		// 	//$stmt->execute();
+		// }
+		// $sql = "UPDATE salary 
+		// 		SET otherDeduction = '$otherDeductionText',
+		// 			mobil = '$mobilText',
+		// 			etisalatNet = '$etisalatNetText',
+		// 			perimiumCard = '$perimiumCardText'
+		// 		WHERE TS_id= '$timesheet_ID' and emp_id = '$employee_ID'";		
+		// $con = connect();
+		// $stmt = $con->prepare($sql);
+		//$stmt->execute();				
 	}
 	//---------get totals of benefits and deductions and netsalary-------
 	function getWagesTotals(){

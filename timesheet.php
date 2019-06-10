@@ -3,9 +3,7 @@
     require 'functions.php';
 ?>
 <div class="container">	
-    <header class="row text-center">
-        <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الحـــصر</div>
-    </header>
+    <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الحـــصر</div>
     <div class="timesheet-container row">
         <div class="table-responsive row">
             <!-- <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الحـــصر</div> -->

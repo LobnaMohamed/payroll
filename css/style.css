@@ -108,8 +108,7 @@ label{
 #timesheet th{
     font-size: 16px;
 }
-#timesheet th ,#pendingPermit th,#confirmedVac th,#confirmedPermit th,
-#empData th,#myVacStatus th,#myPermitStatus th,#pendingVacAtTopmgr th{
+#timesheet th ,#deductions th,#empData th{
     background-color: #999999;
 }
 #confirmedVacReport{
