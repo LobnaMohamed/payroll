@@ -524,7 +524,7 @@
 						<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
 						</td></tr>";
 		}else{
-			$sql ="select  e.empName,e.currentCode,s.otherDeduction,s.mobil,s.etisalatNet,s.perimiumCard,
+			$sql ="select  e.empName,e.currentCode,s.otherDeduction,s.mobil,s.etisalatNet,s.perimiumCard,s.pastPeriod,
 			s.emp_id,s.TS_id,ts.sheetDate
 			from    employee e inner join timesheet ts 
 					on e.ID = ts.emp_id inner join salary s 
@@ -553,16 +553,19 @@
 					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
 					<input name='tsID' type='hidden' value=".$row['TS_id'].">
 					<td>
-						<input type='number' class='form-control' name='otherDeductionText['.$tsindex.']['.$empindex.']' value=".$row['otherDeduction'].">
+						<input type='number' class='form-control' name='otherDeductionText[$tsindex][$empindex]' value=".$row['otherDeduction'].">
 					</td>  
 					<td>
-						<input type='number' class='form-control' name='mobilText['.$tsindex.']['.$empindex.']' value=".$row['mobil'].">
+						<input type='number' class='form-control' name='mobilText[$tsindex][$empindex]' value=".$row['mobil'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='etisalatNetText['.$tsindex.']['.$empindex.']' value=".$row['etisalatNet'].">
+						<input type='number' class='form-control' name='etisalatNetText[$tsindex][$empindex]' value=".$row['etisalatNet'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='perimiumCardText['.$tsindex.']['.$empindex.']' value=".$row['perimiumCard'].">
+						<input type='number' class='form-control' name='perimiumCardText[$tsindex][$empindex]' value=".$row['perimiumCard'].">
+					</td>
+					<td>
+						<input type='number' class='form-control' name='pastPeriodText[$tsindex][$empindex]' value=".$row['pastPeriod'].">
 					</td>
 				
 				</tr>";
@@ -590,8 +593,8 @@
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
 					<td>".  $row['sheetDate']. "</td>
-					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
-					<input name='tsID' type='hidden' value=".$row['ID'].">
+						<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+						<input name='tsID' type='hidden' value=".$row['ID'].">
 						<td>
 							<input type='number' class='form-control' name='otherDeductionText'>
 						</td>  
@@ -604,6 +607,107 @@
 						<td>
 							<input type='number' class='form-control' name='perimiumCardText' >
 						</td>
+						<td>
+							<input type='number' class='form-control' name='pastPeriodText' >
+						</td>
+					</tr>";
+				
+				}
+			}
+
+		}
+		echo $output;
+	}
+	//---------------get sanctions---------------------------
+	function getSanctions(){
+		$output ="";
+		if(isset($_POST['dateFrom'])){
+			$date = $_POST['dateFrom'];
+		}	
+		$con = connect();
+		$sql = "select  e.empName,e.currentCode,ts.sheetDate
+				from    employee e inner join timesheet ts 
+						on e.ID = ts.emp_id 
+				where ts.sheetDate ='$date'";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if(! $result ){
+			$output = "<tr><td colspan='7' class='alert alert-warning'> 
+						<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
+						</td></tr>";
+		}else{
+
+			$sql = "select  e.empName,e.currentCode,s.sanctionDate,s.sanctionDays,s.sanctionAmount,s.sanctionNotes,
+							s.employee_id,e.currentSalary
+					from    employee e inner join sanctions s on e.ID = s.employee_id
+					where s.sanctionDate = '$date'";
+			if(!empty($_POST['search'])){
+				$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
+			}
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			if( $result ){
+				foreach($result as $row){
+					$empindex = $row['employee_id'];
+					
+					$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>".  $row['sanctionDate']. "</td>
+					<input name='emp_id' type='hidden' value=".$row['employee_id'].">
+					<input name='emp_currentSalary[$empindex]' type='hidden' value=".$row['currentSalary'].">
+
+					<td>
+						<input type='number' class='form-control' name='sanctionsDaysText[$empindex]' value=".$row['sanctionDays'].">
+					</td>
+					<td>
+						<input type='number' class='form-control' name='sanctionsText[$empindex]' value=".$row['sanctionAmount'].">
+					</td>
+					<td>
+						<input type='number' class='form-control' name='sanctionsNotesText[$empindex]' value=".$row['sanctionNotes'].">
+					</td>   
+					
+				</tr>";
+				}
+
+			}
+			else{
+
+				$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary
+						from	employee e inner join timesheet ts 
+							on e.ID = ts.emp_id 
+						where ts.sheetDate ='$date'";
+
+				if(!empty($_POST['search'])){
+
+					$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
+
+				}
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				$result = $stmt->fetchAll();
+				foreach($result as $row){
+					$empindex = $row['ID'];
+					// $empindex = $row['emp_id'];
+					// $tsindex = $row['TS_id'];
+					$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>". $date. "</td>
+						<input name='emp_id' type='hidden' value=".$row['ID'].">
+						<input name='emp_currentSalary[$empindex]' type='hidden' value=".$row['currentSalary'].">
+
+						<td>
+							<input type='number' class='form-control' name='sanctionDaysText'>
+						</td> 
+						<td>
+							<input type='number' class='form-control' name='sanctionsAmountText'>
+						</td>  
+						<td>
+							<input type='number' class='form-control' name='sanctionsNotesText'>
+						</td>  
 					</tr>";
 				
 				}
@@ -684,36 +788,172 @@
 	}
 	//-------------update deductions----------------------
 	function updateDeductions(){
-		// $employee_ID = isset($_POST['emp_id'])? filter_var($_POST['emp_id'],FILTER_SANITIZE_NUMBER_INT):'';
-		// $timesheet_ID = isset($_POST['tsID'])? filter_var($_POST['tsID'],FILTER_SANITIZE_NUMBER_INT):'';
-		$otherDeductionText = isset($_POST['otherDeductionText'])? $_POST['otherDeductionText']:'';
+		$otherDeductionText = $_POST['otherDeductionText'];
+		//$otherDeductionText = isset($_POST['otherDeductionText'])? $_POST['otherDeductionText']:'';
+                echo"<pre>";
+                print_r($otherDeductionText);
+                echo"</pre>";
 		$mobilText = isset($_POST['mobilText'])? $_POST['mobilText']:'';
 		$etisalatNetText = isset($_POST['etisalatNetText'])? $_POST['etisalatNetText']:'';
 		$perimiumCardText = isset($_POST['perimiumCardText'])? $_POST['perimiumCardText']:'';
+		$pastPeriodText = isset($_POST['pastPeriodText'])? $_POST['pastPeriodText']:'';
 
-		echo $otherDeductionText;
-		echo"<br>";
-		echo $mobilText;
-		// foreach($otherDeductionText as $otherDeductionkey => $otherDeductionvalue) {
-		// 	echo $otherDeductionkey;
-		// 	echo"<br>";
-		// 	echo  $otherDeductionvalue;
-		// 	$sql = "UPDATE salary 
-		// 			SET otherDeduction ='$otherDeductionvalue', 
-		// 			where emp_id= '$otherDeductionkey'
-		// 			and TS_id ='$otherDeductionkey' ";
-		// 	$stmt = $con->prepare($sql);
-		// 	//$stmt->execute();
-		// }
-		// $sql = "UPDATE salary 
-		// 		SET otherDeduction = '$otherDeductionText',
-		// 			mobil = '$mobilText',
-		// 			etisalatNet = '$etisalatNetText',
-		// 			perimiumCard = '$perimiumCardText'
-		// 		WHERE TS_id= '$timesheet_ID' and emp_id = '$employee_ID'";		
-		// $con = connect();
-		// $stmt = $con->prepare($sql);
-		//$stmt->execute();				
+		$con = connect();
+		//------------OTHER DEDUCTIONS INSERTION---------------------
+        if (isset($_POST['otherDeductionText'])) {
+            foreach ($otherDeductionText as $timesheetkey => $otherDeductionvalueArray) {
+				echo "other deductions is set";
+                // echo $timesheetkey;
+                // echo"<br>";
+                // echo"<pre>";
+                // print_r($otherDeductionvalueArray);
+                // echo"</pre>";
+                foreach ($otherDeductionvalueArray as $emp => $deduction) {
+					
+					// echo $emp;
+					// echo"<br>";
+					// echo  $deduction;
+					// echo"<br>";
+					$sql = "UPDATE salary 
+						SET otherDeduction ='$deduction' 
+						where emp_id= '$emp'
+						and TS_id ='$timesheetkey' ";
+					//echo $sql;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+                }
+            }
+        }
+		//------------MOBIL INSERTION-----------------------------
+		if(isset($_POST['mobilText'])){
+			echo "mobil is set";
+			foreach($mobilText as $timesheetkey => $mobilvalueArray) {
+				// echo $timesheetkey;
+				// echo"<br>";
+				// echo"<pre>";
+				// print_r($mobilvalueArray);
+				// echo"</pre>";
+				foreach($mobilvalueArray as $emp => $mobil){
+					
+					// echo $emp;
+					// echo"<br>";
+					// echo  $mobil;
+					// echo"<br>";
+					$sql = "UPDATE salary 
+							SET mobil ='$mobil' 
+							where emp_id= '$emp'
+							and TS_id ='$timesheetkey' ";
+							
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+					//echo $sql;
+				}
+			}
+		}
+
+		//------------etisalatNet INSERTION-----------------------
+		if(isset($_POST['etisalatNetText'])){
+			echo "etisalt net is set";
+			foreach($etisalatNetText as $timesheetkey => $etisalatNetvalueArray) {
+				// echo $timesheetkey;
+				// echo"<br>";
+				// echo"<pre>";
+				// print_r($etisalatNetvalueArray);
+				// echo"</pre>";
+				foreach($etisalatNetvalueArray as $emp => $etisalatNet){
+					// echo $emp;
+					// echo"<br>";
+					// echo  $etisalatNet;
+					// echo"<br>";
+					
+					$sql = "UPDATE salary 
+							SET etisalatNet ='$etisalatNet' 
+							where emp_id= '$emp'
+							and TS_id ='$timesheetkey' ";
+					//echo $sql;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
+			}
+		}
+
+		//------------perimiumCard INSERTION----------------------
+		if(isset($_POST['perimiumCardText'])){
+			echo " perimiumCardText is set";
+			foreach($perimiumCardText as $timesheetkey => $perimiumCardvalueArray) {
+				// echo $timesheetkey;
+				// echo"<br>";
+				// echo"<pre>";
+				// print_r($perimiumCardvalueArray);
+				// echo"</pre>";
+				foreach($perimiumCardvalueArray as $emp => $perimiumCard){
+					// echo $emp;
+					// echo"<br>";
+					// echo  $perimiumCard;
+					// echo"<br>";
+					$sql = "UPDATE salary 
+							SET perimiumCard ='$perimiumCard' 
+							where emp_id= '$emp'
+							and TS_id ='$timesheetkey' ";
+					//echo $sql;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
+			}
+		}
+		//------------pasrPeriod INSERTION----------------------
+		if(isset($_POST['pastPeriodText'])){
+			echo " pastPeriodText is set";
+			foreach($pastPeriodText as $timesheetkey => $pastPeriodvalueArray) {
+				// echo $timesheetkey;
+				// echo"<br>";
+				// echo"<pre>";
+				// print_r($pasrPeriodArray);
+				// echo"</pre>";
+				foreach($pastPeriodvalueArray as $emp => $pastPeriod){
+					// echo $emp;
+					// echo"<br>";
+					// echo  $pastPeriod;
+					// echo"<br>";
+					$sql = "UPDATE salary 
+							SET pastPeriod ='$pastPeriod' 
+							where emp_id= '$emp'
+							and TS_id ='$timesheetkey' ";
+					//echo $sql;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
+			}
+		}
+
+	}
+
+	//-------------UPDATE SANCTIONS----------------------
+	function updateSanctions(){
+		$sanctionsDaysText = $_POST['sanctionsDaysText'];
+		$sanctionsNotesText = isset($_POST['sanctionsNotesText'])? $_POST['sanctionsNotesText']:'';
+		$sanctionsDate = $_POST['dateFrom']; 
+		$emp_currentSalary =  $_POST['emp_currentSalary'];
+		echo "<pre>";
+		print_r($emp_currentSalary);
+		echo "</pre>";
+
+		$con = connect();
+		//------------SANCTIONS INSERTION---------------------
+        if (isset($_POST['sanctionsDaysText'])) {
+            foreach ($sanctionsDaysText as $empkey => $sanctionDays) {
+				echo "SANCTION is set";
+			//	$sanctionAmount =  $sanctionDays * ();
+				$sql = "UPDATE sanctions 
+						SET sanctionDays ='$sanctionDays' 
+						where emp_id= '$empkey'
+						";
+				//echo $sql;
+				$stmt = $con->prepare($sql);
+				//$stmt->execute();
+
+            }
+        }
 	}
 	//---------get totals of benefits and deductions and netsalary-------
 	function getWagesTotals(){

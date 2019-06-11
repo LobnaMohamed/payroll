@@ -225,6 +225,10 @@ $(document).ready(function(){
 					
 					$('#Deductionsbody').html(data);
  
+				 }else if(currentURL == 'sanctions.php'){
+					
+					$('#sanctionsbody').html(data);
+ 
 				 }
 		   },
 		   error: function(error) {

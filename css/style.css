@@ -99,7 +99,11 @@ label{
     padding-bottom: 3px;
     margin-bottom: 0px;
 }
-
+/* .table td, 
+.table th {
+    /* white-space: nowrap;
+    width: 1%; 
+} */
 /*pending and confirmed tables*/
 #timesheet{
     font-size: 13px;
@@ -108,7 +112,7 @@ label{
 #timesheet th{
     font-size: 16px;
 }
-#timesheet th ,#deductions th,#empData th{
+#timesheet th ,#deductions th,#empData th,#sanctions th{
     background-color: #999999;
 }
 #confirmedVacReport{

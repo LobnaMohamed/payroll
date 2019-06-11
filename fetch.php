@@ -53,5 +53,8 @@
 		elseif(isset($_POST["updateDeductions"])){
 			updateDeductions();
 		}
+		elseif(isset($_POST["updatesanctions"])){
+			updateSanctions();
+		}
 	
 	?>

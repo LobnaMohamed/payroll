@@ -35,4 +35,8 @@
 
 		getDeductions();
 	}
+	elseif($currentURL == 'sanctions.php'){
+
+		getSanctions();
+	}
 	?>
