@@ -5,17 +5,19 @@
 	<div class="container">
 		
 		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الاستقطاعات</div>
-		<form class="navbar-form row" role="search" id="searchEmp" method="POST" action="searchAjax.php">
+		<form class="navbar-form row"  id="searchEmp" method="POST">
 			<div class="form-group add-on ">
-                <label for = "searchDateFrom">التاريخ :</label>
-                <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
+                <!-- <label for = "searchDateFrom">التاريخ :</label>
+                <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" /> -->
 				<label for = "search">رقم القيد:</label>
 				<input class="form-control" placeholder=" ابحث رقم قيد" name="search" id="search" type="text"> 
                 <label for = "searchTo"> إلى:</label>
                 <input class="form-control" placeholder="الى رقم قيد" name="searchTo" id="searchTo" type="text"> 
 			</div> 			
 		</form>
-	    <form class="form-horizontal row" id=updateDeductionsFrom method="POST" action="fetch.php"> 
+	    <form class="form-horizontal row" id=updateDeductionsForm method="POST" action="fetch.php"> 
+		<label for = "searchDateFrom">التاريخ :</label>
+                <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
 	    	<table id="deductions" class="table table-striped table-bordered table-responsive">		
 				<thead>
 					<tr>

@@ -510,6 +510,8 @@
 		$output ="";
 		if(isset($_POST['dateFrom'])){
 			$date = $_POST['dateFrom'];
+		}elseif(isset($_POST['searchDateFrom'])){
+			$date = $_POST['searchDateFrom'];
 		}	
 		$con = connect();
 		$sql = "select  e.empName,e.currentCode,ts.sheetDate
@@ -655,10 +657,11 @@
 					$output .= "<tr>
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
-					<td>".  $row['sanctionDate']. "</td>
+					<td id='sanctionDateValue'>".  $row['sanctionDate']. "</td>
 					<input name='emp_id' type='hidden' value=".$row['employee_id'].">
-					<input name='emp_currentSalary[$empindex]' type='hidden' value=".$row['currentSalary'].">
-
+					<td>
+						<input type='number' class='form-control' name='currentSalary' value=".$row['currentSalary'].">
+					</td>
 					<td>
 						<input type='number' class='form-control' name='sanctionsDaysText[$empindex]' value=".$row['sanctionDays'].">
 					</td>
@@ -697,8 +700,9 @@
 					<td>".  $row['empName']. "</td>
 					<td>". $date. "</td>
 						<input name='emp_id' type='hidden' value=".$row['ID'].">
-						<input name='emp_currentSalary[$empindex]' type='hidden' value=".$row['currentSalary'].">
-
+						<td>
+							<input type='number' class='form-control' name='currentSalary' value=".$row['currentSalary'].">
+						</td>
 						<td>
 							<input type='number' class='form-control' name='sanctionDaysText'>
 						</td> 
@@ -788,11 +792,8 @@
 	}
 	//-------------update deductions----------------------
 	function updateDeductions(){
+	
 		$otherDeductionText = $_POST['otherDeductionText'];
-		//$otherDeductionText = isset($_POST['otherDeductionText'])? $_POST['otherDeductionText']:'';
-                echo"<pre>";
-                print_r($otherDeductionText);
-                echo"</pre>";
 		$mobilText = isset($_POST['mobilText'])? $_POST['mobilText']:'';
 		$etisalatNetText = isset($_POST['etisalatNetText'])? $_POST['etisalatNetText']:'';
 		$perimiumCardText = isset($_POST['perimiumCardText'])? $_POST['perimiumCardText']:'';
@@ -802,18 +803,7 @@
 		//------------OTHER DEDUCTIONS INSERTION---------------------
         if (isset($_POST['otherDeductionText'])) {
             foreach ($otherDeductionText as $timesheetkey => $otherDeductionvalueArray) {
-				echo "other deductions is set";
-                // echo $timesheetkey;
-                // echo"<br>";
-                // echo"<pre>";
-                // print_r($otherDeductionvalueArray);
-                // echo"</pre>";
                 foreach ($otherDeductionvalueArray as $emp => $deduction) {
-					
-					// echo $emp;
-					// echo"<br>";
-					// echo  $deduction;
-					// echo"<br>";
 					$sql = "UPDATE salary 
 						SET otherDeduction ='$deduction' 
 						where emp_id= '$emp'
@@ -826,19 +816,8 @@
         }
 		//------------MOBIL INSERTION-----------------------------
 		if(isset($_POST['mobilText'])){
-			echo "mobil is set";
 			foreach($mobilText as $timesheetkey => $mobilvalueArray) {
-				// echo $timesheetkey;
-				// echo"<br>";
-				// echo"<pre>";
-				// print_r($mobilvalueArray);
-				// echo"</pre>";
 				foreach($mobilvalueArray as $emp => $mobil){
-					
-					// echo $emp;
-					// echo"<br>";
-					// echo  $mobil;
-					// echo"<br>";
 					$sql = "UPDATE salary 
 							SET mobil ='$mobil' 
 							where emp_id= '$emp'
@@ -846,26 +825,14 @@
 							
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
-					//echo $sql;
 				}
 			}
 		}
 
 		//------------etisalatNet INSERTION-----------------------
 		if(isset($_POST['etisalatNetText'])){
-			echo "etisalt net is set";
 			foreach($etisalatNetText as $timesheetkey => $etisalatNetvalueArray) {
-				// echo $timesheetkey;
-				// echo"<br>";
-				// echo"<pre>";
-				// print_r($etisalatNetvalueArray);
-				// echo"</pre>";
 				foreach($etisalatNetvalueArray as $emp => $etisalatNet){
-					// echo $emp;
-					// echo"<br>";
-					// echo  $etisalatNet;
-					// echo"<br>";
-					
 					$sql = "UPDATE salary 
 							SET etisalatNet ='$etisalatNet' 
 							where emp_id= '$emp'
@@ -879,23 +846,12 @@
 
 		//------------perimiumCard INSERTION----------------------
 		if(isset($_POST['perimiumCardText'])){
-			echo " perimiumCardText is set";
 			foreach($perimiumCardText as $timesheetkey => $perimiumCardvalueArray) {
-				// echo $timesheetkey;
-				// echo"<br>";
-				// echo"<pre>";
-				// print_r($perimiumCardvalueArray);
-				// echo"</pre>";
 				foreach($perimiumCardvalueArray as $emp => $perimiumCard){
-					// echo $emp;
-					// echo"<br>";
-					// echo  $perimiumCard;
-					// echo"<br>";
 					$sql = "UPDATE salary 
 							SET perimiumCard ='$perimiumCard' 
 							where emp_id= '$emp'
 							and TS_id ='$timesheetkey' ";
-					//echo $sql;
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
 				}
@@ -903,54 +859,56 @@
 		}
 		//------------pasrPeriod INSERTION----------------------
 		if(isset($_POST['pastPeriodText'])){
-			echo " pastPeriodText is set";
 			foreach($pastPeriodText as $timesheetkey => $pastPeriodvalueArray) {
-				// echo $timesheetkey;
-				// echo"<br>";
-				// echo"<pre>";
-				// print_r($pasrPeriodArray);
-				// echo"</pre>";
 				foreach($pastPeriodvalueArray as $emp => $pastPeriod){
-					// echo $emp;
-					// echo"<br>";
-					// echo  $pastPeriod;
-					// echo"<br>";
 					$sql = "UPDATE salary 
 							SET pastPeriod ='$pastPeriod' 
 							where emp_id= '$emp'
 							and TS_id ='$timesheetkey' ";
-					//echo $sql;
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
 				}
 			}
 		}
 
+		
 	}
 
 	//-------------UPDATE SANCTIONS----------------------
 	function updateSanctions(){
 		$sanctionsDaysText = $_POST['sanctionsDaysText'];
 		$sanctionsNotesText = isset($_POST['sanctionsNotesText'])? $_POST['sanctionsNotesText']:'';
-		$sanctionsDate = $_POST['dateFrom']; 
-		$emp_currentSalary =  $_POST['emp_currentSalary'];
-		echo "<pre>";
-		print_r($emp_currentSalary);
-		echo "</pre>";
-
+		$sanctionDate =$_POST['searchDateFrom'];
 		$con = connect();
 		//------------SANCTIONS INSERTION---------------------
         if (isset($_POST['sanctionsDaysText'])) {
             foreach ($sanctionsDaysText as $empkey => $sanctionDays) {
-				echo "SANCTION is set";
-			//	$sanctionAmount =  $sanctionDays * ();
+				// echo "SANCTION is set";
+				// echo $empkey ;
+				// echo $sanctionDays;
+			
+				$getCurrentBaseSalarysql = 
+					"select currentSalary
+					from employee
+					where ID = '$empkey'";
+				// echo $getCurrentBaseSalarysql;
+				$stmt = $con->prepare($getCurrentBaseSalarysql);
+				$stmt->execute();
+				$baseSalary = $stmt->fetchColumn();
+				$sanctionAmount =  $sanctionDays * ($baseSalary/30);
+				// echo $baseSalary;
 				$sql = "UPDATE sanctions 
-						SET sanctionDays ='$sanctionDays' 
-						where emp_id= '$empkey'
-						";
-				//echo $sql;
+						SET sanctionDays ='$sanctionDays',
+							sanctionAmount = '$sanctionAmount' 
+						where employee_id= '$empkey' 
+						and sanctionDate = '$sanctionDate'";
+				// echo $sql;
 				$stmt = $con->prepare($sql);
-				//$stmt->execute();
+				$stmt->execute();
+				// $sql = "UPDATE salary 
+				// 		SET sanctions ='$sanctionAmount' 
+				// 		where employee_id= '$empkey' 
+				// 		and sanctionDate = '$sanctionDate'";
 
             }
         }
@@ -975,7 +933,7 @@
 		$result = $stmt->fetchAll();
 		if(! $result ){
 			$output = "
-			<tr >
+			<tr>
 			<td colspan='6' class='alert alert-warning'> 
 			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
 			</td></tr>";
@@ -995,7 +953,6 @@
 						</button>
 					</td>
 				</tr>";
-				
 			}
 		}
 

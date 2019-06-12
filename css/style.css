@@ -99,11 +99,11 @@ label{
     padding-bottom: 3px;
     margin-bottom: 0px;
 }
-/* .table td, 
+.table td, 
 .table th {
-    /* white-space: nowrap;
+    white-space: nowrap;
     width: 1%; 
-} */
+}
 /*pending and confirmed tables*/
 #timesheet{
     font-size: 13px;

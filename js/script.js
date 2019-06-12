@@ -199,7 +199,7 @@ $(document).ready(function(){
 		var dateTo_value = $('#searchDateTo').val();
 		var dateFrom_value = $('#searchDateFrom').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log(currentURL);
+		//console.log(dateFrom);
 	   $.ajax({
 		   url:'searchAjax.php',
 		   method:"POST",
@@ -210,7 +210,7 @@ $(document).ready(function(){
 				pageurl:currentURL},
 		   // dataType:"json",
 		   success:function(data){
-			   console.log(data);
+			  // console.log(data);
 
         		if(currentURL == 'empdata.php'){
 				   //console.log(data);
@@ -238,8 +238,6 @@ $(document).ready(function(){
    });
    //------------search timesheet by date----------------------------
    $('#timesheetDate,#search').bind('change keyup',function(){
-			//get timesheet of specific date
-		
 		var timesheet_date = $('#timesheetDate').val();
 		var emp = $('#search').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
@@ -264,16 +262,24 @@ $(document).ready(function(){
 	});
 	//-------------------submit deductions form--------------
 	$(document).on('submit','#updateDeductionsFrom', function(){
-		alert("hi");
-		//e.preventDefault();
-		//var $form = $('#deductions');
-
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
-			data: $('form#updateDeductionsFrom').serialize(),
-			//dataType:"json",
-
+			data: $('form#updateDeductionsForm').serialize(),
+			success:function(data){
+				console.log(data);
+			},
+			error: function(error) {
+            	alert(error);
+        	}
+		});		
+	});
+	//-------------------submit sanctions form--------------
+	$(document).on('submit','#updateSanctionFrom', function(){
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data: $('form#updateSanctionFrom').serialize(),
 			success:function(data){
 				console.log(data);
 			},
@@ -283,4 +289,28 @@ $(document).ready(function(){
 		});		
 	});
 
+	//--------------on change of sanction days-----------------
+	$('#timesheetDate,#search').bind('change keyup',function(){
+		var timesheet_date = $('#timesheetDate').val();
+		var emp = $('#search').val();
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log(currentURL);
+		$.ajax({
+			url:'searchAjax.php',
+			method:"POST",
+			data: {timesheetDate:timesheet_date,
+				   search:emp,
+				   pageurl:currentURL},
+			// dataType:"json",
+			success:function(data){
+				if(currentURL == 'timesheet.php'){
+					console.log(data);
+					$('#timesheetbody').html(data);
+				}		
+			},
+			error: function(error) {
+				//console.log(error);
+			}
+		});	
+	});
 });
