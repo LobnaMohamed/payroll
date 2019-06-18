@@ -274,19 +274,62 @@ $(document).ready(function(){
         	}
 		});		
 	});
+	//------------------on change sanction days-----------
+	$("#sanctions tbody").on("change", ".salaryValue", function(){
+		console.log("hi");
+		var arr = [];
+		var row = $(this).closest("tr");
+		var sanctionDays = $(this).val();
+		var currentSalary = row.find("input[name='currentSalary']").val();
+		var sanctionAmount = ((currentSalary/30)*sanctionDays).toFixed(2);
+		var empID = row.find("input[name='emp_id']").val();
+		// console.log(sanctionDays);
+		// console.log(empID);
+		// console.log(currentSalary);
+		// console.log(sanctionAmount);
+		// console.log(row.find("input[name='sanctionsAmountText']"));
+		row.find("input[name='sanctionsAmountText']").val(sanctionAmount);
+		// sanctionArray[empID] = {sanctionDays:sanctionDays,
+		// 						sanctionAmount:sanctionAmount} ;
+
+		//$.getJSON("displayjson.php",function (data) {
+			$.each(row, function (empID, sanctionDays,sanctionAmount) {
+				arr.push({
+					empID: empID, 
+					sanctionDays:sanctionDays,
+					sanctionAmount:sanctionAmount
+				});
+			});                      
+		//});
+		console.log(arr);
+	});
+
 	//-------------------submit sanctions form--------------
-	$(document).on('submit','#updateSanctionFrom', function(){
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data: $('form#updateSanctionFrom').serialize(),
-			success:function(data){
-				console.log(data);
-			},
-			error: function(error) {
-            	alert(error);
-        	}
-		});		
+	$(document).on('submit','#updateSanctionFrom', function(e){
+		e.preventDefault();
+		console.log($('form#updateSanctionFrom').serialize());
+
+		//var id =  $('input[name="emp_id"]').val();
+		// $("input[name='emp_id']").each(function() {
+		// 	console.log( this.value );
+		//   });
+		// $('form#updateSanctionFrom').each(function() {
+		// 	console.log( "hi" );
+		//   });
+		// console.log( $('form#updateSanctionFrom').find('input[name="sanctionsDaysText[]"]').serialize());
+		//console.log(id);
+		//console.log(days);
+		// $.ajax({
+		// 	url:"fetch.php",
+		// 	method:"POST",
+		// 	data: $('form#updateSanctionFrom').serialize(),
+		// 	success:function(data){
+		// 		console.log(data);
+		// 	},
+		// 	error: function(error) {
+        //     	alert(error);
+        // 	}
+		// });		
 	});
 
 	//--------------on change of sanction days-----------------

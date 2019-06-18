@@ -657,19 +657,19 @@
 					$output .= "<tr>
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
-					<td id='sanctionDateValue'>".  $row['sanctionDate']. "</td>
-					<input name='emp_id' type='hidden' value=".$row['employee_id'].">
+					<td>".  $row['sanctionDate']. "</td>
+					<input type='hidden'  name='emp_id' value=".$row['employee_id'].">
 					<td>
-						<input type='number' class='form-control' name='currentSalary' value=".$row['currentSalary'].">
+						<input type='number'  class='form-control' name='currentSalary' value=".$row['currentSalary'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='sanctionsDaysText[$empindex]' value=".$row['sanctionDays'].">
+						<input type='number' class='form-control salaryValue' name='sanctionsDaysText' value=".$row['sanctionDays'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='sanctionsText[$empindex]' value=".$row['sanctionAmount'].">
+						<input type='number' class='form-control sanctionAmount' name='sanctionsText' value=".$row['sanctionAmount'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='sanctionsNotesText[$empindex]' value=".$row['sanctionNotes'].">
+						<input type='number' class='form-control' name='sanctionsNotesText' value=".$row['sanctionNotes'].">
 					</td>   
 					
 				</tr>";
@@ -701,16 +701,16 @@
 					<td>". $date. "</td>
 						<input name='emp_id' type='hidden' value=".$row['ID'].">
 						<td>
-							<input type='number' class='form-control' name='currentSalary' value=".$row['currentSalary'].">
+							<input  class='form-control' name='currentSalary' value=".$row['currentSalary'].">
 						</td>
 						<td>
-							<input type='number' class='form-control' name='sanctionDaysText'>
+							<input  class='form-control salaryValue' name='sanctionDaysText[  ".$row['ID']." ]'>
 						</td> 
 						<td>
-							<input type='number' class='form-control' name='sanctionsAmountText'>
+							<input  class='form-control' name='sanctionsAmountText'>
 						</td>  
 						<td>
-							<input type='number' class='form-control' name='sanctionsNotesText'>
+							<input type='text' class='form-control' name='sanctionsNotesText'>
 						</td>  
 					</tr>";
 				
