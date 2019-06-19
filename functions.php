@@ -691,6 +691,7 @@
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 				$result = $stmt->fetchAll();
+				$sanctions = [];
 				foreach($result as $row){
 					$empindex = $row['ID'];
 					// $empindex = $row['emp_id'];
@@ -707,18 +708,23 @@
 							<input  class='form-control salaryValue' name='sanctionDaysText[  ".$row['ID']." ]'>
 						</td> 
 						<td>
-							<input  class='form-control' name='sanctionsAmountText'>
+							<input  class='form-control' name='sanctionsAmountText[  ".$row['ID']." ]'>
 						</td>  
 						<td>
-							<input type='text' class='form-control' name='sanctionsNotesText'>
+							<input type='text' class='form-control' name='sanctionsNotesText[  ".$row['ID']." ]'>
 						</td>  
 					</tr>";
+					$data = ["emp_id"=>$empindex, "baseSalary"=>$row['currentSalary']]; 
+					array_push($sanctions,$data);
 				
 				}
+				
 			}
 
 		}
-		echo $output;
+		print_r( $sanctions);
+		//echo $output;
+		
 	}
 	//---------------calculate benifits of salary------------------
 	function calculateSalary24(){

@@ -16,7 +16,7 @@
 		</form>
 
 		<!-- form to show pending vacations and confirm them -->
-	    <form class="form-horizontal row" id=updateSanctionFrom method="POST" > 
+	    <form class="form-horizontal row" id=updateSanctionFrom method="POST" action="fetch.php"> 
 		<label for = "searchDateFrom">التاريخ :</label>
                 <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
 	    	<table id="sanctions" class="table table-striped table-bordered table-responsive">		

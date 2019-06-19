@@ -276,32 +276,33 @@ $(document).ready(function(){
 	});
 	//------------------on change sanction days-----------
 	$("#sanctions tbody").on("change", ".salaryValue", function(){
-		console.log("hi");
 		var arr = [];
 		var row = $(this).closest("tr");
+		var empID = row.find("input[name='emp_id']").val();
 		var sanctionDays = $(this).val();
 		var currentSalary = row.find("input[name='currentSalary']").val();
 		var sanctionAmount = ((currentSalary/30)*sanctionDays).toFixed(2);
-		var empID = row.find("input[name='emp_id']").val();
-		// console.log(sanctionDays);
-		// console.log(empID);
-		// console.log(currentSalary);
-		// console.log(sanctionAmount);
-		// console.log(row.find("input[name='sanctionsAmountText']"));
+		
+		console.log(sanctionDays);
+		console.log(empID);
+		console.log(currentSalary);
+		console.log(sanctionAmount);
+		
 		row.find("input[name='sanctionsAmountText']").val(sanctionAmount);
+		//console.log(row.find("input[name='sanctionsAmountText']"));
 		// sanctionArray[empID] = {sanctionDays:sanctionDays,
 		// 						sanctionAmount:sanctionAmount} ;
 
 		//$.getJSON("displayjson.php",function (data) {
-			$.each(row, function (empID, sanctionDays,sanctionAmount) {
-				arr.push({
-					empID: empID, 
-					sanctionDays:sanctionDays,
-					sanctionAmount:sanctionAmount
-				});
-			});                      
-		//});
-		console.log(arr);
+		// $.each(function() {
+			// arr.push({
+			// 	empID: empID, 
+			// 	sanctionDays:sanctionDays,
+			// 	sanctionAmount:sanctionAmount
+			// });
+		// });                      
+		// //});
+		 //console.log(arr);
 	});
 
 	//-------------------submit sanctions form--------------
