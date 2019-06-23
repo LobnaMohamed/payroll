@@ -55,7 +55,7 @@
 			//getDeductions();
 		}
 		elseif(isset($_POST["updatesanctions"])){
-			//updateSanctions();
+			insertSanctions();
 		}
 	
 	?>

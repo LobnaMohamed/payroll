@@ -275,8 +275,7 @@ $(document).ready(function(){
 		});		
 	});
 	//------------------on change sanction days-----------
-	$("#sanctions tbody").on("change", ".salaryValue", function(){
-		var arr = [];
+	$("#sanctions tbody").on("change keyup", ".salaryValue", function(){
 		var row = $(this).closest("tr");
 		var empID = row.find("input[name='emp_id']").val();
 		var sanctionDays = $(this).val();
@@ -288,50 +287,40 @@ $(document).ready(function(){
 		console.log(currentSalary);
 		console.log(sanctionAmount);
 		
-		row.find("input[name='sanctionsAmountText']").val(sanctionAmount);
-		//console.log(row.find("input[name='sanctionsAmountText']"));
-		// sanctionArray[empID] = {sanctionDays:sanctionDays,
-		// 						sanctionAmount:sanctionAmount} ;
-
-		//$.getJSON("displayjson.php",function (data) {
-		// $.each(function() {
-			// arr.push({
-			// 	empID: empID, 
-			// 	sanctionDays:sanctionDays,
-			// 	sanctionAmount:sanctionAmount
-			// });
-		// });                      
-		// //});
-		 //console.log(arr);
+		row.find("input[name='sanctionsAmountText["+empID+"]']").val(sanctionAmount);
+		row.find("input[name='sanctionsDaysText["+empID+"]']").val(sanctionDays);
 	});
-
+	//-------------------enable text box--------------------
+	// $("#sanctions tbody").on("dblclick", ".salaryValue", function(){
+	// 	$(".salaryValue").attr("readonly", false); 
+	// });
 	//-------------------submit sanctions form--------------
-	$(document).on('submit','#updateSanctionFrom', function(e){
-		e.preventDefault();
-		console.log($('form#updateSanctionFrom').serialize());
+	// $(document).on('submit','#updateSanctionFrom', function(e){
+	// 	//e.preventDefault();
+	// 	console.log($('form#updateSanctionFrom').serialize());
 
-		//var id =  $('input[name="emp_id"]').val();
-		// $("input[name='emp_id']").each(function() {
-		// 	console.log( this.value );
-		//   });
-		// $('form#updateSanctionFrom').each(function() {
-		// 	console.log( "hi" );
-		//   });
-		// console.log( $('form#updateSanctionFrom').find('input[name="sanctionsDaysText[]"]').serialize());
-		//console.log(id);
-		//console.log(days);
-		// $.ajax({
-		// 	url:"fetch.php",
-		// 	method:"POST",
-		// 	data: $('form#updateSanctionFrom').serialize(),
-		// 	success:function(data){
-		// 		console.log(data);
-		// 	},
-		// 	error: function(error) {
-        //     	alert(error);
-        // 	}
-		// });		
-	});
+	// 	//var id =  $('input[name="emp_id"]').val();
+	// 	// $("input[name='emp_id']").each(function() {
+	// 	// 	console.log( this.value );
+	// 	//   });
+	// 	// $('form#updateSanctionFrom').each(function() {
+	// 	// 	console.log( "hi" );
+	// 	//   });
+	// 	// console.log( $('form#updateSanctionFrom').find('input[name="sanctionsDaysText[]"]').serialize());
+	// 	//console.log(id);
+	// 	//console.log(days);
+	// 	$.ajax({
+	// 		url:"fetch.php",
+	// 		method:"POST",
+	// 		data: $('form#updateSanctionFrom').serialize(),
+	// 		success:function(data){
+	// 			console.log(data);
+	// 		},
+	// 		error: function(error) {
+    //         	alert(error);
+    //     	}
+	// 	});		
+	// });
 
 	//--------------on change of sanction days-----------------
 	$('#timesheetDate,#search').bind('change keyup',function(){

@@ -639,7 +639,7 @@
 						<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
 						</td></tr>";
 		}else{
-
+			// if there are already inserted values
 			$sql = "select  e.empName,e.currentCode,s.sanctionDate,s.sanctionDays,s.sanctionAmount,s.sanctionNotes,
 							s.employee_id,e.currentSalary
 					from    employee e inner join sanctions s on e.ID = s.employee_id
@@ -660,16 +660,16 @@
 					<td>".  $row['sanctionDate']. "</td>
 					<input type='hidden'  name='emp_id' value=".$row['employee_id'].">
 					<td>
-						<input type='number'  class='form-control' name='currentSalary' value=".$row['currentSalary'].">
+						<input class='form-control' name='currentSalary' value=".$row['currentSalary'].">
 					</td>
 					<td>
-						<input type='number' class='form-control salaryValue' name='sanctionsDaysText' value=".$row['sanctionDays'].">
+						<input class='form-control salaryValue' name='sanctionsDaysText[".$row['employee_id']."]' value=".$row['sanctionDays'].">
 					</td>
 					<td>
-						<input type='number' class='form-control sanctionAmount' name='sanctionsText' value=".$row['sanctionAmount'].">
+						<input class='form-control sanctionAmount' name='sanctionsAmountText[".$row['employee_id']."]' value=".$row['sanctionAmount'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='sanctionsNotesText' value=".$row['sanctionNotes'].">
+						<input class='form-control' name='sanctionsNotesText[".$row['employee_id']."]' value=".$row['sanctionNotes'].">
 					</td>   
 					
 				</tr>";
@@ -694,6 +694,7 @@
 				$sanctions = [];
 				foreach($result as $row){
 					$empindex = $row['ID'];
+					
 					// $empindex = $row['emp_id'];
 					// $tsindex = $row['TS_id'];
 					$output .= "<tr>
@@ -705,25 +706,24 @@
 							<input  class='form-control' name='currentSalary' value=".$row['currentSalary'].">
 						</td>
 						<td>
-							<input  class='form-control salaryValue' name='sanctionDaysText[  ".$row['ID']." ]'>
+							<input  class='form-control salaryValue' name='sanctionsDaysText[".$row['ID']."]'>
 						</td> 
 						<td>
-							<input  class='form-control' name='sanctionsAmountText[  ".$row['ID']." ]'>
+							<input  class='form-control' name='sanctionsAmountText[".$row['ID']."]'>
 						</td>  
 						<td>
-							<input type='text' class='form-control' name='sanctionsNotesText[  ".$row['ID']." ]'>
+							<input type='text' class='form-control' name='sanctionsNotesText[".$row['ID']."]'>
 						</td>  
 					</tr>";
-					$data = ["emp_id"=>$empindex, "baseSalary"=>$row['currentSalary']]; 
-					array_push($sanctions,$data);
-				
+					// $data = ["emp_id"=>$empindex, "baseSalary"=>$row['currentSalary']]; 
+					// array_push($sanctions,$data);
 				}
 				
 			}
 
 		}
-		print_r( $sanctions);
-		//echo $output;
+		// print_r( $sanctions);
+		echo $output;
 		
 	}
 	//---------------calculate benifits of salary------------------
@@ -881,43 +881,37 @@
 	}
 
 	//-------------UPDATE SANCTIONS----------------------
-	function updateSanctions(){
-		$sanctionsDaysText = $_POST['sanctionsDaysText'];
-		$sanctionsNotesText = isset($_POST['sanctionsNotesText'])? $_POST['sanctionsNotesText']:'';
+	function insertSanctions(){
+		// $sanctionsDaysText = $_POST['sanctionsDaysText'];
+		// $sanctionsNotesText = isset($_POST['sanctionsNotesText'])? $_POST['sanctionsNotesText']:'';
 		$sanctionDate =$_POST['searchDateFrom'];
+		// print_r($_POST['sanctionsDaysText']);
+		// print_r($_POST['sanctionsAmountText']);
+		// print_r($_POST['sanctionsNotesText']);
+		// echo $sanctionDate;
 		$con = connect();
-		//------------SANCTIONS INSERTION---------------------
-        if (isset($_POST['sanctionsDaysText'])) {
-            foreach ($sanctionsDaysText as $empkey => $sanctionDays) {
+		//---------------SANCTIONS INSERTION---------------------
+      	if (isset($_POST['sanctionsDaysText'])) {
+            foreach ($_POST['sanctionsDaysText'] as $empkey => $sanctionDays) {
 				// echo "SANCTION is set";
-				// echo $empkey ;
-				// echo $sanctionDays;
-			
-				$getCurrentBaseSalarysql = 
-					"select currentSalary
-					from employee
-					where ID = '$empkey'";
-				// echo $getCurrentBaseSalarysql;
-				$stmt = $con->prepare($getCurrentBaseSalarysql);
-				$stmt->execute();
-				$baseSalary = $stmt->fetchColumn();
-				$sanctionAmount =  $sanctionDays * ($baseSalary/30);
-				// echo $baseSalary;
-				$sql = "UPDATE sanctions 
-						SET sanctionDays ='$sanctionDays',
-							sanctionAmount = '$sanctionAmount' 
-						where employee_id= '$empkey' 
-						and sanctionDate = '$sanctionDate'";
-				// echo $sql;
+				echo "<br>";
+				echo $empkey ;
+				echo "<br>";
+				echo $sanctionDays;
+				$sanctionAmount = $_POST['sanctionsAmountText'][$empkey];
+				$sanctionNotes = $_POST['sanctionsNotesText'][$empkey];
+				echo "<br>";
+				echo $sanctionAmount;
+				$sql = "insert into sanctions values ('$empkey','$sanctionDate','$sanctionDays','$sanctionAmount','$sanctionNotes')";
+				 echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
-				// $sql = "UPDATE salary 
-				// 		SET sanctions ='$sanctionAmount' 
-				// 		where employee_id= '$empkey' 
-				// 		and sanctionDate = '$sanctionDate'";
 
             }
         }
+	}
+	function updateSanctions(){
+
 	}
 	//---------get totals of benefits and deductions and netsalary-------
 	function getWagesTotals(){
