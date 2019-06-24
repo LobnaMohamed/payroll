@@ -640,10 +640,17 @@
 						</td></tr>";
 		}else{
 			// if there are already inserted values
-			$sql = "select  e.empName,e.currentCode,s.sanctionDate,s.sanctionDays,s.sanctionAmount,s.sanctionNotes,
-							s.employee_id,e.currentSalary
-					from    employee e inner join sanctions s on e.ID = s.employee_id
-					where s.sanctionDate = '$date'";
+			// $sql = "select  e.empName,e.currentCode,s.sanctionDate,s.sanctionDays,s.sanctionAmount,s.sanctionNotes,
+			// 				s.employee_id,e.currentSalary
+			// 		from    employee e inner join sanctions s on e.ID = s.employee_id
+			// 		where s.sanctionDate = '$date'";
+
+			$sql = "select  e.empName,e.currentCode,ts.sheetDate,e.currentSalary,s.sanctionDays,s.sanctionAmount,s.sanctionNotes,
+							s.employee_ID
+					from    employee e inner join timesheet ts 
+					on e.ID = ts.emp_id inner join sanctions s
+					on ts.ID = s.TS_id and ts.emp_id=s.employee_ID
+					where ts.sheetDate = '$date'";
 			if(!empty($_POST['search'])){
 				$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
 			}
@@ -671,14 +678,17 @@
 					<td>
 						<input class='form-control' name='sanctionsNotesText[".$row['employee_id']."]' value=".$row['sanctionNotes'].">
 					</td>   
-					
+					<td>
+						<a class='btn btn-sm delete_sanction'><i class='fa fa-trash fa-lg'></i>
+						</a>
+					</td>
 				</tr>";
 				}
 
 			}
 			else{
 
-				$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary
+				$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary,ts.ID as TS_ID
 						from	employee e inner join timesheet ts 
 							on e.ID = ts.emp_id 
 						where ts.sheetDate ='$date'";
@@ -702,6 +712,7 @@
 					<td>".  $row['empName']. "</td>
 					<td>". $date. "</td>
 						<input name='emp_id' type='hidden' value=".$row['ID'].">
+						<input name='TS_id' type='hidden' value=".$row['TS_ID'].">
 						<td>
 							<input  class='form-control' name='currentSalary' value=".$row['currentSalary'].">
 						</td>
@@ -903,9 +914,13 @@
 				echo "<br>";
 				echo $sanctionAmount;
 				$sql = "insert into sanctions values ('$empkey','$sanctionDate','$sanctionDays','$sanctionAmount','$sanctionNotes')";
-				 echo $sql;
+				echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
+				//$sql = "update salary(sanctions) set sanctions= $sanctionAmount where";
+				//echo $sql;
+				//$stmt = $con->prepare($sql);
+				//$stmt->execute();
 
             }
         }

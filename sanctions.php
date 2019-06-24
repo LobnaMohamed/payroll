@@ -28,7 +28,8 @@
                         <th>المرتب الاساسى</th>  						
                         <th>أيام جزاءات</th>         
                         <th>قيمة الجزاءات</th>
-                        <th>ملاحظات</th>
+						<th>ملاحظات</th>
+                        <th>حذف</th>	
 				    </tr>		
 				</thead>
 				<tbody id="sanctionsbody">
