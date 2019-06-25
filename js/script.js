@@ -278,17 +278,12 @@ $(document).ready(function(){
 	$("#sanctions tbody").on("change keyup", ".salaryValue", function(){
 		var row = $(this).closest("tr");
 		var empID = row.find("input[name='emp_id']").val();
+		var sheetID = row.find("input[name='TS_id']").val();
 		var sanctionDays = $(this).val();
 		var currentSalary = row.find("input[name='currentSalary']").val();
-		var sanctionAmount = ((currentSalary/30)*sanctionDays).toFixed(2);
-		
-		console.log(sanctionDays);
-		console.log(empID);
-		console.log(currentSalary);
-		console.log(sanctionAmount);
-		
-		row.find("input[name='sanctionsAmountText["+empID+"]']").val(sanctionAmount);
-		row.find("input[name='sanctionsDaysText["+empID+"]']").val(sanctionDays);
+		var sanctionAmount = ((currentSalary/30)*sanctionDays).toFixed(2);		
+		row.find("input[name='sanctionsAmountText["+sheetID+"]["+empID+"]']").val(sanctionAmount);
+		row.find("input[name='sanctionsDaysText["+sheetID+"]["+empID+"]']").val(sanctionDays);
 	});
 	//-------------------enable text box--------------------
 	// $("#sanctions tbody").on("dblclick", ".salaryValue", function(){
