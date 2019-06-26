@@ -321,11 +321,11 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if(! $result ){
-			$output = "
-			<tr >
-			<td colspan='12' class='alert alert-warning'> 
-			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='#'>here</a>
-			</td></tr>";
+			// $output = "
+			// <tr>
+			// <td colspan='12' class='alert alert-warning'> 
+			// <strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='#'>here</a>
+			// </td></tr>";
 
 			$sql = "select  e.empName,e.currentCode,e.ID
 					from	employee e";
@@ -347,36 +347,36 @@
 					<td>". $_POST['timesheetDate']. "</td>
 					<input name='emp_id' type='hidden' value=".$row['ID'].">
 					<td>
-						<input  class='form-control' name='presence_days'>
+						<input  class='form-control' name='presence_days[".$row['ID']."]'>
 					</td> 
 					<td>
-						<input  class='form-control' name='sickLeave_days'>
+						<input  class='form-control' name='sickLeave_days[".$row['ID']."]'>
 					</td>  
 					<td>
-						<input class='form-control' name='deduction_days'>
+						<input class='form-control' name='deduction_days[".$row['ID']."]'>
 					</td>
 					<td>
-						<input class='form-control' name='absence_days'>
+						<input class='form-control' name='absence_days[".$row['ID']."]'>
 					</td> 
 					<td>
-						<input class='form-control' name='annual_days'>
+						<input class='form-control' name='annual_days[".$row['ID']."]'>
 					</td>
 					<td>
-						<input class='form-control' name='casual_days'>
+						<input class='form-control' name='casual_days[".$row['ID']."]'>
 					</td>
 					<td>
-						<input class='form-control' name='manufacturing_days'>
+						<input class='form-control' name='manufacturing_days[".$row['ID']."]'>
 					</td>
 					<td>
-						<input class='form-control' name='shift_days'>
+						<input class='form-control' name='shift_days[".$row['ID']."]'>
 					</td>
 					<td>
-						<input class='form-control' name='notes'>
+						<input class='form-control' name='notes[".$row['ID']."]'>
 					</td>
 					     
 				</tr>";
 			}
-				
+			
 			
 		}else{
 			foreach($result as $row){
@@ -405,7 +405,7 @@
 		echo $output;
 	}
 	//---------------get timesheet function------------------------
-	function timesheetinsertion(){
+	function insertTimesheet(){
 		$output="";	
 		$con = connect();
 		$sql= '';		
