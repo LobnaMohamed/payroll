@@ -5,6 +5,8 @@
 	//according to current url the page loads
 	if($currentURL == 'timesheet.php'){
 		getTimesheet();
+	}elseif($currentURL == 'timesheetinsertion.php'){
+		getinsertTimesheet();
 	}
 	elseif($currentURL == 'empdata.php'){
 

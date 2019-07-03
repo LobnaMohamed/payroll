@@ -57,5 +57,18 @@
 		elseif(isset($_POST["updatesanctions"])){
 			insertSanctions();
 		}
+		elseif(isset($_POST["insertTimesheet"])){
+			$con = connect();
+			$timesheetDate =$_POST['timesheetDate'];
+			$checkDate_sql = "select distinct ID from timesheet where sheetDate ='$timesheetDate' ";
+			$stmt = $con->prepare($checkDate_sql);
+			$stmt->execute();
+			$result = $stmt->fetchColumn();
+			if(! $result){
+				insertTimesheet();
+			}else{
+				//echo "already exists";
+			}
+		}
 	
 	?>

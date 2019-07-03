@@ -16,8 +16,8 @@
 			</div> 			
 		</form>
 	    <form class="form-horizontal row" id=updateDeductionsForm method="POST" action="fetch.php"> 
-		<label for = "searchDateFrom">التاريخ :</label>
-                <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
+			<label for = "searchDateFrom">التاريخ :</label>
+            <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
 	    	<table id="deductions" class="table table-striped table-bordered table-responsive">		
 				<thead>
 					<tr>

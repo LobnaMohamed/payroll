@@ -321,62 +321,11 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if(! $result ){
-			// $output = "
-			// <tr>
-			// <td colspan='12' class='alert alert-warning'> 
-			// <strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='#'>here</a>
-			// </td></tr>";
-
-			$sql = "select  e.empName,e.currentCode,e.ID
-					from	employee e";
-
-			// if(!empty($_POST['search'])){
-
-			// 	$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
-
-			// }
-
-			$stmt = $con->prepare($sql);
-			$stmt->execute();
-			$result = $stmt->fetchAll();
-			foreach($result as $row){
-				$empindex = $row['ID'];
-				$output .= "<tr>
-					<td>".  $row['currentCode']. "</td>
-					<td>".  $row['empName']. "</td>
-					<td>". $_POST['timesheetDate']. "</td>
-					<input name='emp_id' type='hidden' value=".$row['ID'].">
-					<td>
-						<input  class='form-control' name='presence_days[".$row['ID']."]'>
-					</td> 
-					<td>
-						<input  class='form-control' name='sickLeave_days[".$row['ID']."]'>
-					</td>  
-					<td>
-						<input class='form-control' name='deduction_days[".$row['ID']."]'>
-					</td>
-					<td>
-						<input class='form-control' name='absence_days[".$row['ID']."]'>
-					</td> 
-					<td>
-						<input class='form-control' name='annual_days[".$row['ID']."]'>
-					</td>
-					<td>
-						<input class='form-control' name='casual_days[".$row['ID']."]'>
-					</td>
-					<td>
-						<input class='form-control' name='manufacturing_days[".$row['ID']."]'>
-					</td>
-					<td>
-						<input class='form-control' name='shift_days[".$row['ID']."]'>
-					</td>
-					<td>
-						<input class='form-control' name='notes[".$row['ID']."]'>
-					</td>
-					     
-				</tr>";
-			}
-			
+			$output = "
+			<tr>
+			<td colspan='12' class='alert alert-warning'> 
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='#'>here</a>
+			</td></tr>";		
 			
 		}else{
 			foreach($result as $row){
@@ -405,7 +354,7 @@
 		echo $output;
 	}
 	//---------------get timesheet function------------------------
-	function insertTimesheet(){
+	function getinsertTimesheet(){
 		$output="";	
 		$con = connect();
 		$sql= '';		
@@ -428,11 +377,53 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if(! $result ){
-			$output = "
-			<tr >
-			<td colspan='12' class='alert alert-warning'> 
-			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
-			</td></tr>";
+			$sql = "select  e.empName,e.currentCode,e.ID
+				    from	employee e";
+
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			foreach($result as $row){
+				$empindex = $row['ID'];
+				$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<td>". $_POST['timesheetDate']. "</td>
+					<input name='emp_id' type='hidden' value=".$row['ID'].">
+					<td>
+						<input  class='form-control' name='presence_days[".$row['ID']."]' value=30>
+					</td> 
+					<td>
+						<input  class='form-control' name='sickLeave_days[".$row['ID']."]' value=0>
+					</td>  
+					<td>
+						<input class='form-control' name='deduction_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='absence_days[".$row['ID']."]' value=0>
+					</td> 
+					<td>
+						<input class='form-control' name='annual_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='casual_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='shift_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='overnight_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='notes[".$row['ID']."]'>
+					</td>
+					     
+				</tr>";
+			}
+			
 		}else{
 			foreach($result as $row){
 				//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
@@ -1002,6 +993,47 @@
 	}
 	function updateSanctions(){
 
+	}
+	//===================insert  timesheet================
+	function insertTimesheet(){
+		$con = connect();
+		$timesheetDate =$_POST['timesheetDate'];
+		$getlastTSID_sql = "select max(ID) from timesheet";
+		$stmt = $con->prepare($getlastTSID_sql);
+		$stmt->execute();
+		$lastID = $stmt->fetchColumn()+1;
+		echo $lastID;
+
+		//---------------timesheet INSERTION---------------------
+		foreach ($_POST['presence_days'] as $empID => $value) {
+
+			// ECHO "<pre>";
+			// PRINT_R($_POST);
+			// ECHO "<\pre>";
+			// print " {\n ";
+				$sickLeave = $_POST['sickLeave_days'][$empID];
+				$deduction = $_POST['deduction_days'][$empID];
+				$absence = $_POST['absence_days'][$empID];
+				$annual = $_POST['annual_days'][$empID];
+				$casual = $_POST['casual_days'][$empID];
+				$manufacturing = $_POST['manufacturing_days'][$empID];
+				$overnight = $_POST['overnight_days'][$empID];
+				$shift = $_POST['shift_days'][$empID];
+				$notes = $_POST['notes'][$empID];
+
+			//if($value !=30){
+				//echo $notes;
+				$sql = "insert into timesheet(ID,emp_id,sheetDate,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
+								casual_days,manufacturing_days,overnight_days,shift_days,notes) 
+						values ('$lastID','$empID','$timesheetDate','$value','$sickLeave','$deduction','$absence','$annual',
+								'$casual','$manufacturing','$overnight','$shift','$notes')";
+				echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+
+			//}
+			//  print "}\n";
+		}
 	}
 	//---------get totals of benefits and deductions and netsalary-------
 	function getWagesTotals(){
