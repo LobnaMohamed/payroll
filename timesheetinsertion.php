@@ -37,7 +37,7 @@
             </tbody>
         </table>
         <div>
-            <input type="submit" name="insertTimesheet" value="إدخـــــــال" class="btn btn-info col-sm-2 col-sm-offset-5">
+            <input type="submit" name="insertTimesheet" value="إدخـــــــال" class="btn btn-primary col-sm-2 col-sm-offset-5">
         </div>	
     </form>
 </div>

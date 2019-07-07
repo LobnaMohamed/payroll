@@ -323,7 +323,7 @@
 		if(! $result ){
 			$output = "
 			<tr>
-			<td colspan='12' class='alert alert-warning'> 
+			<td colspan='13' class='alert alert-warning'> 
 			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='#'>here</a>
 			</td></tr>";		
 			
@@ -425,24 +425,31 @@
 			}
 			
 		}else{
-			foreach($result as $row){
-				//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
-				$output .=
-				"<tr>
-					<td>".  $row['currentCode']. "</td>
-					<td>".  $row['empName']. "</td>
-					<td>".  $row['presence_days']. "</td>
-					<td>".  $row['absence_days']. "</td>
-					<td>".  $row['casual_days']. "</td>
-					<td>".  $row['sickLeave_days']. "</td>
-					<td>".  $row['deduction_days']. "</td>
-					<td>".  $row['annual_days']. "</td>
-					<td>".  $row['manufacturing_days']. "</td>
-					<td>".  $row['shift_days']. "</td>
-					<td>".  $row['overnight_days']. "</td>
-					<td>".  $row['notes']. "</td>
-				</tr>";
-			}
+			$output = "
+			<tr>
+			<td colspan='12' class='alert alert-warning'> 
+			<strong><i class='fa fa-exclamation-triangle'></i>
+			تم ادخال حصر لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
+			<a href='timesheet.php'>here</a>
+			</td></tr>";
+			// foreach($result as $row){
+			// 	//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
+			// 	$output .=
+			// 	"<tr>
+			// 		<td>".  $row['currentCode']. "</td>
+			// 		<td>".  $row['empName']. "</td>
+			// 		<td>".  $row['presence_days']. "</td>
+			// 		<td>".  $row['absence_days']. "</td>
+			// 		<td>".  $row['casual_days']. "</td>
+			// 		<td>".  $row['sickLeave_days']. "</td>
+			// 		<td>".  $row['deduction_days']. "</td>
+			// 		<td>".  $row['annual_days']. "</td>
+			// 		<td>".  $row['manufacturing_days']. "</td>
+			// 		<td>".  $row['shift_days']. "</td>
+			// 		<td>".  $row['overnight_days']. "</td>
+			// 		<td>".  $row['notes']. "</td>
+			// 	</tr>";
+			// }
 		}
 
 		echo $output;

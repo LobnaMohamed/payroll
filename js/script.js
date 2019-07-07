@@ -199,7 +199,7 @@ $(document).ready(function(){
 		var dateTo_value = $('#searchDateTo').val();
 		var dateFrom_value = $('#searchDateFrom').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		//console.log(dateFrom);
+		console.log(dateFrom);
 	   $.ajax({
 		   url:'searchAjax.php',
 		   method:"POST",
@@ -255,11 +255,11 @@ $(document).ready(function(){
 					$('#timesheetbody').html(data);
 				}else if(currentURL == 'timesheetinsertion.php'){
 					console.log(data);
-					$('#timesheetbody').html(data);
+					$('#timesheetbody').html(data);	 
 				}		
 			},
 			error: function(error) {
-				//console.log(error);
+				console.log(error);
 			}
 		});	
 	});
@@ -277,6 +277,20 @@ $(document).ready(function(){
         	}
 		});		
 	});
+	//--------------------------insert timesheet-------------------------------
+	// $(document).on('submit','#updateDeductionsFrom', function(){
+	// 	$.ajax({
+	// 		url:"fetch.php",
+	// 		method:"POST",
+	// 		data: $('form#updateDeductionsForm').serialize(),
+	// 		success:function(data){
+	// 			console.log(data);
+	// 		},
+	// 		error: function(error) {
+    //         	alert(error);
+    //     	}
+	// 	});		
+	// });
 	//------------------on change sanction days-----------
 	$("#sanctions tbody").on("change keyup", ".salaryValue", function(){
 		var row = $(this).closest("tr");
@@ -320,28 +334,4 @@ $(document).ready(function(){
 	// 	});		
 	// });
 
-	//--------------on change of sanction days-----------------
-	$('#timesheetDate,#search').bind('change keyup',function(){
-		var timesheet_date = $('#timesheetDate').val();
-		var emp = $('#search').val();
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log(currentURL);
-		$.ajax({
-			url:'searchAjax.php',
-			method:"POST",
-			data: {timesheetDate:timesheet_date,
-				   search:emp,
-				   pageurl:currentURL},
-			// dataType:"json",
-			success:function(data){
-				if(currentURL == 'timesheet.php'){
-					console.log(data);
-					$('#timesheetbody').html(data);
-				}		
-			},
-			error: function(error) {
-				//console.log(error);
-			}
-		});	
-	});
 });
