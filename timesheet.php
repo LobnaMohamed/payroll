@@ -28,7 +28,7 @@
                 <th>وردية</th>
                 <th>نوباتجية</th>
                 <th>ملاحظات</th>
-                <th>تعديل</th>
+                <!-- <th>تعديل</th> -->
             </tr>
         </thead>
         <tbody id="timesheetbody">
