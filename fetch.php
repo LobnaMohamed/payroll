@@ -59,16 +59,45 @@
 		}
 		elseif(isset($_POST["insertTimesheet"])){
 			$con = connect();
-			$timesheetDate =$_POST['timesheetDate'];
-			$checkDate_sql = "select distinct ID from timesheet where sheetDate ='$timesheetDate' ";
+			print_r( $_POST);
+			//$timesheetDate =$_POST['timesheetDate'];
+			$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['timesheetDate'] ."' ";
+			// echo $checkDate_sql;
 			$stmt = $con->prepare($checkDate_sql);
 			$stmt->execute();
 			$result = $stmt->fetchColumn();
-			if(! $result){
+			// echo "<br>";
+			// echo "hi";
+			// echo $result;
+			if( !$result){
+				echo"insert timesheet";
 				insertTimesheet();
+			    header("location:timesheetinsertion.php");
 			}else{
 				//echo "already exists";
 			}
+		}
+		elseif(isset($_POST["editTimesheet_empID"]) && isset($_POST["editTimesheet_ID"]) )  
+		{  
+			//show data in timsheet edit modal
+			$con = connect();			
+			$sql= "select t.*,e.currentCode,e.empName,empt.*
+					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+						inner join employee e on empt.emp_id = e.ID
+					where empt.emp_id = '".$_POST["editTimesheet_empID"]."'
+					and empt.TS_id ='".$_POST["editTimesheet_ID"]."' ";  
+					
+			$stmt = $con->prepare($sql);
+			$stmt->execute(array($_POST["editTimesheet_empID"], $_POST["editTimesheet_ID"]));
+			$result = $stmt->fetch(); //PDO::FETCH_ASSOC
+			//print_r($result) ;
+			echo json_encode($result); 
+
+		}
+		elseif(isset($_POST["UpdateTimesheet"])){
+			editTimesheet();
+			header("Location:timesheet.php");
+		//	getTimesheet();
 		}
 	
 	?>

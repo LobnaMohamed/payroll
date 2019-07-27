@@ -143,7 +143,7 @@ label{
     color: #940308;
 }
 .managements-container,.MaritalStatus-container,.levels-container,
-.timesheet-container,.job-container,.empdata-container,.timesheet-container{
+.timesheet-container,.job-container,.empdata-container,{
     margin: 0 auto;
 }
 .managements{
@@ -157,7 +157,7 @@ label{
     color: #f2f2f2;
 }
 #addManagementModal  input[type="submit"]:hover , #editManagementModal  input[type="submit"]:hover,
-#editLevelModal  input[type="submit"]:hover,#editsyndicateModal input[type="submit"]:hover{
+#editLevelModal  input[type="submit"]:hover,#editsyndicateModal input[type="submit"]:hover,#edittimesheetModal input[type="submit"]:hover{
     background-color: #940308;
     color: #fff;
 }

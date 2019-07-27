@@ -15,7 +15,7 @@
 	elseif($currentURL == 'wages.php'){
 		$con = connect();
 		$sql=  "select count(s.TS_id)
-				from timesheet t,salary s
+				from timesheets t,salary s
 				where t.ID=s.TS_id and t.emp_id = s.emp_id
 				and t.sheetDate = '" . $_POST['dateFrom'] ."'";
 		$stmt = $con->prepare($sql);

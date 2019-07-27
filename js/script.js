@@ -199,7 +199,7 @@ $(document).ready(function(){
 		var dateTo_value = $('#searchDateTo').val();
 		var dateFrom_value = $('#searchDateFrom').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log(dateFrom);
+		//console.log(dateFrom);
 	   $.ajax({
 		   url:'searchAjax.php',
 		   method:"POST",
@@ -263,6 +263,124 @@ $(document).ready(function(){
 			}
 		});	
 	});
+	   //------------on click insert timesheet button----------------------------
+	//  $('input[name="insertTimesheet"]').bind('click',function(){
+	// 	var timesheet_date = $('#timesheetDate').val();
+	// 	var emp = $('#search').val();
+	// 	var currentURL = document.location.href.match(/[^\/]+$/)[0];
+	// 	console.log(currentURL);
+	// 	$.ajax({
+	// 		url:'fetch.php',
+	// 		method:"POST",
+	// 		data: {timesheetDate:timesheet_date,
+	// 			   //search:emp,
+	// 			   pageurl:currentURL},
+	// 		// dataType:"json",
+	// 		success:function(data){
+	// 		    if(currentURL == 'timesheetinsertion.php'){
+	// 				console.log(data);
+	// 				$('#timesheetbody').html(data);	 
+	// 			}		
+	// 		},
+	// 		error: function(error) {
+	// 			console.log(error);
+	// 		}
+	// 	});	
+	// });
+
+
+	$('#timesheetinsertion').on('submit',function(){
+		//  e.preventDefault();
+		var timesheet_date = $('#timesheetDate').val();
+		//var emp = $('#search').val();
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log(currentURL);
+		console.log(timesheet_date);
+		$.ajax({
+			url:'fetch.php',
+			method:"POST",
+			data: {timesheetDate:timesheet_date,
+				   //search:emp,
+				   pageurl:currentURL},
+			// dataType:"json",
+			success:function(data){
+			    if(currentURL == 'timesheetinsertion.php'){
+					console.log(data);
+					console.log("line 309");
+					$('#timesheetbody').html(data);	 
+				}		
+			},
+			error: function(error) {
+				console.log(error);
+			}
+		});	
+	});
+	//--------------get data into edit timesheet modal---------------------
+	$(document).on('click','.edittimsesheetData', function(){
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		var employee_id=$(this).attr("id");
+		var timesheet_id = $(this).closest('tr').find('td.timesheet_ID').html();
+		console.log(timesheet_id);
+		
+		console.log(employee_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{editTimesheet_empID:employee_id,
+				  editTimesheet_ID :timesheet_id
+				 },
+			dataType:"json",
+			success:function(data){
+				//console.log(data);
+				$('#emp_id').val(data.emp_id);
+				$('#sheetID').val(data.TS_id);
+
+				$('#emp_currentCode').val(data.currentCode);
+				$('#empName').val(data.empName);
+				$('#sheetDate').val(data.sheetDate);
+				$('#presenceDaysEdit').val(data.presence_days) ;
+				$('#deductionDaysEdit').val(data.deduction_days);
+				$('#absenceDaysEdit').val(data.absence_days) ;
+				$('#sickLeaveDaysEdit').val(data.sickLeave_days);
+				$('#manufacturingDaysEdit').val(data.manufacturing_days);
+				$('#overnightDaysEdit').val(data.overnight_days) ;
+				$('#shiftDaysEdit').val(data.shift_days) ;
+				$('#annualDaysEdit').val(data.annual_days);
+				$('#casualDaysEdit').val(data.casual_days) ;
+				$('#notesEdit').val(data.notes);
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	//--------------onsubmit edit form-----------------------------
+	$(document).on('submit','#editTimesheetForm', function(){
+		alert("سيتم تعديل البيانات...هل انت متأكد؟");
+		//e.preventDefault();
+		//var $form = $('#editTimesheetForm');
+		//console.log( $( this ).serialize() );
+		var $element = $(this);
+
+		var data = $element.serialize();
+		console.log(data);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data: data,
+			//dataType:"json",
+			success:function(data){
+				console.log(data);
+				console.log('success');
+				
+				$("#edittimsesheetModal").modal('hide');	
+			},
+			error: function(error) {
+            	alert(error);
+        	}
+		});		
+	});
+
+
 	//-------------------submit deductions form--------------
 	$(document).on('submit','#updateDeductionsFrom', function(){
 		$.ajax({
