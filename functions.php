@@ -972,13 +972,13 @@
 			$incentive+$shift+$specializationAllowance+$specialBonus+$otherDues ; // اجمالى الاستحقاق
 
 			//------------deductions calculations---------------------
-			$sanction_days = 0;
+			//$sanction_days = 0;
 			//$pastPeriod = 0;//مدة سابقة
 			//$perimiumCard = 0 ; 
 			$familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
 			//$otherDeduction = 0; // استقطاع اخر
 			$petroleumSyndicate= 10; // ن.بترول
-			$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
+			//$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
 			//$mobil = 0; // نوباتجية
 			$loan = 0; //قرض
 			$empServiceFund = 20; // صندوق خدمات عاملين
@@ -1010,12 +1010,11 @@
 					 tiffinAllowance =$tiffinAllowance,
 					 incentive =$incentive,
 					 specializationAllowance =$specializationAllowance,
-					 pastPeriod =$pastPeriod,
-					 perimiumCard  =$perimiumCard,
+					 
 					 familyHealthInsurance =$familyHealthInsurance,
-					 otherDeduction =$otherDeduction,
+					
 					 petroleumSyndicate =$petroleumSyndicate,
-					 sanctions =$sanctions,
+					
 					 empServiceFund = $empServiceFund,
 					 socialInsurances =$socialInsurances,
 					 totalBenefits = $totalBenifits,
@@ -1162,20 +1161,28 @@
 									WHERE TS_id = $TSID 
 									and employee_id = $empKey ";
 									echo $sql;
+							$updateSalarywithSanctions = "UPDATE salary 
+									SET sanctions = $Amount
+									WHERE TS_id = $TSID 
+									and emp_id = $empKey ";
 						}else{
 							$sql = "insert into sanctions values ('$TSID','$empKey','$sanctionDays','$Amount','$notes')";
 							echo $sql;
+							$updateSalarywithSanctions = "UPDATE salary 
+									SET sanctions = $Amount
+									WHERE TS_id = $TSID 
+									and emp_id = $empKey ";
 						}
 						$stmt = $con->prepare($sql);
 						$stmt->execute();
+						$updateSalary_stmt = $con->prepare($updateSalarywithSanctions);
+						$updateSalary_stmt->execute();
+					
 					}
 				}
 				//print "}\n";
 			}
         }else{ echo "nothing set";}
-	}
-	function updateSanctions(){
-
 	}
 
 	//---------get totals of benefits and deductions and netsalary-------
