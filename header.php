@@ -82,7 +82,7 @@
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> إدخالات الاستقطاعات
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
-						  <li><a href="Deductions.php">استقطاعات</a></li>
+						  <li><a href="Deductions.php"> استقطاعات أخرى</a></li>
 						  <li><a href="#">علاج أسر</a></li>
 						  <li><a href="sanctions.php">جزاءات</a></li>
 

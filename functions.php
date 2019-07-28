@@ -246,11 +246,11 @@
 		$output="";
 		$con = connect();
 		$sql= '';		
-		if(!empty($_GET['search'])){
+		if(!empty($_POST['search'])){
 			$sql = "select ID,empName,currentCode
 					from employee 
-					where  (currentCode like '%". $_GET['search'] ."%' 
-								OR empName like '%". $_GET['search'] ."%') 
+					where  (currentCode like '%". $_POST['search'] ."%' 
+								OR empName like '%". $_POST['search'] ."%') 
 					ORDER BY currentCode";
 		}else{
 			$sql=" select ID,empName,currentCode
@@ -307,7 +307,7 @@
 		$output="";	
 		$con = connect();
 		$sql= '';		
-		if(!empty($_POST['timesheetDate'])){
+		if(!empty($_POST['dateFrom'])){
 			// $sql = "select t.*,e.currentCode,e.empName
 			// 		from employee e,timesheet t
 			// 		where t.emp_id = e.ID
@@ -317,7 +317,7 @@
 			$sql= "select t.*,e.currentCode,e.empName,empt.*
 					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
 						inner join employee e on empt.emp_id = e.ID
-					and month(t.sheetDate)=  month('".$_POST['timesheetDate']."')";
+					and month(t.sheetDate)=  month('".$_POST['dateFrom']."')";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -417,7 +417,7 @@
 		// 		where t.emp_id = e.ID
 		// 				and month(t.sheetDate) = month(getdate())";
 		
-		if(!empty($_POST['timesheetDate'])){	
+		if(!empty($_POST['dateFrom'])){	
 			// $sql= "select t.*,e.currentCode,e.empName,empt.*
 			// 		from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
 			// 			inner join employee e on empt.emp_id = e.ID
@@ -426,7 +426,7 @@
 				from	employee e
 				where e.ID not in (select empt.emp_id
 				from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-				where month(t.sheetDate)=  month('".$_POST['timesheetDate']."')) ";
+				where month(t.sheetDate)=  month('".$_POST['dateFrom']."')) ";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -518,7 +518,7 @@
 	//===================insert  timesheet================
 	function insertTimesheet(){
 		$con = connect();
-		$timesheetDate =$_POST['timesheetDate'];
+		$timesheetDate =$_POST['dateFrom'];
 		$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
 		$stmt = $con->prepare($timesheetsql);
 		$stmt->execute();
@@ -547,14 +547,17 @@
 				$shift = $_POST['shift_days'][$empID];
 				$notes = $_POST['notes'][$empID];
 
-			//if($value !=30){
-				//echo $notes;
-
 				$sql = "insert into empTimesheet(TS_id,emp_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
 								casual_days,manufacturing_days,overnight_days,shift_days,notes) 
 						values ('$lastID','$empID','$value','$sickLeave','$deduction','$absence','$annual',
 								'$casual','$manufacturing','$overnight','$shift','$notes')";
 				echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+
+				$sql = "insert into salary(TS_id,emp_id) 
+						values ('$lastID','$empID')";
+				//echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 
@@ -760,43 +763,36 @@
 	}
 	//---------------get other deductions--------------------
 	function getDeductions(){
+		$sql = "";
 		$output ="";
-		if(isset($_POST['dateFrom'])){
-			$date = $_POST['dateFrom'];
-		}elseif(isset($_POST['searchDateFrom'])){
-			$date = $_POST['searchDateFrom'];
-		}	
 		$con = connect();
-		$sql = "select  e.empName,e.currentCode,ts.sheetDate
-				from    employee e inner join timesheet ts 
-						on e.ID = ts.emp_id 
-				where ts.sheetDate ='$date'";
+		//check if there are any values in salary for that date:
+		$sql = "select ID
+				from timesheets
+				where sheetDate = '".$_POST['dateFrom']."'";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
-		$result = $stmt->fetchAll();
-		if(! $result ){
-			$output = "<tr><td colspan='7' class='alert alert-warning'> 
-						<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
-						</td></tr>";
-		}else{
-			$sql ="select  e.empName,e.currentCode,s.otherDeduction,s.mobil,s.etisalatNet,s.perimiumCard,s.pastPeriod,
-			s.emp_id,s.TS_id,ts.sheetDate
-			from    employee e inner join timesheet ts 
-					on e.ID = ts.emp_id inner join salary s 
-					on ts.ID = s.TS_id
-			where  ts.emp_id = s.emp_id";
-			if(!empty($_POST['dateFrom'])){
-				$sql .= " and ts.sheetDate = '$date'";	
-			}
+		$timesheetID = $stmt->fetchColumn();
+		if($timesheetID){
+			//there is timesheet with this date
+			//check salary table
+
+			$sql= "select e.currentCode,e.empName,empt.emp_id ,empt.TS_id,s.otherDeduction,s.mobil,
+						s.perimiumCard,s.pastPeriod,s.etisalatNet,s.socialInsurances
+					from employee e inner join empTimesheet empt
+						on e.ID = empt.emp_id inner join salary s 
+						on empt.emp_id = s.emp_id and empt.TS_id = s.TS_id
+					where empt.TS_id =  $timesheetID";
 			if(!empty($_POST['search'])){
-
-				$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
-
+				$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
 			}
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetchAll();
-			if( $result ){
+			if($result){
+			// 	<td>
+			// 	<input type='number' class='form-control' name='socialInsurancesText[$tsindex][$empindex]' value=".$row['socialInsurances'].">
+			// </td> 
 				foreach($result as $row){
 					$empindex = $row['emp_id'];
 					$tsindex = $row['TS_id'];
@@ -804,73 +800,36 @@
 					$output .= "<tr>
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
-					<td>".  $row['sheetDate']. "</td>
 					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
 					<input name='tsID' type='hidden' value=".$row['TS_id'].">
 					<td>
 						<input type='number' class='form-control' name='otherDeductionText[$tsindex][$empindex]' value=".$row['otherDeduction'].">
-					</td>  
+					</td> 
+
 					<td>
 						<input type='number' class='form-control' name='mobilText[$tsindex][$empindex]' value=".$row['mobil'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='etisalatNetText[$tsindex][$empindex]' value=".$row['etisalatNet'].">
+						<input type='number' class='form-control' name='etisalatNetText[$tsindex][$empindex]'  value=".$row['etisalatNet'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='perimiumCardText[$tsindex][$empindex]' value=".$row['perimiumCard'].">
+						<input type='number' class='form-control' name='perimiumCardText[$tsindex][$empindex]'  value=".$row['perimiumCard'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='pastPeriodText[$tsindex][$empindex]' value=".$row['pastPeriod'].">
+						<input type='number' class='form-control' name='pastPeriodText[$tsindex][$empindex]'  value=".$row['pastPeriod'].">
 					</td>
-				
-				</tr>";
-				}
-
-			}
-			else{
-				$sql ="select  e.empName,e.currentCode,ts.sheetDate,ts.emp_id ,ts.ID
-						from    employee e inner join timesheet ts 
-						on e.ID = ts.emp_id 
-						where ts.sheetDate ='$date'";
-				if(!empty($_POST['dateFrom'])){
-					$sql .= " and ts.sheetDate = '$date'";	
-				}
-				if(!empty($_POST['search'])){
-
-					$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
-
-				}
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
-				$result = $stmt->fetchAll();
-				foreach($result as $row){
-					$output .= "<tr>
-					<td>".  $row['currentCode']. "</td>
-					<td>".  $row['empName']. "</td>
-					<td>".  $row['sheetDate']. "</td>
-						<input name='emp_id' type='hidden' value=".$row['emp_id'].">
-						<input name='tsID' type='hidden' value=".$row['ID'].">
-						<td>
-							<input type='number' class='form-control' name='otherDeductionText'>
-						</td>  
-						<td>
-							<input type='number' class='form-control' name='mobilText'>
-						</td>
-						<td>
-							<input type='number' class='form-control' name='etisalatNetText' >
-						</td>
-						<td>
-							<input type='number' class='form-control' name='perimiumCardText' >
-						</td>
-						<td>
-							<input type='number' class='form-control' name='pastPeriodText' >
-						</td>
 					</tr>";
-				
 				}
 			}
-
+		}else{
+			$output = "
+			<tr>
+			<td colspan='13' class='alert alert-warning'> 
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
+			</td></tr>";
 		}
+
+		
 		echo $output;
 	}
 	//---------------get sanctions for insertion---------------------------
@@ -880,112 +839,113 @@
 			$date = $_POST['dateFrom'];
 		}	
 		$con = connect();
-		$sql = "select  e.empName,e.currentCode,ts.sheetDate
-				from    employee e inner join timesheet ts 
-						on e.ID = ts.emp_id 
-				where ts.sheetDate ='$date'";
+
+		//-------------------------------------------------------------
+		$sql = "select ID
+				from timesheets
+				where sheetDate = '".$_POST['dateFrom']."'";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
-		$result = $stmt->fetchAll();
-		if(! $result ){
-			$output = "<tr><td colspan='7' class='alert alert-warning'> 
-						<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
-						</td></tr>";
-		}else{
-			// if there is timesheet already for this date
-			//check if there are inserted values for sanctions
-			$sql = "select  e.empName,e.currentCode,ts.sheetDate,e.currentSalary,s.sanctionDays,s.sanctionAmount,s.sanctionNotes,
-							s.employee_ID
-					from    employee e inner join timesheet ts 
-					on e.ID = ts.emp_id inner join sanctions s
-					on ts.ID = s.TS_id and ts.emp_id=s.employee_ID
-					where ts.sheetDate = '$date'";
+		$timesheetID = $stmt->fetchColumn();
+		if($timesheetID){
+			//there is timesheet with this date
+			//check salary table
+			$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary
+							from	employee e";
 			if(!empty($_POST['search'])){
-				$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
+
+				$sql .= " where (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')
+							or e.currentCode like '%". $_POST['search'] ."%'";	
+	
 			}
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetchAll();
-			//if there are already values
-			if( $result ){
-				foreach($result as $row){
-					$empindex = $row['employee_ID'];
-					$output .= "<tr>
-								<td>". $row['currentCode']. "</td>
-								<td>". $row['empName']. "</td>
-								<td>". $date.  "</td>
-								<input type='hidden'  name='emp_id' value=".$row['employee_ID'].">
-								<td> ".$row['currentSalary']." </td>
-								<td> ".$row['sanctionDays']." </td>
-								<td> ".$row['sanctionAmount']."</td>
-								<td> ".$row['sanctionNotes']."</td> 
-								<td><a class='btn btn-sm editSanctionData' >
-									<i class='fa fa-edit fa-lg' data-toggle='modal' data-target='#editSanctionModal'></i>
-									</a></td>
-							</tr>";
-				}
-
-			}
-			//if no values 
-			else{
-
-				$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary,ts.ID as TS_ID
-						from	employee e inner join timesheet ts 
-							on e.ID = ts.emp_id 
-						where ts.sheetDate ='$date'";
-
-				if(!empty($_POST['search'])){
-
-					$sql .= " and (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')";	
-
-				}
-				$stmt = $con->prepare($sql);
+			foreach($result as $row){
+				$empindex = $row['ID'];
+			    //".$row['TS_ID']."][".$row['ID']."
+				$tsindex = $timesheetID;
+				$output .= "<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<td class='currentSalary'>".  $row['currentSalary']. "</td>
+				
+				<input name='emp_id' type='hidden' value=".$row['ID'].">
+				<input name='tsID' type='hidden' value=".$timesheetID.">";
+				$sql2= "select s.sanctionDays,s.sanctionAmount,s.sanctionNotes,s.employee_id,s.TS_id
+					
+						from  sanctions s
+						where s.TS_id =  $timesheetID and s.employee_id = $empindex";
+				$stmt = $con->prepare($sql2);
 				$stmt->execute();
-				$result = $stmt->fetchAll();
-				//$sanctions = [];
-				foreach($result as $row){
-					$empindex = $row['ID'];
-					$output .= "<tr>
-					<td>".  $row['currentCode']. "</td>
-					<td>".  $row['empName']. "</td>
-					<td>". $date. "</td>
-						<input name='emp_id' type='hidden' value=".$row['ID'].">
-						<input name='TS_id' type='hidden' value=".$row['TS_ID'].">
+				$result2 = $stmt->fetchAll();
+				if($result2){
+					foreach($result2 as $row2){
+						$output .= "<td>
+						<input  class='form-control sanctionDays' name='sanctionsDaysText[$tsindex][$empindex]' value=".$row2['sanctionDays'].">
+						</td> 
+
 						<td>
-							<input  class='form-control' name='currentSalary' value=".$row['currentSalary'].">
+							<input  class='form-control sanctionAmount' name='sanctionsAmountText[$tsindex][$empindex]' value=".$row2['sanctionAmount'].">
 						</td>
 						<td>
-							<input  class='form-control salaryValue' name='sanctionsDaysText[".$row['TS_ID']."][".$row['ID']."]'>
-						</td> 
-						<td>
-							<input  class='form-control' name='sanctionsAmountText[".$row['TS_ID']."][".$row['ID']."]'>
-						</td>  
-						<td>
-							<input type='text' class='form-control' name='sanctionsNotesText[".$row['TS_ID']."][".$row['ID']."]'>
-						</td>  
+							<input type='text' class='form-control sanctionNotes' name='sanctionsNotesText[$tsindex][$empindex]'  value=".$row2['sanctionNotes'].">
+						</td>
+						
+						</tr>";
+					}
+					
+				}else{
+					$output .= "<td>
+						<input  class='form-control sanctionDays' name='sanctionsDaysText[$tsindex][$empindex]'>
+					</td> 
+
+					<td>
+						<input  class='form-control sanctionAmount' name='sanctionsAmountText[$tsindex][$empindex]' >
+					</td>
+					<td>
+						<input type='text' class='form-control sanctionNotes' name='sanctionsNotesText[$tsindex][$empindex]' >
+					</td>
+					
 					</tr>";
 				}
-				
-			}
 
-		}
-		// print_r( $sanctions);
+
+			}
+			//}
+		}else{
+				$output = "<tr><td colspan='7' class='alert alert-warning'> 
+				<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
+				</td></tr>";
+		}	
 		echo $output;
 		
 	}
 	//---------------calculate benifits of salary------------------
 	function calculateSalary24(){
 		$con = connect();		
-		$sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,ms.med_insurance,s.amount,
-					   e.currentWorkAllowanceNature,ts.manufacturing_days,ts.overnight_days,ts.shift_days,l.incentivePercent,
-					   j.specialization_amount,j.experience_amount,j.representation_amount,ts.ID as timesheetID
-				from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l,job j
-				where  e.ID = ts.emp_id
-					   and e.currentMS = ms.ID
-					   and e.syndicate_id = s.ID
-					   and e.currentLevel = l.ID
-					   and e.currentJob = j.ID
-					   and ts.sheetDate = '" . $_POST['dateFrom'] ."'";					   
+		// $sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,ms.med_insurance,s.amount,
+		// 			   e.currentWorkAllowanceNature,ts.manufacturing_days,ts.overnight_days,ts.shift_days,l.incentivePercent,
+		// 			   j.specialization_amount,j.experience_amount,j.representation_amount,ts.ID as timesheetID
+		// 		from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l,job j
+		// 		where  e.ID = ts.emp_id
+		// 			   and e.currentMS = ms.ID
+		// 			   and e.syndicate_id = s.ID
+		// 			   and e.currentLevel = l.ID
+		// 			   and e.currentJob = j.ID
+		// 			   and ts.sheetDate = '" . $_POST['dateFrom'] ."'";		
+		$sql = "select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
+				ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
+				j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.overnight_days,
+				empt.shift_days,empt.presence_days
+				from   employee e,timesheets ts,maritalStatus ms,syndicates s,level l,job j,empTimesheet empt
+				where  e.currentMS = ms.ID
+						and e.syndicate_id = s.ID
+						and e.currentLevel = l.ID
+						and e.currentJob = j.ID
+						and ts.sheetDate = '" . $_POST['dateFrom'] ."'
+						and e.ID = empt.emp_id
+						and ts.ID = empt.TS_id";			   
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		//$stmt->execute(array($_POST["searchDateFrom"]));
@@ -1013,31 +973,55 @@
 
 			//------------deductions calculations---------------------
 			$sanction_days = 0;
-			$pastPeriod = 0;//مدة سابقة
-			$perimiumCard = 0 ; 
+			//$pastPeriod = 0;//مدة سابقة
+			//$perimiumCard = 0 ; 
 			$familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
-			$otherDeduction = 0; // استقطاع اخر
+			//$otherDeduction = 0; // استقطاع اخر
 			$petroleumSyndicate= 10; // ن.بترول
 			$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
-			$mobil = 0; // نوباتجية
+			//$mobil = 0; // نوباتجية
 			$loan = 0; //قرض
 			$empServiceFund = 20; // صندوق خدمات عاملين
-			$socialInsurances = 0;//تأمينات
-			$etisalatNet =  0; 
-			$totalDeductions = $pastPeriod+$perimiumCard+$familyHealthInsurance+$otherDeduction+$petroleumSyndicate+
-			$sanctions+$mobil+$loan+$empServiceFund+$socialInsurances+$etisalatNet; // اجمالى الاستقطاع
+			//$socialInsurances = 0;//تأمينات
+			//$etisalatNet =  0; 
+			// $totalDeductions = $pastPeriod+$perimiumCard+$familyHealthInsurance+$otherDeduction+$petroleumSyndicate+
+			// $sanctions+$mobil+$loan+$empServiceFund+$socialInsurances+$etisalatNet; // اجمالى الاستقطاع
 
 			//$netsalary=$totalBenifits-$totalDeductions;
 			//-----------insert into salary table---------------- 
-			$sql2 ="insert into salary(emp_id,TS_id,attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
-					experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance,
-					pastPeriod,perimiumCard,familyHealthInsurance,otherDeduction,petroleumSyndicate,sanctions,
-					mobil,loan,empServiceFund,socialInsurances,etisalatNet,totalBenefits,totalDeductions)
-					values(".$row['ID'].",".$row['timesheetID'].",".$attendancePay.",".$natureOfworkAllowance.",".$socialAid.",".$representation.",".$occupationalAllowance.",
-					".$experience.",".$overnightShift.",".$labordayGrant.",".$tiffinAllowance.",".$incentive.",".$specializationAllowance.",
-					".$pastPeriod.",".$perimiumCard.",".$familyHealthInsurance.",".$otherDeduction.",".$petroleumSyndicate.",
-					".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.",".$totalBenifits.",
-					".$totalDeductions.")";
+			// $sql2 ="insert into salary(emp_id,TS_id,attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
+			// 		experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance,
+			// 		pastPeriod,perimiumCard,familyHealthInsurance,otherDeduction,petroleumSyndicate,sanctions,
+			// 		mobil,loan,empServiceFund,socialInsurances,etisalatNet,totalBenefits,totalDeductions)
+			// 		values(".$row['ID'].",".$row['timesheetID'].",".$attendancePay.",".$natureOfworkAllowance.",".$natureOfworkAllowance.",".$representation.",".$occupationalAllowance.",
+			// 		".$experience.",".$overnightShift.",".$labordayGrant.",".$tiffinAllowance.",".$incentive.",".$specializationAllowance.",
+			// 		".$pastPeriod.",".$perimiumCard.",".$familyHealthInsurance.",".$otherDeduction.",".$petroleumSyndicate.",
+			// 		".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.",".$totalBenifits.",
+			// 		".$totalDeductions.")";
+			$sql2 = "UPDATE salary 
+					 SET attendancePay = $attendancePay,
+					 natureOfworkAllowance = $natureOfworkAllowance,
+					 socialAid = $natureOfworkAllowance,
+					 representation = $representation,
+					 occupationalAllowance = $occupationalAllowance,
+					 experience = $experience,
+					 overnightShift =$overnightShift,
+					 labordayGrant =$labordayGrant,
+					 tiffinAllowance =$tiffinAllowance,
+					 incentive =$incentive,
+					 specializationAllowance =$specializationAllowance,
+					 pastPeriod =$pastPeriod,
+					 perimiumCard  =$perimiumCard,
+					 familyHealthInsurance =$familyHealthInsurance,
+					 otherDeduction =$otherDeduction,
+					 petroleumSyndicate =$petroleumSyndicate,
+					 sanctions =$sanctions,
+					 empServiceFund = $empServiceFund,
+					 socialInsurances =$socialInsurances,
+					 totalBenefits = $totalBenifits,
+					 totalDeductions  =$totalDeductions
+					 WHERE TS_id = ".$row['timesheetID']."
+					 and emp_id =".$row['ID']." " ;
 			$stmt = $con->prepare($sql2);
 			$stmt->execute();
 			//echo $sql2;
@@ -1051,22 +1035,40 @@
 		$etisalatNetText = isset($_POST['etisalatNetText'])? $_POST['etisalatNetText']:'';
 		$perimiumCardText = isset($_POST['perimiumCardText'])? $_POST['perimiumCardText']:'';
 		$pastPeriodText = isset($_POST['pastPeriodText'])? $_POST['pastPeriodText']:'';
-
+		print_r($otherDeductionText) ;
 		$con = connect();
 		//------------OTHER DEDUCTIONS INSERTION---------------------
         if (isset($_POST['otherDeductionText'])) {
+			echo "hi";
             foreach ($otherDeductionText as $timesheetkey => $otherDeductionvalueArray) {
                 foreach ($otherDeductionvalueArray as $emp => $deduction) {
+
 					$sql = "UPDATE salary 
 						SET otherDeduction ='$deduction' 
 						where emp_id= '$emp'
 						and TS_id ='$timesheetkey' ";
-					//echo $sql;
+					echo $sql;
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
                 }
             }
-        }
+		}
+		//------------SOCIAL INSURANCES INSERTION----------------
+		// if (isset($_POST['socialInsurancesText'])) {
+		// 	echo "hi";
+        //     foreach ($socialInsurancesText as $timesheetkey => $socialInsurancesvalueArray) {
+        //         foreach ($socialInsurancesText as $emp => $socialInsurances) {
+
+		// 			$sql = "UPDATE salary 
+		// 				SET socialInsurances ='$socialInsurances' 
+		// 				where emp_id= '$emp'
+		// 				and TS_id ='$timesheetkey' ";
+		// 			echo $sql;
+		// 			$stmt = $con->prepare($sql);
+		// 			$stmt->execute();
+        //         }
+        //     }
+        // }
 		//------------MOBIL INSERTION-----------------------------
 		if(isset($_POST['mobilText'])){
 			foreach($mobilText as $timesheetkey => $mobilvalueArray) {
@@ -1131,8 +1133,13 @@
 	function insertSanctions(){
 		//$sanctionDate =$_POST['searchDateFrom'];
 		$con = connect();
+		echo "<pre>";
+		print_r($_POST);
+		echo "</pre>";
+		
 		//---------------SANCTIONS INSERTION---------------------
       	if (isset($_POST['sanctionsDaysText'])) {
+			 
 			foreach ($_POST['sanctionsDaysText'] as $TSID => $values) {
 				//print "$TSID {\n";
 				foreach ($values as $empKey => $sanctionDays) {
@@ -1141,15 +1148,31 @@
 						$Amount = $_POST['sanctionsAmountText'][$TSID][$empKey];
 						$notes = $_POST['sanctionsNotesText'][$TSID][$empKey];
 						//echo $notes;
-						$sql = "insert into sanctions values ('$TSID','$empKey','$sanctionDays','$Amount','$notes')";
-						//echo $sql;
+						//check wether there is sanction already to update
+						$checkvalues_sql = "select sanctionAmount from sanctions where TS_id = $TSID and employee_id = $empKey";
+						
+						$checkvalues_stmt = $con->prepare($checkvalues_sql);
+						$checkvalues_stmt->execute();
+						$result=$checkvalues_stmt->fetchAll();
+						if($result){
+							$sql = "UPDATE sanctions 
+									SET sanctionDays =$sanctionDays,
+									sanctionAmount = $Amount,
+									sanctionNotes = '$notes'
+									WHERE TS_id = $TSID 
+									and employee_id = $empKey ";
+									echo $sql;
+						}else{
+							$sql = "insert into sanctions values ('$TSID','$empKey','$sanctionDays','$Amount','$notes')";
+							echo $sql;
+						}
 						$stmt = $con->prepare($sql);
 						$stmt->execute();
 					}
 				}
 				//print "}\n";
 			}
-        }
+        }else{ echo "nothing set";}
 	}
 	function updateSanctions(){
 
@@ -1166,10 +1189,9 @@
 		}	
 		$sql = "select  e.empName,e.currentCode,s.totalBenefits,s.totalDeductions,s.netSalary,
 						s.emp_id,s.TS_id,ts.sheetDate
-				from    employee e inner join timesheet ts 
-						on e.ID = ts.emp_id inner join salary s 
-						on ts.ID = s.TS_id
-				where  ts.emp_id = s.emp_id and ts.sheetDate =  '$date'";
+				from    employee e inner join salary s on e.ID = s.emp_id 
+						inner join timesheets ts 	on   s.TS_id =ts.ID
+				where ts.sheetDate =  '".$_POST['dateFrom']."'";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();

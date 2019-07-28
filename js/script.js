@@ -216,13 +216,22 @@ $(document).ready(function(){
 				   //console.log(data);
 				   $('#empDatabody').html(data);
 
-				}else if(currentURL == 'wages.php'){
+				}
+				else if(currentURL == 'timesheet.php'){
+					//console.log(data);
+					$('#timesheetbody').html(data);
+				}
+				else if(currentURL == 'timesheetinsertion.php'){
+					//console.log(data);
+					$('#timesheetbody').html(data);	 
+				}
+				else if(currentURL == 'wages.php'){
 					
 				   $('#wagesDatabody').html(data);
 
 				}
 				else if(currentURL == 'Deductions.php'){
-					
+					//console.log(data);
 					$('#Deductionsbody').html(data);
  
 				 }else if(currentURL == 'sanctions.php'){
@@ -235,60 +244,8 @@ $(document).ready(function(){
 			   console.log(error);
 		   }
 	   });	
-   });
-   //------------search timesheet by date----------------------------
-   $('#timesheetDate,#search').bind('change keyup',function(){
-		var timesheet_date = $('#timesheetDate').val();
-		var emp = $('#search').val();
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log(currentURL);
-		$.ajax({
-			url:'searchAjax.php',
-			method:"POST",
-			data: {timesheetDate:timesheet_date,
-				   search:emp,
-				   pageurl:currentURL},
-			// dataType:"json",
-			success:function(data){
-				if(currentURL == 'timesheet.php'){
-					console.log(data);
-					$('#timesheetbody').html(data);
-				}else if(currentURL == 'timesheetinsertion.php'){
-					console.log(data);
-					$('#timesheetbody').html(data);	 
-				}		
-			},
-			error: function(error) {
-				console.log(error);
-			}
-		});	
-	});
-	   //------------on click insert timesheet button----------------------------
-	//  $('input[name="insertTimesheet"]').bind('click',function(){
-	// 	var timesheet_date = $('#timesheetDate').val();
-	// 	var emp = $('#search').val();
-	// 	var currentURL = document.location.href.match(/[^\/]+$/)[0];
-	// 	console.log(currentURL);
-	// 	$.ajax({
-	// 		url:'fetch.php',
-	// 		method:"POST",
-	// 		data: {timesheetDate:timesheet_date,
-	// 			   //search:emp,
-	// 			   pageurl:currentURL},
-	// 		// dataType:"json",
-	// 		success:function(data){
-	// 		    if(currentURL == 'timesheetinsertion.php'){
-	// 				console.log(data);
-	// 				$('#timesheetbody').html(data);	 
-	// 			}		
-	// 		},
-	// 		error: function(error) {
-	// 			console.log(error);
-	// 		}
-	// 	});	
-	// });
-
-
+    });
+   
 	$('#timesheetinsertion').on('submit',function(){
 		//  e.preventDefault();
 		var timesheet_date = $('#timesheetDate').val();
@@ -382,11 +339,11 @@ $(document).ready(function(){
 
 
 	//-------------------submit deductions form--------------
-	$(document).on('submit','#updateDeductionsFrom', function(){
+	$(document).on('submit','#deductioninsertion', function(){
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
-			data: $('form#updateDeductionsForm').serialize(),
+			data: $('form#deductioninsertion').serialize(),
 			success:function(data){
 				console.log(data);
 			},
@@ -395,61 +352,52 @@ $(document).ready(function(){
         	}
 		});		
 	});
-	//--------------------------insert timesheet-------------------------------
-	// $(document).on('submit','#updateDeductionsFrom', function(){
-	// 	$.ajax({
-	// 		url:"fetch.php",
-	// 		method:"POST",
-	// 		data: $('form#updateDeductionsForm').serialize(),
-	// 		success:function(data){
-	// 			console.log(data);
-	// 		},
-	// 		error: function(error) {
-    //         	alert(error);
-    //     	}
-	// 	});		
-	// });
+
 	//------------------on change sanction days-----------
-	$("#sanctions tbody").on("change keyup", ".salaryValue", function(){
+	$("#sanctions tbody").on("change keyup", ".sanctionDays", function(){
 		var row = $(this).closest("tr");
 		var empID = row.find("input[name='emp_id']").val();
-		var sheetID = row.find("input[name='TS_id']").val();
+		var sheetID = row.find("input[name='tsID']").val();		
 		var sanctionDays = $(this).val();
-		var currentSalary = row.find("input[name='currentSalary']").val();
-		var sanctionAmount = ((currentSalary/30)*sanctionDays).toFixed(2);		
-		row.find("input[name='sanctionsAmountText["+sheetID+"]["+empID+"]']").val(sanctionAmount);
-		row.find("input[name='sanctionsDaysText["+sheetID+"]["+empID+"]']").val(sanctionDays);
+
+		//var currentSalary = row.find("input[name='currentSalary']").val();
+		var currentSalary = row.find('.currentSalary').html();
+		var sanctionAmount = ((currentSalary/30)*sanctionDays).toFixed(2);	
+		// row.find("input[name='sanctionsAmountText["+sheetID+"]["+empID+"]']").val(sanctionAmount);
+
+		// row.find("input[name='sanctionsDaysText["+sheetID+"]["+empID+"]']").val(sanctionDays);
+		row.find('.sanctionAmount').val(sanctionAmount);
 	});
 	//-------------------enable text box--------------------
 	// $("#sanctions tbody").on("dblclick", ".salaryValue", function(){
 	// 	$(".salaryValue").attr("readonly", false); 
 	// });
 	//-------------------submit sanctions form--------------
-	// $(document).on('submit','#updateSanctionFrom', function(e){
-	// 	//e.preventDefault();
-	// 	console.log($('form#updateSanctionFrom').serialize());
+	$(document).on('submit','#sanctionsinsertion', function(){
+		// e.preventDefault();
+		console.log($('form#sanctionsinsertion').serialize());
 
-	// 	//var id =  $('input[name="emp_id"]').val();
-	// 	// $("input[name='emp_id']").each(function() {
-	// 	// 	console.log( this.value );
-	// 	//   });
-	// 	// $('form#updateSanctionFrom').each(function() {
-	// 	// 	console.log( "hi" );
-	// 	//   });
-	// 	// console.log( $('form#updateSanctionFrom').find('input[name="sanctionsDaysText[]"]').serialize());
-	// 	//console.log(id);
-	// 	//console.log(days);
-	// 	$.ajax({
-	// 		url:"fetch.php",
-	// 		method:"POST",
-	// 		data: $('form#updateSanctionFrom').serialize(),
-	// 		success:function(data){
-	// 			console.log(data);
-	// 		},
-	// 		error: function(error) {
-    //         	alert(error);
-    //     	}
-	// 	});		
-	// });
+		//var id =  $('input[name="emp_id"]').val();
+		// $("input[name='emp_id']").each(function() {
+		// 	console.log( this.value );
+		//   });
+		// $('form#sanctionsinsertion').each(function() {
+		// 	console.log( "hi" );
+		//   });
+		// console.log( $('form#sanctionsinsertion').find('input[name="sanctionsDaysText[]"]').serialize());
+		//console.log(id);
+		//console.log(days);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data: $('form#sanctionsinsertion').serialize(),
+			success:function(data){
+				console.log(data);
+			},
+			error: function(error) {
+            	alert(error);
+        	}
+		});		
+	});
 
 });

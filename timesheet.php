@@ -7,8 +7,8 @@
     <!-- <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الحـــصر</div> -->
     <form class="navbar-form row" role="search" id="searchEmp" method="POST">
         <div class="form-group add-on">
-            <label for="timesheetDate">تاريخ الحصر:</label>
-            <input class="form-control"  name="timesheetDate" id="timesheetDate" type="date">
+            <label for="searchDateFrom">تاريخ الحصر:</label>
+            <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date">
             <label for = "search">رقم القيد / الاسم :</label>
             <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">  
         </div>

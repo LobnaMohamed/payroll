@@ -51,11 +51,15 @@
 			}
 		}
 		elseif(isset($_POST["updateDeductions"])){
+		
 			updateDeductions();
+			header("Location:deductions.php");
 			//getDeductions();
 		}
 		elseif(isset($_POST["updatesanctions"])){
 			insertSanctions();
+			header("Location:sanctions.php");
+			
 		}
 		elseif(isset($_POST["insertTimesheet"])){
 			$con = connect();

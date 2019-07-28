@@ -1,11 +1,5 @@
 <?php 
-	// session_start();
-	// if(isset($_SESSION['Username'])){
-	// 	//echo "Welcome" . $_SESSION['Username'];
-	// }else{
-	// 	header('Location: index.php');//redirect
-	// 	exit();
-	// }
+
 	include 'header.php';
 	require 'functions.php';      
 ?>
@@ -16,7 +10,7 @@
 	    </header>
 			<div class="empdata-container row">
 				<div class="table-responsive row">
-					<form class="navbar-form row" role="search" id="searchEmp" method="GET">
+					<form class="navbar-form row" role="search" id="searchEmp" method="POST">
 						<div class="col-md-2">
 							عدد العاملين:
 							<?php  getEmpCount() ?>

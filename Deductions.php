@@ -5,26 +5,28 @@
 	<div class="container">
 		
 		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الاستقطاعات</div>
-		<form class="navbar-form row"  id="searchEmp" method="POST">
+		<form class="navbar-form row"  id="deductioninsertion" method="POST" action="fetch.php">
 			<div class="form-group add-on ">
                 <!-- <label for = "searchDateFrom">التاريخ :</label>
                 <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" /> -->
+				<label for = "searchDateFrom">التاريخ :</label>
+                <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
 				<label for = "search">رقم القيد:</label>
 				<input class="form-control" placeholder=" ابحث رقم قيد" name="search" id="search" type="text"> 
                 <label for = "searchTo"> إلى:</label>
                 <input class="form-control" placeholder="الى رقم قيد" name="searchTo" id="searchTo" type="text"> 
 			</div> 			
-		</form>
-	    <form class="form-horizontal row" id=updateDeductionsForm method="POST" action="fetch.php"> 
-			<label for = "searchDateFrom">التاريخ :</label>
-            <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
+		<!-- </form>
+	    <form class="form-horizontal row" id=updateDeductionsForm method="POST" >  -->
+			
 	    	<table id="deductions" class="table table-striped table-bordered table-responsive">		
 				<thead>
 					<tr>
 						<th>رقم القيد</th>
                         <th>الاسم</th>
-						<th>التــاريخ</th>             
+						<!-- <th>التــاريخ</th>  -->
                         <th>إستقطاع أخر</th>
+                        <!-- <th>تأمينات</th> -->
 						<th>موبايل</th>
 						<th>اتصالات انترنت</th>
 						<th>كارت بريميوم</th> 

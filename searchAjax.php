@@ -13,24 +13,24 @@
 		getAllEmp();
 	}
 	elseif($currentURL == 'wages.php'){
-		$con = connect();
-		$sql=  "select count(s.TS_id)
-				from timesheets t,salary s
-				where t.ID=s.TS_id and t.emp_id = s.emp_id
-				and t.sheetDate = '" . $_POST['dateFrom'] ."'";
-		$stmt = $con->prepare($sql);
-		$stmt->execute(array($_POST["dateFrom"]));
-		$result = $stmt->fetchColumn();
+		// $con = connect();
+		// $sql=  "select count(s.TS_id)
+		// 		from timesheets t,salary s
+		// 		where t.ID=s.TS_id and t.emp_id = s.emp_id
+		// 		and t.sheetDate = '" . $_POST['dateFrom'] ."'";
+		// $stmt = $con->prepare($sql);
+		// $stmt->execute(array($_POST["dateFrom"]));
+		// $result = $stmt->fetchColumn();
 		//echo $result;
-		if($result <= 0){   //if this date already exists in salary table
-			calculateSalary24();
-			getWagesTotals();
+		// if($result <= 0){   //if this date already exists in salary table
+	     	calculateSalary24();
+		 	getWagesTotals();
 			
-		}
-		else{
-			getWagesTotals();
+		// }
+		// else{
+		// 	getWagesTotals();
 			
-		}
+		// }
 		
 	}
 	elseif($currentURL == 'Deductions.php'){
