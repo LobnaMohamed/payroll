@@ -40,5 +40,8 @@
 	elseif($currentURL == 'sanctions.php'){
 
 		getSanctions();
+	}elseif($currentURL == 'benifits.php'){
+
+		showBenifits();
 	}
 	?>

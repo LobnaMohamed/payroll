@@ -761,6 +761,79 @@
 			    echo "<option value=" .$row['ID'].">" . $row['Management'] . "</option>";
 			}		
 	}
+	//---------------show benefits-----------------------
+	function showBenifits(){
+		$sql = "";
+		$output ="";
+		$con = connect();
+		//check if there are any values in salary for that date:
+		$sql = "select ID
+				from timesheets
+				where sheetDate = '".$_POST['dateFrom']."'";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$timesheetID = $stmt->fetchColumn();
+		if($timesheetID){
+			//there is timesheet with this date
+			//check salary table
+
+			$sql= "select e.currentCode,e.empName,empt.emp_id ,empt.TS_id,s.attendancePay,s.natureOfworkAllowance,s.laborDayGrant,
+						s.socialAid,s.representation,s.occupationalAllowance,s.experience,s.specialBonus,s.overnightShift,
+						s.tiffinAllowance,s.incentive,s.shift,s.specializationAllowance,s.manufacturingAllowance,s.otherDues
+					from employee e inner join empTimesheet empt
+						on e.ID = empt.emp_id inner join salary s 
+						on empt.emp_id = s.emp_id and empt.TS_id = s.TS_id
+					where empt.TS_id =  $timesheetID";
+			if(!empty($_POST['search'])){
+				$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
+			}
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			if($result){
+				foreach($result as $row){
+					$empindex = $row['emp_id'];
+					$tsindex = $row['TS_id'];
+					
+					$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+					<input name='tsID' type='hidden' value=".$row['TS_id'].">
+					<td>".  $row['attendancePay']. "</td>
+					<td>".  $row['natureOfworkAllowance']. "</td>
+					<td>".  $row['specializationAllowance']. "</td>
+					<td>".  $row['manufacturingAllowance']. "</td>
+					<td>".  $row['socialAid']. "</td>
+					<td>".  $row['representation']. "</td>
+					<td>".  $row['occupationalAllowance']. "</td>
+					
+					<td>".  $row['experience']. "</td>
+					<td>".  $row['specialBonus']. "</td>
+					<td>".  $row['overnightShift']. "</td>
+					<td>".  $row['laborDayGrant']. "</td>
+					<td>".  $row['tiffinAllowance']. "</td>
+					<td>".  $row['incentive']. "</td>
+					
+					<td>".  $row['shift']. "</td>
+					<td>".  $row['otherDues']. "</td>
+					</tr>";
+					
+
+				}
+			}
+		}else{
+			$output = "
+			<tr>
+			<td colspan='13' class='alert alert-warning'> 
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
+			</td></tr>";
+		}
+
+		
+		echo $output;
+
+	}
 	//---------------get other deductions--------------------
 	function getDeductions(){
 		$sql = "";
@@ -971,6 +1044,14 @@
 			$manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
 			$incentive+$shift+$specializationAllowance+$specialBonus+$otherDues ; // اجمالى الاستحقاق
 
+
+			$getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
+			sanctions+mobil+loan+empServiceFund+socialInsurances+etisalatNet
+			from salary where emp_id =".$row['ID']." and TS_id = ".$row['timesheetID']." ";
+			$getdeductions_stmt = $con->prepare($getdeductions_sql);
+			$getdeductions_stmt->execute();
+			$totalDeductionsresult = $getdeductions_stmt->fetchColumn();
+			echo $totalDeductionsresult ;
 			//------------deductions calculations---------------------
 			//$sanction_days = 0;
 			//$pastPeriod = 0;//مدة سابقة
@@ -982,7 +1063,7 @@
 			//$mobil = 0; // نوباتجية
 			$loan = 0; //قرض
 			$empServiceFund = 20; // صندوق خدمات عاملين
-			//$socialInsurances = 0;//تأمينات
+			$socialInsurances = 0;//تأمينات
 			//$etisalatNet =  0; 
 			// $totalDeductions = $pastPeriod+$perimiumCard+$familyHealthInsurance+$otherDeduction+$petroleumSyndicate+
 			// $sanctions+$mobil+$loan+$empServiceFund+$socialInsurances+$etisalatNet; // اجمالى الاستقطاع
@@ -1018,7 +1099,7 @@
 					 empServiceFund = $empServiceFund,
 					 socialInsurances =$socialInsurances,
 					 totalBenefits = $totalBenifits,
-					 totalDeductions  =$totalDeductions
+					 totalDeductions  =$totalDeductionsresult
 					 WHERE TS_id = ".$row['timesheetID']."
 					 and emp_id =".$row['ID']." " ;
 			$stmt = $con->prepare($sql2);

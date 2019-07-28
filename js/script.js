@@ -238,6 +238,10 @@ $(document).ready(function(){
 					
 					$('#sanctionsbody').html(data);
  
+				 }else if(currentURL == 'benifits.php'){
+					
+					$('#benifitsbody').html(data);
+ 
 				 }
 		   },
 		   error: function(error) {

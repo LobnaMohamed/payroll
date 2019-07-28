@@ -89,9 +89,11 @@
 						</ul>
 					</div>
 					<div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> إدخالات الاستحقاقات
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستحقاقات
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
+							<li><a href="benifits.php">إستحقاقات</a></li>
+							
 						  <li><a href="#">إستحقاق</a></li>
 						</ul>
 					</div>
