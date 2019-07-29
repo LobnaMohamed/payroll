@@ -238,9 +238,13 @@ $(document).ready(function(){
 					
 					$('#sanctionsbody').html(data);
  
-				 }else if(currentURL == 'benifits.php'){
+				 }else if(currentURL == 'benefitsreview.php'){
 					
-					$('#benifitsbody').html(data);
+					$('#benefitsbody').html(data);
+ 
+				 }else if(currentURL == 'deductionsreview.php'){
+					
+					$('#benefitsbody').html(data);
  
 				 }
 		   },

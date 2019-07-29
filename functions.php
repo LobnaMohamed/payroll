@@ -762,7 +762,7 @@
 			}		
 	}
 	//---------------show benefits-----------------------
-	function showBenifits(){
+	function showbenefits(){
 		$sql = "";
 		$output ="";
 		$con = connect();
@@ -994,7 +994,7 @@
 		echo $output;
 		
 	}
-	//---------------calculate benifits of salary------------------
+	//---------------calculate benefits of salary------------------
 	function calculateSalary24(){
 		$con = connect();		
 		// $sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,ms.med_insurance,s.amount,
@@ -1040,7 +1040,7 @@
 			$specializationAllowance = $currentDays * ($row['specialization_amount']+ ($row['currentSalary']/4)) ; // بدل تخصص
 		    $specialBonus = 0; // علاوات خاصة
 			$otherDues = 0; // استحقاق
-			$totalBenifits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
+			$totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
 			$manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
 			$incentive+$shift+$specializationAllowance+$specialBonus+$otherDues ; // اجمالى الاستحقاق
 
@@ -1068,7 +1068,7 @@
 			// $totalDeductions = $pastPeriod+$perimiumCard+$familyHealthInsurance+$otherDeduction+$petroleumSyndicate+
 			// $sanctions+$mobil+$loan+$empServiceFund+$socialInsurances+$etisalatNet; // اجمالى الاستقطاع
 
-			//$netsalary=$totalBenifits-$totalDeductions;
+			//$netsalary=$totalbenefits-$totalDeductions;
 			//-----------insert into salary table---------------- 
 			// $sql2 ="insert into salary(emp_id,TS_id,attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
 			// 		experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance,
@@ -1077,7 +1077,7 @@
 			// 		values(".$row['ID'].",".$row['timesheetID'].",".$attendancePay.",".$natureOfworkAllowance.",".$natureOfworkAllowance.",".$representation.",".$occupationalAllowance.",
 			// 		".$experience.",".$overnightShift.",".$labordayGrant.",".$tiffinAllowance.",".$incentive.",".$specializationAllowance.",
 			// 		".$pastPeriod.",".$perimiumCard.",".$familyHealthInsurance.",".$otherDeduction.",".$petroleumSyndicate.",
-			// 		".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.",".$totalBenifits.",
+			// 		".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.",".$totalbenefits.",
 			// 		".$totalDeductions.")";
 			$sql2 = "UPDATE salary 
 					 SET attendancePay = $attendancePay,
@@ -1098,7 +1098,7 @@
 					
 					 empServiceFund = $empServiceFund,
 					 socialInsurances =$socialInsurances,
-					 totalBenefits = $totalBenifits,
+					 totalBenefits = $totalbenefits,
 					 totalDeductions  =$totalDeductionsresult
 					 WHERE TS_id = ".$row['timesheetID']."
 					 and emp_id =".$row['ID']." " ;

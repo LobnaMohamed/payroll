@@ -38,7 +38,7 @@
 				</tbody>
 			</table>
 			<div>
-				<input type="submit" name="updateDeductions" value="إدخـــــــال" class="btn btn-info col-sm-2 col-sm-offset-5">
+				<!-- <input type="submit" name="updateDeductions" value="إدخـــــــال" class="btn btn-info col-sm-2 col-sm-offset-5"> -->
 			</div>			
 		 </form>		
 	</div> 

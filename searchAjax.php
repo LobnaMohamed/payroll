@@ -40,8 +40,8 @@
 	elseif($currentURL == 'sanctions.php'){
 
 		getSanctions();
-	}elseif($currentURL == 'benifits.php'){
+	}elseif($currentURL == 'benefitsreview.php'){
 
-		showBenifits();
+		showbenefits();
 	}
 	?>

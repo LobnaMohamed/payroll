@@ -1,12 +1,12 @@
 <?php 
 require 'functions.php';
 include 'header.php';
- //calculateBenifits();
+ //calculatedeductions();
 ?>
 	<div class="container">
 		
-		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الاستحقاقات</div>
-		<form class="navbar-form row"  id="benifitinsertion" method="POST" action="fetch.php">
+		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>مراجعة الاستقطاعات</div>
+		<form class="navbar-form row"   method="POST" action="fetch.php">
 			<div class="form-group add-on ">
                 <!-- <label for = "searchDateFrom">التاريخ :</label>
                 <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" /> -->
@@ -18,9 +18,9 @@ include 'header.php';
                 <input class="form-control" placeholder="الى رقم قيد" name="searchTo" id="searchTo" type="text"> 
 			</div> 			
 		<!-- </form>
-	    <form class="form-horizontal row" id=updatebenifitsForm method="POST" >  -->
+	    <form class="form-horizontal row" id=updatedeductionsForm method="POST" >  -->
 			
-	    	<table id="benifits" class="table table-striped table-bordered table-responsive">		
+	    	<table id="deductions" class="table table-striped table-bordered table-responsive">		
 				<thead>
 					<tr>
 						<th>رقم القيد</th>
@@ -43,12 +43,12 @@ include 'header.php';
  
 				    </tr>		
 				</thead>
-				<tbody id="benifitsbody">
+				<tbody id="deductionsbody">
 
 				</tbody>
 			</table>
 			<div>
-				<input type="submit" name="updatebenifits" value="إدخـــــــال" class="btn btn-info col-sm-2 col-sm-offset-5">
+				<input type="submit" name="updatedeductions" value="إدخـــــــال" class="btn btn-info col-sm-2 col-sm-offset-5">
 			</div>			
 		 </form>		
 	</div> 

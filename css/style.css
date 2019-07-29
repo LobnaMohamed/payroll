@@ -112,7 +112,7 @@ label{
 #timesheet th{
     font-size: 16px;
 }
-#timesheet th ,#deductions th,#empData th,#sanctions th,#benifits th{
+#timesheet th ,#deductions th,#empData th,#sanctions th,#benefits th{
     background-color: #999999;
 }
 #confirmedVacReport{
