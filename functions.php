@@ -469,17 +469,34 @@
 	//===================insert  timesheet================
 	function insertTimesheet(){
 		$con = connect();
-		$timesheetDate =$_POST['dateFrom'];
-		$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
-		$stmt = $con->prepare($timesheetsql);
+		$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['searchDateFrom'] ."' ";
+		$timesheetDate =$_POST['searchDateFrom'];
+		echo $timesheetDate;
+		$stmt = $con->prepare($checkDate_sql);
 		$stmt->execute();
+		$result = $stmt->fetchColumn();
+		if(! $result){
+			
+			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
+			$stmt = $con->prepare($timesheetsql);
+			$stmt->execute();
+	
+			$getlastTSID_sql = "select max(ID) from timesheets";
+			
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$lastID = $stmt->fetchColumn();
+			echo $lastID;
+		}else{
+			// if timesheet already exist get its ID and uinsert for remaining emp the timesheet
+			$getlastTSID_sql = "select ID  from timesheets where sheetDate =  '$timesheetDate' ";
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$lastID = $stmt->fetchColumn();
+			echo $lastID;
 
-		$getlastTSID_sql = "select max(ID) from timesheets";
-		
-		$stmt = $con->prepare($getlastTSID_sql);
-		$stmt->execute();
-		$lastID = $stmt->fetchColumn();
-		echo $lastID;
+		}
+
 
 		//---------------timesheet INSERTION---------------------
 		foreach ($_POST['presence_days'] as $empID => $value) {

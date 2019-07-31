@@ -298,8 +298,8 @@ $(document).ready(function(){
     });
    
 	$('#timesheetinsertion').on('submit',function(){
-		//  e.preventDefault();
-		var timesheet_date = $('#timesheetDate').val();
+		//   e.preventDefault();
+		var timesheet_date = $('#searchDateFrom').val();
 		//var emp = $('#search').val();
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		console.log(currentURL);
@@ -307,9 +307,12 @@ $(document).ready(function(){
 		$.ajax({
 			url:'fetch.php',
 			method:"POST",
-			data: {timesheetDate:timesheet_date,
+			data: //{//timesheetDate:timesheet_date,
 				   //search:emp,
-				   pageurl:currentURL},
+				   //pageurl:currentURL
+				   $('form#timesheetinsertion').serialize()
+			//	}
+			,
 			// dataType:"json",
 			success:function(data){
 			    if(currentURL == 'timesheetinsertion.php'){
@@ -329,7 +332,6 @@ $(document).ready(function(){
 		var employee_id=$(this).attr("id");
 		var timesheet_id = $(this).closest('tr').find('td.timesheet_ID').html();
 		console.log(timesheet_id);
-		
 		console.log(employee_id);
 		$.ajax({
 			url:"fetch.php",
