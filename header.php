@@ -83,7 +83,7 @@
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
 						  <li><a href="Deductions.php"> استقطاعات أخرى</a></li>
-						  <li><a href="#">علاج أسر</a></li>
+						  <!-- <li><a href="#">علاج أسر</a></li> -->
 						  <li><a href="sanctions.php">جزاءات</a></li>
 
 						</ul>
@@ -94,7 +94,7 @@
 						<ul class="dropdown-menu dropdown-menu-right">
 							<li><a href="benefitsreview.php">إستحقاقات</a></li>
 							
-						  <li><a href="#">إستحقاق</a></li>
+						  <li><a href="benefits.php">ادخال الإستحقاق</a></li>
 						</ul>
 					</div>
 					<!-- <a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a> -->

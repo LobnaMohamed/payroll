@@ -17,55 +17,6 @@
             {
             echo "Connection failed: " . $e->getMessage();
 		    }
-		
-		// $serverName = "DESKTOP-B9U461U"; //serverName\instanceName
-
-		// // Since UID and PWD are not specified in the $connectionInfo array,
-		// // The connection will be attempted using Windows Authentication.
-		// $connectionInfo = array( "Database"=>"wages");
-		// $con = sqlsrv_connect( $serverName, $connectionInfo);
-		
-		// if( $con ) {
-		// 	 echo "Connection established.<br />";
-		// }else{
-		// 	 echo "Connection could not be established.<br />";
-		// 	 die( print_r( sqlsrv_errors(), true));
-		// }
-
-        //-----------------------------------------------  
-        // Perform operations with connection.  
-        //-----------------------------------------------  
-        
-        /* Close the connection. */  
-        // sqlsrv_close( $conn); 
-		// $dsn = 'sqlserver:host=DESKTOP-B9U461U;dbname=wages';//data source name
-		// $user= '';
-		// $pass='';
-		// $options = array (
-		// 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-		// 		//PDO::ATTR_PERSISTENT => true
-		// 	);
-
-		// try{
-		// 	//new connection to db
-		// 		static $con;
-		// 	    if ($con == NULL){ 
-		// 	        $con =  new PDO($dsn, $user, $pass, $options);
-		// 			$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
-		//     }
-		// 	// $con = new PDO($dsn, $user, $pass, $options);
-		// 	// $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
-		// 	//QUERY
-		// 	// $q = "INSERT INTO test(name,phone)VALUES('لبنى','محمد')";
-		// 	// $con->exec($q);
-		// 	//echo "success";
-		// 	//print_r($con) ;
-
-		// }
-		// catch(PDOexception $e){
-		// 	echo "failed" . $e->getMessage();
-        // }
-       // print_r($con);
 		return $con;
 	}	
 
@@ -628,6 +579,11 @@
 			$addbasicsalary = isset($_POST['addbasicsalary'])? filter_var($_POST['addbasicsalary'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
 			$addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_INT):'';
 			$addgender = isset($_POST['addgender'])? filter_var($_POST['addgender'],FILTER_SANITIZE_STRING) : '';
+			$adddesc_job = isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : '';
+			$addhireDate = $_POST['addhireDate'];
+			$addDOB = $_POST['addDOB'];
+			$addWorkAllowanceNature = isset($_POST['addWorkAllowanceNature'])? filter_var($_POST['addWorkAllowanceNature'],FILTER_SANITIZE_NUMBER_FLOAT) : '';
+			$addrepresentation = isset($_POST['addrepresentation'])? filter_var($_POST['addrepresentation'],FILTER_SANITIZE_NUMBER_FLOAT) : '';
 			// creating array of errors
 			$formErrors = array();
 
@@ -637,12 +593,40 @@
 				// print_r($formErrors) ;
 			} else {
 				$con = connect();
-				$sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
-							currentSalary,syndicate_id) 
-						VALUES ('".$addempCode."','".$addempName."','".$addcontractType."','".$addjob."','".$addlevel."','".$addshift."',
-						'".$addmaritalstatus."','".$addgender."','".$addbasicsalary."','".$addsyndicate."')" ;
-				$stmt = $con->prepare($sql);
+				$employee_sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
+									currentSalary,syndicate_id,hireDate,education,DOB) 
+								VALUES ('".$addempCode."','".$addempName."','".$addcontractType."','".$addjob."','".$addlevel."','".$addshift."',
+								'".$addmaritalstatus."','".$addgender."','".$addbasicsalary."','".$addsyndicate."','".$addhireDate."'
+								,'".$addeducation."','".$addDOB."')" ;
+				$stmt = $con->prepare($employee_sql);
 				$stmt->execute();
+				$empID_sql = "select ID FROM employee where currentCode =$addempCode "	;	
+				$stmt = $con->prepare($empID_sql);
+				$stmt->execute();
+				$empID = $stmt->fetchColumn();
+
+				$level_sql= "INSERT INTO emp_level(emp_id,level_id,level_date) VALUES ('".$empID."','".$addlevel."','".$addhireDate."')" ;
+				$stmt = $con->prepare($level_sql);
+				$stmt->execute();
+				$contract_sql = "INSERT INTO emp_contract(emp_id,contract_id,contract_date,empCode) VALUES ('".$empID."','".$addcontractType."',
+				'".$addhireDate."','".$addempCode."')" ;
+				$stmt = $con->prepare($contract_sql);
+				$stmt->execute();
+				$job_sql= "INSERT INTO emp_job(emp_id,job_id,job_date,job_description,shift)
+							VALUES ('".$empID."','".$addjob."','".$addhireDate."','".$adddesc_job."','" .$addshift ."')" ;
+
+				$stmt = $con->prepare($job_sql);
+				$stmt->execute();
+				$marital_status_sql= "INSERT INTO emp_maritalstatus(emp_id,marital_status_id,marital_status_date) 
+							VALUES ('".$empID."','".$addmaritalstatus."','".$addhireDate."')" ;
+				$stmt = $con->prepare($marital_status_sql);
+				$stmt->execute();
+				$salary_sql= "INSERT INTO emp_basicsalary(emp_id,basicSalary,salaryDate) 
+							VALUES ('".$empID."','".$addbasicsalary."','".$addhireDate."')" ;
+				$stmt = $con->prepare($salary_sql);
+				$stmt->execute();
+
+
 				
 				echo "done";
 			}
@@ -905,6 +889,68 @@
 		
 		echo $output;
 	}
+	//---------------get other benefits--------------------
+	function getBenefits(){
+		$sql = "";
+		$output ="";
+		$con = connect();
+		//check if there are any values in salary for that date:
+		$sql = "select ID
+				from timesheets
+				where sheetDate = '".$_POST['dateFrom']."'";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$timesheetID = $stmt->fetchColumn();
+		if($timesheetID){
+			//there is timesheet with this date
+			//check salary table
+
+			$sql= "select e.currentCode,e.empName,empt.emp_id ,empt.TS_id,s.specialBonus,s.otherDues
+						
+					from employee e inner join empTimesheet empt
+						on e.ID = empt.emp_id inner join salary s 
+						on empt.emp_id = s.emp_id and empt.TS_id = s.TS_id
+					where empt.TS_id =  $timesheetID";
+			if(!empty($_POST['search'])){
+				$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
+			}
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			if($result){
+			// 	<td>
+			// 	<input type='number' class='form-control' name='socialInsurancesText[$tsindex][$empindex]' value=".$row['socialInsurances'].">
+			// </td> 
+				foreach($result as $row){
+					$empindex = $row['emp_id'];
+					$tsindex = $row['TS_id'];
+					
+					$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+					<input name='tsID' type='hidden' value=".$row['TS_id'].">
+					<td>
+						<input type='number' class='form-control' name='specialBonusText[$tsindex][$empindex]' value=".$row['specialBonus'].">
+					</td> 
+
+					<td>
+						<input type='number' class='form-control' name='otherDuesText[$tsindex][$empindex]' value=".$row['otherDues'].">
+					</td>
+					</tr>";
+				}
+			}
+		}else{
+			$output = "
+			<tr>
+			<td colspan='13' class='alert alert-warning'> 
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
+			</td></tr>";
+		}
+
+		
+		echo $output;
+	}
 	//---------------get sanctions for insertion---------------------------
 	function getSanctions(){
 		$output ="";
@@ -1082,7 +1128,7 @@
 			$sql2 = "UPDATE salary 
 					 SET attendancePay = $attendancePay,
 					 natureOfworkAllowance = $natureOfworkAllowance,
-					 socialAid = $natureOfworkAllowance,
+					 socialAid = $socialAid,
 					 representation = $representation,
 					 occupationalAllowance = $occupationalAllowance,
 					 experience = $experience,
@@ -1115,11 +1161,11 @@
 		$etisalatNetText = isset($_POST['etisalatNetText'])? $_POST['etisalatNetText']:'';
 		$perimiumCardText = isset($_POST['perimiumCardText'])? $_POST['perimiumCardText']:'';
 		$pastPeriodText = isset($_POST['pastPeriodText'])? $_POST['pastPeriodText']:'';
-		print_r($otherDeductionText) ;
+		//print_r($otherDeductionText) ;
 		$con = connect();
 		//------------OTHER DEDUCTIONS INSERTION---------------------
         if (isset($_POST['otherDeductionText'])) {
-			echo "hi";
+			//echo "hi";
             foreach ($otherDeductionText as $timesheetkey => $otherDeductionvalueArray) {
                 foreach ($otherDeductionvalueArray as $emp => $deduction) {
 
@@ -1127,7 +1173,7 @@
 						SET otherDeduction ='$deduction' 
 						where emp_id= '$emp'
 						and TS_id ='$timesheetkey' ";
-					echo $sql;
+					//echo $sql;
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
                 }
@@ -1198,6 +1244,46 @@
 				foreach($pastPeriodvalueArray as $emp => $pastPeriod){
 					$sql = "UPDATE salary 
 							SET pastPeriod ='$pastPeriod' 
+							where emp_id= '$emp'
+							and TS_id ='$timesheetkey' ";
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
+			}
+		}
+
+		
+	}
+	//-------------update Benefits----------------------
+	function updateBenefits(){
+
+		$specialBonusText = $_POST['specialBonusText'];
+		$otherDuesText = isset($_POST['otherDuesText'])? $_POST['otherDuesText']:'';
+	
+		//print_r($specialBonusText) ;
+		$con = connect();
+		//------------special bonus INSERTION---------------------
+		if (isset($_POST['specialBonusText'])) {
+			//echo "hi";
+			foreach ($specialBonusText as $timesheetkey => $specialBonusvalueArray) {
+				foreach ($specialBonusvalueArray as $emp => $bonus) {
+
+					$sql = "UPDATE salary 
+						SET specialBonus ='$bonus' 
+						where emp_id= '$emp'
+						and TS_id ='$timesheetkey' ";
+					//echo $sql;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
+			}
+		}
+		//------------other dues INSERTION----------------------
+		if(isset($_POST['otherDuesText'])){
+			foreach($otherDuesText as $timesheetkey => $otherDuesvalueArray) {
+				foreach($otherDuesvalueArray as $emp => $otherDues){
+					$sql = "UPDATE salary 
+							SET otherDues ='$otherDues' 
 							where emp_id= '$emp'
 							and TS_id ='$timesheetkey' ";
 					$stmt = $con->prepare($sql);

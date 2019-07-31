@@ -62,13 +62,15 @@
 										  echo"<option value='أنثى'>أنثى</option>"; 	
 										?>
 								</select>
+								<label for= "addDOB">تاريخ الميلاد</label>
+					    		<input type="date" class="form-control" id="addDOB" name="addDOB">
 								<label for= "addmaritalstatus">الحالة الاجتماعية</label>
 								<select class="form-control" id="addmaritalstatus" name="addmaritalstatus">
 									<option selected disabled hidden style='display: none' value=''></option>
 										<?php  	get_marital_status(); ?>
 								</select>
 								<label for= "adddesc_job">الوظيفة الحالية</label>
-					    	<input type="text" class="form-control" id="adddesc_job" name="adddesc_job">
+					    		<input type="text" class="form-control" id="adddesc_job" name="adddesc_job">
 								<input type="hidden" name="employee_id" id="employee_id">  
 								<label for= "addshift">نهارى/ورادى</label>
 								<select class="form-control" id="addshift" name="addshift">
@@ -82,6 +84,8 @@
 							<div class="form-group col-md-4">
 								<label for= "addempName">اسم الموظف</label>
 								<input type="text" class="form-control" id="addempName" name="addempName" >
+								<label for= "addhireDate">تاريخ التعيين</label>
+								<input type="date" class="form-control" id="addhireDate" name="addhireDate" >
 
 								<label for= "addlevel">المستوى</label>
 								<select class="form-control" id="addlevel" name="addlevel" >
@@ -93,25 +97,31 @@
 									<option selected disabled hidden style='display: none' value=''></option>
 										<?php  	getJob();   ?>
 								</select>
+								<!-- <label for= "addspecialization"> بدل التخصص</label>
+					    		<input type="text" class="form-control" id="addspecialization" name="addspecialization"> -->
 								<label for= "addeducation">المؤهل</label>
 								<input type="text" class="form-control" id="addeducation" name="addeducation" >
 							</div>
 							<div class="form-group col-md-4">
 								<label for= "addempCode">رقم قيد الموظف</label>
-					    	<input type="number" class="form-control" id="addempCode" name="addempCode">
+					    		<input type="number" class="form-control" id="addempCode" name="addempCode">
 								<label for= "addcontractType">نوع العقد</label>
-					    	<select class="form-control" id="addcontractType" name="addcontractType">
-							   	<option selected disabled hidden style='display: none' value=''></option>
-						   	    <?php  	getContract();   ?>
+					    		<select class="form-control" id="addcontractType" name="addcontractType">
+									<option selected disabled hidden style='display: none' value=''></option>
+									<?php  	getContract();   ?>
 								</select>	
 								<label for= "addbasicsalary">المرتب الاساسى</label>
-					    	<input type="text" class="form-control" id="addbasicsalary" name="addbasicsalary">
+					    		<input type="text" class="form-control" id="addbasicsalary" name="addbasicsalary">
 									
 								<label for= "addsyndicate">النقابة</label>
 								<select class="form-control" id="addsyndicate" name="addsyndicate">
 									<option selected disabled hidden style='display: none' value=''></option>
 										<?php  	getsyndicate();   ?>
 								</select>
+								<label for= "addrepresentation"> بدل التمثيل</label>
+					    		<input type="text" class="form-control" id="addrepresentation" name="addrepresentation">
+								<label for= "addWorkAllowanceNature">بدل الطبيعة</label>
+					    		<input type="text" class="form-control" id="addWorkAllowanceNature" name="addWorkAllowanceNature">
 							</div>
 							<div class="form-group col-md-3 col-md-offset-4 ">
 								<input type="submit" name="insertEmp" class="btn btn-success" value="حفظ">

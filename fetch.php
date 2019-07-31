@@ -4,15 +4,35 @@
 		if(isset($_POST["empID"]))  
 		{  
 			//show data in emp modal
-			$con = connect();			
-			$sql = "select ID,empName,currentCode,gender,currentLevel,syndicate_id,currentMS,currentContract,
-						   currentSalary,currentJob,education,currentShift,shift,job_description,ej.MaxDate
-					from employee inner join emp_job on employee.ID = emp_job.emp_id
-					inner join (select emp_id, max(job_date) as MaxDate
-								from emp_job
-								group by emp_id) ej
-							on  emp_job.job_date = ej.MaxDate
-					where ID = '".$_POST["empID"]."'";  
+			$con = connect();			 
+			$sql = "select ID,empName,currentCode,gender,currentLevel,syndicate_id,currentMS,currentContract,currentSalary,currentJob,education,currentShift,hireDate
+					,shift,job_description,ej.JobMaxDate,empMS.MSMaxDate,empl.levelMaxDate,empc.contractMaxDate,empbasic.salaryMaxDate
+								from employee inner join emp_job on employee.ID = emp_job.emp_id
+								inner join (select emp_id, max(job_date) as JobMaxDate
+											from emp_job
+											group by emp_id) ej
+										on  emp_job.job_date = ej.JobMaxDate
+								inner join emp_maritalstatus on employee.ID = emp_maritalstatus.emp_id
+								inner join (select emp_id, max(marital_status_date) as MSMaxDate
+											from emp_maritalstatus
+											group by emp_id) empMS
+										on  emp_maritalstatus.marital_status_date = empMS.MSMaxDate
+								inner join emp_level on employee.ID = emp_level.emp_id
+								inner join (select emp_id, max(level_date) as levelMaxDate
+											from emp_level
+											group by emp_id) empl
+										on  emp_level.level_date = empl.levelMaxDate
+								inner join emp_contract on employee.ID = emp_contract.emp_id
+								inner join (select emp_id, max(contract_date) as contractMaxDate
+											from emp_contract
+											group by emp_id) empc
+										on  emp_contract.contract_date = empc.contractMaxDate
+								inner join emp_basicsalary on employee.ID = emp_basicsalary.emp_id
+								inner join (select emp_id, max(salaryDate) as salaryMaxDate
+											from emp_basicsalary
+											group by emp_id) empbasic
+										on  emp_basicsalary.salaryDate = empbasic.salaryMaxDate
+								where ID ='".$_POST["empID"]."'";
 					
 			$stmt = $con->prepare($sql);
 			$stmt->execute(array($_POST["empID"]));
@@ -20,11 +40,18 @@
 			//print_r($result) ;
 			echo json_encode($result); 
 
-		}elseif(isset($_POST["currentProfileEmpID"])){
+		}
+		// elseif(isset($_POST["addjob"])){
+		// 	$con = connect();			 
+		// 	$sql = "select specialization_amount from job where ID ='".$_POST["addjob"]."' ";
+
+		// }
+		elseif(isset($_POST["currentProfileEmpID"])){
 			getEmpCurrentProfile(); 
 		}
 		elseif(isset($_POST["insertEmp"])){
 			addEmp();
+			header("Location:empdata.php");
 		}
 		elseif(isset($_POST["UpdateEmp"])){
 			editEmp();
@@ -50,11 +77,17 @@
 				
 			}
 		}
+		elseif(isset($_POST["updatebenefits"])){
+		
+			updateBenefits();
+			header("Location:benefits.php");
+			
+		}
 		elseif(isset($_POST["updateDeductions"])){
 		
 			updateDeductions();
 			header("Location:deductions.php");
-			//getDeductions();
+			
 		}
 		elseif(isset($_POST["updatesanctions"])){
 			insertSanctions();

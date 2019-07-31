@@ -69,7 +69,34 @@ $(document).ready(function(){
 
 	//     return false;
 	// });	
+	$('#addjob').bind('change keyup',function(){
+		//get dates between 2 dates
+		var jobID = $('this').val();
+		//console.log(dateFrom);
+	   $.ajax({
+		   url:'fetch.php',
+		   method:"POST",
+		   data: {jobID:jobID},
+		   // dataType:"json",
+		   success:function(data){
+			  // console.log(data);
 
+        		if(currentURL == 'empdata.php'){
+				   //console.log(data);
+				   $('#empDatabody').html(data);
+
+				}
+				else if(currentURL == 'timesheet.php'){
+					//console.log(data);
+					$('#timesheetbody').html(data);
+				}
+			
+		   },
+		   error: function(error) {
+			   console.log(error);
+		   }
+	   });	
+    });
 	//--------------get employee data in edit modal---------------
 	$(document).on('click','.editEmpData', function(){
 		$('.nav-tabs a[href="#tab5"]').tab('show')
@@ -88,14 +115,26 @@ $(document).ready(function(){
 				$('#empCodeEdit').val(data.currentCode);
 				$('#genderEdit').val(data.gender);
 				$('#desc_jobEdit').val(data.job_description);
-				$('#levelEdit').val(data.currentLevel);
-				$('#contractTypeEdit').val(data.currentContract);
-				$('#jobEdit').val(data.currentJob);
-				$('#syndicateEdit').val(data.syndicate_id);
-				$('#maritalstatusEdit').val(data.currentMS);
-				$('#basicsalaryEdit').val(data.currentSalary);
 				$('#educationEdit').val(data.education);
 				$('#shiftEdit').val(data.currentShift);
+				$('#syndicateEdit').val(data.syndicate_id);
+
+				$('#basicSalaryDate').val(data.salaryMaxDate);
+				$('#basicsalaryEdit').val(data.currentSalary);
+
+				$('#levelDate').val(data.levelMaxDate);
+				$('#levelEdit').val(data.currentLevel);
+
+				$('#contractDate').val(data.contractMaxDate);
+				$('#contractTypeEdit').val(data.currentContract);
+
+				$('#jobDate').val(data.JobMaxDate);
+				$('#jobEdit').val(data.currentJob);
+
+				
+				$('#maritalstatusEdit').val(data.currentMS);
+				$('#MSDate').val(data.MSMaxDate);
+
 			},error:function(error){
 				console.log(error);
 			}
@@ -230,7 +269,7 @@ $(document).ready(function(){
 				   $('#wagesDatabody').html(data);
 
 				}
-				else if(currentURL == 'Deductions.php'){
+				else if(currentURL == 'deductions.php'){
 					//console.log(data);
 					$('#Deductionsbody').html(data);
  
@@ -243,6 +282,10 @@ $(document).ready(function(){
 					$('#benefitsbody').html(data);
  
 				 }else if(currentURL == 'deductionsreview.php'){
+					
+					$('#deductionsbody').html(data);
+ 
+				 }else if(currentURL == 'benefits.php'){
 					
 					$('#benefitsbody').html(data);
  

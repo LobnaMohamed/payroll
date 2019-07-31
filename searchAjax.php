@@ -33,7 +33,7 @@
 		// }
 		
 	}
-	elseif($currentURL == 'Deductions.php'){
+	elseif($currentURL == 'deductions.php'){
 
 		getDeductions();
 	}
@@ -43,5 +43,8 @@
 	}elseif($currentURL == 'benefitsreview.php'){
 
 		showbenefits();
+	}elseif($currentURL == 'benefits.php'){
+
+		getBenefits();
 	}
 	?>
