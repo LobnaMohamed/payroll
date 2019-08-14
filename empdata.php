@@ -156,20 +156,29 @@
 										<div class="form-group col-md-4 col-md-offset-1 ">
 											<label for= "maritalstatusEdit">الحالة الاجتماعية</label>
 											<select class="form-control" id="maritalstatusEdit" name="maritalstatusEdit">
+											
 												<option selected disabled hidden style='display: none' value=''></option>
 													<?php  	get_marital_status(); ?>
 											</select>
+											<input type="hidden" id="MScurrentValue" name="MScurrentValue">											
+											
 											<label for= "MSDate">تاريخ الحالة الاجتماعية</label>
 											<input type="date" class="form-control" id="MSDate" name="MSDate">
+											<input type="hidden" id="MSDatecurrentValue" name="MSDatecurrentValue">											
+											
 											<label for= "syndicateEdit">النقابة</label>
 											<select class="form-control" id="syndicateEdit" name="syndicateEdit">
 												<option selected disabled hidden style='display: none' value=''></option>
 													<?php  	getsyndicate();   ?>
 											</select>
+											<input type="hidden" id="syndicatecurrentValue"  name="syndicatecurrentValue">											
+											
 										</div>
 										<div class="form-group col-md-4 ">
 											<label for= "empNameEdit">اسم الموظف</label>
 											<input type="text" class="form-control" id="empNameEdit" name="empNameEdit" >
+											<input type="hidden" id="empNamecurrentValue" name="empNamecurrentValue">											
+											
 											<label for= "genderEdit">النوع</label>
 											<select class="form-control" id="genderEdit" name="genderEdit">
 												<option selected disabled hidden style='display: none' ></option>
@@ -178,8 +187,12 @@
 														echo"<option value='أنثى'>أنثى</option>"; 	
 													?>
 											</select>
+											<input type="hidden" id="gendercurrentValue" name="gendercurrentValue">											
+											
 											<label for= "educationEdit">المؤهل</label>
-											<input type="text" class="form-control" id="educationEdit" name="educationEdit" >	
+											<input type="text" class="form-control" id="educationEdit" name="educationEdit" >
+											<input type="hidden" id="educationcurrentValue" name="educationcurrentValue">											
+												
 
 										</div>
 									</div>							
@@ -187,13 +200,19 @@
 										<div class="form-group col-md-4 col-md-offset-4">
 											<label for= "contractDate">التاريخ</label>
 											<input type="date" class="form-control" id="contractDate" name="contractDate">
+											<input type="hidden" id="contractDatecurrentValue" name="contractDatecurrentValue">											
+											
 											<label for= "empCodeEdit">رقم قيد الموظف</label>
 											<input type="number" class="form-control" id="empCodeEdit" name="empCodeEdit">
+											<input type="hidden" id="empCodecurrentValue" name="empCodecurrentValue" >											
+											
 											<label for= "contractTypeEdit">نوع العقد</label>
 											<select class="form-control" id="contractTypeEdit" name="contractTypeEdit">
 												<option selected disabled hidden style='display: none' value=''></option>
 													<?php  	getContract();   ?>
 											</select>	
+											<input type="hidden" id="contractTypecurrentValue" name="contractTypecurrentValue">											
+											
 											<input type ="hidden" name="employee_idEdit" id="employee_idEdit">  
 
 										</div>
@@ -202,34 +221,48 @@
 										<div class="form-group col-md-4 col-md-offset-4">
 											<label for= "levelDate">التاريخ</label>
 											<input type="date" class="form-control" id="levelDate" name="levelDate">
+											<input type="hidden" id="levelDatecurrentValue" name="levelDatecurrentValue">											
+											
 											<label for= "levelEdit">المستوى</label>
 											<select class="form-control" id="levelEdit" name="levelEdit" >
 												<option selected disabled hidden style='display: none' value=''></option>
 													<?php  	getLevel();   ?>
 											</select>
+											<input type="hidden" id="levelcurrentValue" name="levelcurrentValue">											
+											
 										</div>
 									</div>
 									<div class="tab-pane" id="tab3">
 										<div class="form-group col-md-4 col-md-offset-4">
 										<label for= "jobDate">التاريخ</label>
 										<input type="date" class="form-control" id="jobDate" name="jobDate">
+										<input type="hidden" id="jobDatecurrentValue" name="jobDatecurrentValue">											
+										
 										<label for= "jobEdit">الوظيفة</label>
 											<select class="form-control" id="jobEdit" name="jobEdit">
 												<option selected disabled hidden style='display: none' value=''></option>
 													<?php  	getJob();   ?>
 											</select>
+											<input type="hidden" id="jobcurrentValue" name="jobcurrentValue">											
+											
 											<label for= "shiftEdit">نهارى/ورادى</label>
 											<input type="text" class="form-control" id="shiftEdit" name="shiftEdit">
 											<label for= "desc_jobEdit">الوظيفة الحالية</label>
 											<input type="text" class="form-control" id="desc_jobEdit" name="desc_jobEdit">
+											<input type="hidden" id="descjobcurrentValue" name="descjobcurrentValue">											
+											
 										</div>
 									</div>
 									<div class="tab-pane" id="tab4">
 										<div class="form-group col-md-4 col-md-offset-4">	
 											<label for= "basicSalaryDate">التاريخ</label>
-											<input type="date" class="form-control" id="basicSalaryDate" name="basicSalaryDate">											
+											<input type="date" class="form-control" id="basicSalaryDate" name="basicSalaryDate">
+											<input type="hidden" id="basicSalaryDatecurrentValue" name="basicSalaryDatecurrentValue">											
+																						
 											<label for= "basicsalaryEdit">المرتب الاساسى</label>
 											<input type="text" class="form-control" id="basicsalaryEdit" name="basicsalaryEdit">
+											<input type="hidden" id="basicSalarycurrentValue" name="basicSalarycurrentValue">											
+											
 										</div>
 									</div>
 								</div>

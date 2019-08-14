@@ -112,28 +112,55 @@ $(document).ready(function(){
 				//console.log(data);
 				$('#employee_idEdit').val(data.ID);
 				$('#empNameEdit').val(data.empName);
+				$('#empNamecurrentValue').val(data.empName);
+				
 				$('#empCodeEdit').val(data.currentCode);
+				$('#empCodecurrentValue').val(data.currentCode);
+				
 				$('#genderEdit').val(data.gender);
+				
 				$('#desc_jobEdit').val(data.job_description);
+				$('#descjobcurrentValue').val(data.currentCode);
+				
 				$('#educationEdit').val(data.education);
+				$('#educationcurrentValue').val(data.education);
+				
 				$('#shiftEdit').val(data.currentShift);
 				$('#syndicateEdit').val(data.syndicate_id);
+				$('#syndicatecurrentValue').val(data.syndicate_id);
+				
 
 				$('#basicSalaryDate').val(data.salaryMaxDate);
+				$('#basicSalaryDatecurrentValue').val(data.salaryMaxDate);
+				
 				$('#basicsalaryEdit').val(data.currentSalary);
+				$('#basicSalarycurrentValue').val(data.currentSalary);
 
 				$('#levelDate').val(data.levelMaxDate);
+				$('#levelDatecurrentValue').val(data.levelMaxDate);
+				
 				$('#levelEdit').val(data.currentLevel);
+				$('#levelcurrentValue').val(data.currentLevel);
 
 				$('#contractDate').val(data.contractMaxDate);
+				$('#contractDatecurrentValue').val(data.contractMaxDate);
+				
 				$('#contractTypeEdit').val(data.currentContract);
+				$('#contractTypecurrentValue').val(data.currentContract);
 
 				$('#jobDate').val(data.JobMaxDate);
+				$('#jobDatecurrentValue').val(data.JobMaxDate);
+				
 				$('#jobEdit').val(data.currentJob);
+				$('#jobcurrentValue').val(data.currentJob);
 
 				
 				$('#maritalstatusEdit').val(data.currentMS);
+				$('#MScurrentValue').val(data.currentMS);
+
 				$('#MSDate').val(data.MSMaxDate);
+				$('#MSDatecurrentValue').val(data.MSMaxDate);
+				
 
 			},error:function(error){
 				console.log(error);

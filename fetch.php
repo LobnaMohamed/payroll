@@ -95,16 +95,16 @@
 			
 		}
 		elseif(isset($_POST["insertTimesheet"])){
-		// 	$con = connect();
-		// //	print_r( $_POST);
-		// 	//$timesheetDate =$_POST['timesheetDate'];
-		// 	$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['searchDateFrom'] ."' ";
-		// 	// echo $checkDate_sql;
-		// 	$stmt = $con->prepare($checkDate_sql);
-		// 	$stmt->execute();
-		// 	$result = $stmt->fetchColumn();
-		// 	// if no timesheet for this date at all 
-		// 	if( !$result){
+			// 	$con = connect();
+			// //	print_r( $_POST);
+			// 	//$timesheetDate =$_POST['timesheetDate'];
+			// 	$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['searchDateFrom'] ."' ";
+			// 	// echo $checkDate_sql;
+			// 	$stmt = $con->prepare($checkDate_sql);
+			// 	$stmt->execute();
+			// 	$result = $stmt->fetchColumn();
+			// 	// if no timesheet for this date at all 
+			// 	if( !$result){
 				//echo"insert timesheet";
 				insertTimesheet();
 			    header("location:timesheetinsertion.php");
