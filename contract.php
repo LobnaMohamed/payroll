@@ -42,7 +42,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editcontractForm" action="insert.php">	
+                    <form method="POST" id="editcontractForm" action="fetch.php">	
                         <div class="form-group col-md-12">
                             <input type="hidden" name="contract_id" id="contract_id"> 
                             <label for= "contractEdit">نوع العقد:</label>

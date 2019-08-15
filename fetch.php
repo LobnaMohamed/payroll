@@ -49,6 +49,21 @@
 		elseif(isset($_POST["currentProfileEmpID"])){
 			getEmpCurrentProfile(); 
 		}
+		elseif(isset($_POST["level_id"])){
+			getLevelDetails();
+		}
+		elseif(isset($_POST["contract_id"])){
+			getContractDetails();
+		}
+		elseif(isset($_POST["MS_id"])){
+			getMSDetails();
+		}
+		elseif(isset($_POST["syndicate_id"])){
+			getsyndicateDetails();
+		}
+		elseif(isset($_POST["job_id"])){
+			getJobDetails();
+		}
 		elseif(isset($_POST["insertEmp"])){
 			addEmp();
 			header("Location:empdata.php");

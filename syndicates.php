@@ -42,13 +42,20 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editsyndicateForm" action="insert.php">	
-                        <div class="form-group col-md-12">
-                            <input type="hidden" name="syndicate_id" id="syndicate_id"> 
-                            <label for= "syndicateEdit">الوظيفة:</label>
-                            <input type="text" class="form-control" id="syndicateEdit" name="syndicateEdit">
+                    <form method="POST" id="editsyndicateForm" action="fetch.php">	
+                        <div class="form-group col-md-6">
                             
+                            <label for= "syndicateAmountEdit">البدل:</label>
+                            <input type="text" class="form-control" id="syndicateAmountEdit" name="syndicateAmountEdit"> 
+                       
                         </div>
+                        <div class="form-group col-md-6">
+                            <input type="hidden" name="syndicate_id" id="syndicate_id"> 
+                            <label for= "syndicateEdit">النقابة:</label>
+                            <input type="text" class="form-control" id="syndicateEdit" name="syndicateEdit"> 
+                        </div>
+                            
+
 
                         <div class="form-group col-md-12">
                             <input type="submit" name="updatesyndicate" class="btn btn-block btn-lg" value="حفظ">

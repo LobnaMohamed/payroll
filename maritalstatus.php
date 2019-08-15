@@ -53,7 +53,7 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body row">
-						<form method="POST" id="editMaritalStatusForm" action="insert.php">	
+						<form method="POST" id="editMaritalStatusForm" action="fetch.php">	
                             <div class="form-group col-md-4">
                                 <label for= "medInsuranceEdit">علاج أسر :</label>
                                 <input type="text" class="form-control" id="medInsuranceEdit" name="medInsuranceEdit">

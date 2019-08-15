@@ -106,9 +106,9 @@
 		$result = $stmt->fetchAll();
 		if($page == 'contract.php'){
 			foreach($result as $row){
-				echo '<button  class="btn  btn-lg managements editcontractData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editcontractModal" id="'.$row['ID'].'">'. $row['contractType'] .'</button>';
+				echo '<button  class="btn btn-lg managements editcontractData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editcontractModal" id="'.$row['ID'].'">'. $row['contractType'] .'</button>';
 				}
-				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addcontractModal'><i class='fa fa-plus-circle'></i></div>";
+				echo "<div class='btn btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addcontractModal'><i class='fa fa-plus-circle'></i></div>";
 	
 		}elseif($page == 'empdata.php'){
 			foreach($result as $row){
@@ -151,18 +151,30 @@
 	}
 	//---------------get jobs type function-----------------------
 	function getJob(){
+		$output ="";
 		$page =  basename($_SERVER['REQUEST_URI']);
 		$con = connect();
-		$sql= "SELECT ID,job FROM job" ;
+		$sql= "SELECT * FROM job" ;
     	$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if($page == 'job.php'){
 			foreach($result as $row){
-				echo '<button  class="btn  btn-lg managements editjobData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editjobModal" id="'.$row['ID'].'">'. $row['job'] .'</button>';
+				$output .= 
+				"<tr>
+					<td>".  $row['job']. "</td>
+					<td>".  $row['experience_amount']. "</td>
+					<td>".  $row['specialization_amount']. "</td>
+					<td>".  $row['representation_amount']. "</td>
+					<td>
+						<button type='button' class='btn btn-primary btn-sm   editjobData' data-toggle='modal' 
+						data-target='#editjobModal' id=".$row['ID']."><i class='fa fa-edit fa-lg' aria-hidden='true'></i></button>
+					</td>
+				</tr>";
+				//echo '<button  class="btn  btn-lg managements editjobData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editjobModal" id="'.$row['ID'].'">'. $row['job'] .'</button>';
 				}
-				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addjobModal'><i class='fa fa-plus-circle'></i></div>";
-	
+				//echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addjobModal'><i class='fa fa-plus-circle'></i></div>";
+				echo $output ;
 		}elseif($page == 'empdata.php'){
 	    	foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['job'] . "</option>";
@@ -191,7 +203,17 @@
 		}
 
 	}
+	// --------------get job details function-----------------------
+	function getJobDetails(){
+		//$output="";
+		$con = connect();		
+		$sql="select * from job where ID = ".$_POST['job_id']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
 
+	}
 	// --------------get Employee function-----------------------
 	function getAllEmp(){
 		$output="";
@@ -225,8 +247,8 @@
 					data-target='#viewcurrentEmpModal' id=".$row['ID']."><i class='fa fa-address-card-o fa-lg' aria-hidden='true'></i></button>
 				</td>
 				<td>
-					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
-					data-target='#viewEmphistoryModal' id=".$row['ID']."><i class='fa fa-history fa-lg' aria-hidden='true'></i></button>
+					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#viewEmphistoryModal'
+					 id=".$row['ID']."><i class='fa fa-history fa-lg' aria-hidden='true'></i></button>
 				</td>
 			</tr>";
 		 }
@@ -237,6 +259,50 @@
 		//$output="";
 		$con = connect();		
 		$sql="select * from empCurrentProfile where ID = ".$_POST['currentProfileEmpID']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
+
+	}
+	// --------------get level details function-----------------------
+	function getLevelDetails(){
+		//$output="";
+		$con = connect();		
+		$sql="select * from level where ID = ".$_POST['level_id']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
+
+	}
+	// --------------get contract details function-----------------------
+	function getContractDetails(){
+		//$output="";
+		$con = connect();		
+		$sql="select * from contract where ID = ".$_POST['contract_id']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
+
+	}
+	// --------------get ms details function-----------------------
+	function getMSDetails(){
+		//$output="";
+		$con = connect();		
+		$sql="select * from maritalStatus where ID = ".$_POST['MS_id']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
+
+	}
+	// --------------get ms details function-----------------------
+	function getsyndicateDetails(){
+		//$output="";
+		$con = connect();		
+		$sql="select * from syndicates where ID = ".$_POST['syndicate_id']."";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch();
@@ -374,10 +440,10 @@
 			// 			inner join employee e on empt.emp_id = e.ID
 			// 		and month(t.sheetDate)=  month('".$_POST['timesheetDate']."')";
 			$sql = "select  e.empName,e.currentCode,e.ID
-				from	employee e
-				where e.ID not in (select empt.emp_id
-				from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-				where month(t.sheetDate)=  month('".$_POST['dateFrom']."')) ";
+					from	employee e
+					where e.ID not in (select empt.emp_id
+					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+					where month(t.sheetDate)=  month('".$_POST['dateFrom']."')) ";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -403,10 +469,10 @@
 					
 					<input name='emp_id' type='hidden' value=".$row['ID'].">
 					<td>
-						<input  class='form-control' name='presence_days[".$row['ID']."]' value=30>
+						<input class='form-control' name='presence_days[".$row['ID']."]' value=30>
 					</td> 
 					<td>
-						<input  class='form-control' name='sickLeave_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='sickLeave_days[".$row['ID']."]' value=0>
 					</td>  
 					<td>
 						<input class='form-control' name='deduction_days[".$row['ID']."]' value=0>
@@ -763,6 +829,9 @@
 		//echo json_encode($result); 
 	}
 	//---------------edit levels function-------------------------
+	function editLevel(){
+
+	}
 	//---------------edit contracts function----------------------
 	//---------------edit marital status function-----------------
 	//---------------edit jobs function---------------------------

@@ -46,10 +46,10 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editLevelForm" action="insert.php">	
+                    <form method="POST" id="editLevelForm" action="fetch.php">	
                         <div class="form-group col-md-6">
                             <label for= "hafezpercentEdit">الحافز :</label>
-                            <input type="text" class="form-control" id="hafezpercentEdit" name="hafezpercentEdit">
+                            <input  class="form-control" id="hafezpercentEdit" name="hafezpercentEdit">
                         </div>
                         <div class="form-group col-md-6">
                             <input type="hidden" name="level_id" id="level_id"> 

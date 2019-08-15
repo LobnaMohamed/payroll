@@ -19,16 +19,9 @@ label{
     font-size: 110%;
     /* display:block; */
 }
-/* .form-wages *{
-    direction: rtl;
-} */
-/* .form-group {
-    
-    margin-bottom: 50px;
-} */
 .form-control{
     font-size: 17px;
-    /* margin-bottom: 20px; */
+    
 }
 .form-control input[type="text"], input[type="date"]{
     text-align: right;
@@ -65,6 +58,7 @@ label{
     padding: 15px;
     margin: 0 auto;
 }
+
 .navbar-nav{
     /* margin-bottom: 0; */
     font-size: 21px;
@@ -99,20 +93,23 @@ label{
     padding-bottom: 3px;
     margin-bottom: 0px;
 }
+.form-control{
+    width:auto;
+}
 .table td, 
 .table th {
     white-space: nowrap;
     width: 1%; 
 }
-/*pending and confirmed tables*/
-#timesheet{
+/* tables*/
+/* #timesheet{
     font-size: 13px;
     font-weight: bold;
-}
+} */
 #timesheet th{
     font-size: 16px;
 }
-#timesheet th ,#deductions th,#empData th,#sanctions th,#benefits th{
+#timesheet th ,#deductions th,#empData th,#jobData th, #sanctions th,#benefits th{
     background-color: #999999;
 }
 #confirmedVacReport{
@@ -145,7 +142,7 @@ label{
 .managements-container,.MaritalStatus-container,.levels-container,
 .timesheet-container,.job-container,.empdata-container,{
     margin: 0 auto;
-}
+}   
 .managements{
     background-color: #c2bfbfc4;
     text-align: center;
@@ -156,8 +153,10 @@ label{
     background-color: #940308;
     color: #f2f2f2;
 }
-#addManagementModal  input[type="submit"]:hover , #editManagementModal  input[type="submit"]:hover,
-#editLevelModal  input[type="submit"]:hover,#editsyndicateModal input[type="submit"]:hover,#edittimesheetModal input[type="submit"]:hover{
+#addjobModal  input[type="submit"]:hover , #editManagementModal  input[type="submit"]:hover,
+#editLevelModal  input[type="submit"]:hover,#editsyndicateModal input[type="submit"]:hover,
+#editcontractModal input[type="submit"]:hover,#edittimesheetModal input[type="submit"]:hover,
+#editMaritalStatusModal input[type="submit"]:hover,#editjobModal input[type="submit"]:hover{
     background-color: #940308;
     color: #fff;
 }
