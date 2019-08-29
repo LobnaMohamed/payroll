@@ -2,7 +2,7 @@
 	//include 'connect.php';
 	// --------------connection to database function-------------
 	function connect(){
-		$servername = "LOBNA";
+		$servername = "LOBNA-PC";
         // $username = "username";
         // $password = "password";
         
@@ -554,7 +554,7 @@
 			$lastID = $stmt->fetchColumn();
 			echo $lastID;
 		}else{
-			// if timesheet already exist get its ID and uinsert for remaining emp the timesheet
+			// if timesheet already exist get its ID and insert for remaining emp the timesheet
 			$getlastTSID_sql = "select ID  from timesheets where sheetDate =  '$timesheetDate' ";
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
@@ -566,11 +566,6 @@
 
 		//---------------timesheet INSERTION---------------------
 		foreach ($_POST['presence_days'] as $empID => $value) {
-
-			// ECHO "<pre>";
-			// PRINT_R($_POST);
-			// ECHO "<\pre>";
-			// print " {\n ";
 				$sickLeave = $_POST['sickLeave_days'][$empID];
 				$deduction = $_POST['deduction_days'][$empID];
 				$absence = $_POST['absence_days'][$empID];
@@ -928,20 +923,33 @@
 		//check if there are any values in salary for that date:
 		$sql = "select ID
 				from timesheets
-				where sheetDate = '".$_POST['dateFrom']."'";
+				where month(sheetDate) = month('".$_POST['dateFrom']."')";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$timesheetID = $stmt->fetchColumn();
-		if($timesheetID){
+		if(! $timesheetID){
+			// if no timesheet date insert new one
+			$insertSql = "insert into timesheets(sheetDate)values('".$_POST['dateFrom']."') ";
+			$stmt = $con->prepare($insertSql);
+			$stmt->execute();
+			$getlastTSID_sql = "select max(ID) from timesheets";
+			
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+		    $timesheetID = $stmt->fetchColumn();
+			// $insertTimesheetinSalary = "insert into salary(TS_id)values('$timesheetID')";
+
+		}
+		//if($timesheetID){
 			//there is timesheet with this date
 			//check salary table
 
-			$sql= "select e.currentCode,e.empName,empt.emp_id ,empt.TS_id,s.otherDeduction,s.mobil,
-						s.perimiumCard,s.pastPeriod,s.etisalatNet,s.socialInsurances
-					from employee e inner join empTimesheet empt
-						on e.ID = empt.emp_id inner join salary s 
-						on empt.emp_id = s.emp_id and empt.TS_id = s.TS_id
-					where empt.TS_id =  $timesheetID";
+			$sql= "select e.currentCode,e.empName,t.ID,s.otherDeduction,s.mobil,s.TS_id,s.emp_id,
+					s.perimiumCard,s.pastPeriod,s.etisalatNet,s.socialInsurances
+					from employee e  inner join salary s 
+						on e.ID = s.emp_id inner join timesheets t 
+						on s.TS_id = t.ID 
+					where s.TS_id =  $timesheetID";
 			if(!empty($_POST['search'])){ 
 				$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
 			}
@@ -949,9 +957,9 @@
 			$stmt->execute();
 			$result = $stmt->fetchAll();
 			if($result){
-			// 	<td>
-			// 	<input type='number' class='form-control' name='socialInsurancesText[$tsindex][$empindex]' value=".$row['socialInsurances'].">
-			// </td> 
+				// 	<td>
+				// 	<input type='number' class='form-control' name='socialInsurancesText[$tsindex][$empindex]' value=".$row['socialInsurances'].">
+				// </td> 
 				foreach($result as $row){
 					$empindex = $row['emp_id'];
 					$tsindex = $row['TS_id'];
@@ -980,12 +988,46 @@
 					</tr>";
 				}
 			}
-		}else{
-			$output = "
-			<tr>
-			<td colspan='13' class='alert alert-warning'> 
-			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
-			</td></tr>";
+		//}
+		else{
+			
+			$sql= "select e.ID,e.currentCode,e.empName from employee e";
+			if(!empty($_POST['search'])){ 
+				$sql .= " where (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
+			}
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			// $output = "
+			// <tr>
+			// <td colspan='13' class='alert alert-warning'> 
+			// <strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
+			// </td></tr>";
+			foreach($result as $row){
+				$empindex = $row['ID'];
+				$output .= "<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<input name='emp_id' type='hidden' value=".$row['ID'].">
+				<input name='tsID' type='hidden' value= '$timesheetID'>
+				<td>
+					<input type='number' class='form-control' name='otherDeductionText[$timesheetID][$empindex]' >
+				</td> 
+
+				<td>
+					<input type='number' class='form-control' name='mobilText[$timesheetID][$empindex]' >
+				</td>
+				<td>
+					<input type='number' class='form-control' name='etisalatNetText[$timesheetID][$empindex]' >
+				</td>
+				<td>
+					<input type='number' class='form-control' name='perimiumCardText[$timesheetID][$empindex]'>
+				</td>
+				<td>
+					<input type='number' class='form-control' name='pastPeriodText[$timesheetID][$empindex]' >
+				</td>
+				</tr>";
+			}
 		}
 
 		
