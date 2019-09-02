@@ -938,6 +938,23 @@
 			$stmt->execute();
 		    $timesheetID = $stmt->fetchColumn();
 			// $insertTimesheetinSalary = "insert into salary(TS_id)values('$timesheetID')";
+			//---------------timesheet ID INSERTION in salary table---------------------
+			$sql="select ID from employee";
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			
+			foreach ($result as $row) {
+
+				$sql = "insert into salary(TS_id,emp_id) 
+						values ($timesheetID,". $row['ID'].")";
+				//echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+
+				//}
+				//  print "}\n";
+			}
 
 		}
 		//if($timesheetID){
@@ -1041,20 +1058,50 @@
 		//check if there are any values in salary for that date:
 		$sql = "select ID
 				from timesheets
-				where sheetDate = '".$_POST['dateFrom']."'";
+				where month(sheetDate) = month('".$_POST['dateFrom']."')";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$timesheetID = $stmt->fetchColumn();
-		if($timesheetID){
+		if(!$timesheetID){
+
+		
+			// if no timesheet date insert new one
+			$insertSql = "insert into timesheets(sheetDate)values('".$_POST['dateFrom']."') ";
+			$stmt = $con->prepare($insertSql);
+			$stmt->execute();
+			$getlastTSID_sql = "select max(ID) from timesheets";
+			
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$timesheetID = $stmt->fetchColumn();
+		
+			//---------------timesheet ID INSERTION in salary table---------------------
+			$sql="select ID from employee";
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			
+			foreach ($result as $row) {
+
+				$sql = "insert into salary(TS_id,emp_id) 
+						values ($timesheetID,". $row['ID'].")";
+			//	echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+
+				//}
+				//  print "}\n";
+			}
+		}
+		//if($timesheetID){
 			//there is timesheet with this date
 			//check salary table
 
-			$sql= "select e.currentCode,e.empName,empt.emp_id ,empt.TS_id,s.specialBonus,s.otherDues
+			$sql= "select e.currentCode,e.empName,s.emp_id ,s.TS_id,s.specialBonus,s.otherDues
 						
-					from employee e inner join empTimesheet empt
-						on e.ID = empt.emp_id inner join salary s 
-						on empt.emp_id = s.emp_id and empt.TS_id = s.TS_id
-					where empt.TS_id =  $timesheetID";
+					from employee e inner join  salary s 
+						on e.ID = s.emp_id 
+					where s.TS_id =  $timesheetID";
 			if(!empty($_POST['search'])){
 				$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
 			}
@@ -1084,13 +1131,13 @@
 					</tr>";
 				}
 			}
-		}else{
-			$output = "
-			<tr>
-			<td colspan='13' class='alert alert-warning'> 
-			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
-			</td></tr>";
-		}
+		 //}//else{
+		// 	$output = "
+		// 	<tr>
+		// 	<td colspan='13' class='alert alert-warning'> 
+		// 	<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. </strong>
+		// 	</td></tr>";
+		// }
 
 		
 		echo $output;
@@ -1106,81 +1153,103 @@
 		//-------------------------------------------------------------
 		$sql = "select ID
 				from timesheets
-				where sheetDate = '".$_POST['dateFrom']."'";
+				where month(sheetDate) = month('".$_POST['dateFrom']."')";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$timesheetID = $stmt->fetchColumn();
-		if($timesheetID){
-			//there is timesheet with this date
-			//check salary table
-			$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary
-							from	employee e";
-			if(!empty($_POST['search'])){
+		if(!$timesheetID){
 
-				$sql .= " where (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')
-							or e.currentCode like '%". $_POST['search'] ."%'";	
-	
-			}
+		
+			// if no timesheet date insert new one
+			$insertSql = "insert into timesheets(sheetDate)values('".$_POST['dateFrom']."') ";
+			$stmt = $con->prepare($insertSql);
+			$stmt->execute();
+			$getlastTSID_sql = "select max(ID) from timesheets";
+			
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$timesheetID = $stmt->fetchColumn();
+			// $insertTimesheetinSalary = "insert into salary(TS_id)values('$timesheetID')";
+			//---------------timesheet ID INSERTION in salary table---------------------
+			$sql="select ID from employee";
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetchAll();
-			foreach($result as $row){
-				$empindex = $row['ID'];
-			    //".$row['TS_ID']."][".$row['ID']."
-				$tsindex = $timesheetID;
-				$output .= "<tr>
-				<td>".  $row['currentCode']. "</td>
-				<td>".  $row['empName']. "</td>
-				<td class='currentSalary'>".  $row['currentSalary']. "</td>
-				
-				<input name='emp_id' type='hidden' value=".$row['ID'].">
-				<input name='tsID' type='hidden' value=".$timesheetID.">";
-				$sql2= "select s.sanctionDays,s.sanctionAmount,s.sanctionNotes,s.employee_id,s.TS_id
-					
-						from  sanctions s
-						where s.TS_id =  $timesheetID and s.employee_id = $empindex";
-				$stmt = $con->prepare($sql2);
-				$stmt->execute();
-				$result2 = $stmt->fetchAll();
-				if($result2){
-					foreach($result2 as $row2){
-						$output .= "<td>
-						<input  class='form-control sanctionDays' name='sanctionsDaysText[$tsindex][$empindex]' value=".$row2['sanctionDays'].">
-						</td> 
+			
+			foreach ($result as $row) {
 
-						<td>
-							<input  class='form-control sanctionAmount' name='sanctionsAmountText[$tsindex][$empindex]' value=".$row2['sanctionAmount'].">
-						</td>
-						<td>
-							<input type='text' class='form-control sanctionNotes' name='sanctionsNotesText[$tsindex][$empindex]'  value=".$row2['sanctionNotes'].">
-						</td>
-						
-						</tr>";
-					}
-					
-				}else{
+				$sql = "insert into salary(TS_id,emp_id) 
+						values ($timesheetID,". $row['ID'].")";
+			//	echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+
+				//}
+				//  print "}\n";
+			}
+		}
+		//there is timesheet with this date
+		//check salary table
+		$sql = "select  e.empName,e.currentCode,e.ID,e.currentSalary
+						from	employee e";
+		if(!empty($_POST['search'])){
+
+			$sql .= " where (e.currentCode between '".$_POST['search']."' and '".$_POST['searchTo'] ."')
+						or e.currentCode like '%". $_POST['search'] ."%'";	
+
+		}
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$empindex = $row['ID'];
+			//".$row['TS_ID']."][".$row['ID']."
+			$tsindex = $timesheetID;
+			$output .= "<tr>
+			<td>".  $row['currentCode']. "</td>
+			<td>".  $row['empName']. "</td>
+			<td class='currentSalary'>".  $row['currentSalary']. "</td>
+			
+			<input name='emp_id' type='hidden' value=".$row['ID'].">
+			<input name='tsID' type='hidden' value=".$timesheetID.">";
+			$sql2= "select s.sanctionDays,s.sanctionAmount,s.sanctionNotes,s.employee_id,s.TS_id
+				
+					from  sanctions s
+					where s.TS_id =  $timesheetID and s.employee_id = $empindex";
+			$stmt = $con->prepare($sql2);
+			$stmt->execute();
+			$result2 = $stmt->fetchAll();
+			if($result2){
+				foreach($result2 as $row2){
 					$output .= "<td>
-						<input  class='form-control sanctionDays' name='sanctionsDaysText[$tsindex][$empindex]'>
+					<input  class='form-control sanctionDays' name='sanctionsDaysText[$tsindex][$empindex]' value=".$row2['sanctionDays'].">
 					</td> 
 
 					<td>
-						<input  class='form-control sanctionAmount' name='sanctionsAmountText[$tsindex][$empindex]' >
+						<input  class='form-control sanctionAmount' name='sanctionsAmountText[$tsindex][$empindex]' value=".$row2['sanctionAmount'].">
 					</td>
 					<td>
-						<input type='text' class='form-control sanctionNotes' name='sanctionsNotesText[$tsindex][$empindex]' >
+						<input type='text' class='form-control sanctionNotes' name='sanctionsNotesText[$tsindex][$empindex]'  value=".$row2['sanctionNotes'].">
 					</td>
 					
 					</tr>";
 				}
+				
+			}else{
+				$output .= "<td>
+					<input  class='form-control sanctionDays' name='sanctionsDaysText[$tsindex][$empindex]'>
+				</td> 
 
-
+				<td>
+					<input  class='form-control sanctionAmount' name='sanctionsAmountText[$tsindex][$empindex]' >
+				</td>
+				<td>
+					<input type='text' class='form-control sanctionNotes' name='sanctionsNotesText[$tsindex][$empindex]' >
+				</td>
+				
+				</tr>";
 			}
-			//}
-		}else{
-				$output = "<tr><td colspan='7' class='alert alert-warning'> 
-				<strong>لا يوجد حصر أيام الحضور بهذا التاريخ!</strong>
-				</td></tr>";
-		}	
+		}
 		echo $output;
 		
 	}
