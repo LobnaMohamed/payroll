@@ -54,9 +54,6 @@
                             <label for= "syndicateEdit">النقابة:</label>
                             <input type="text" class="form-control" id="syndicateEdit" name="syndicateEdit"> 
                         </div>
-                            
-
-
                         <div class="form-group col-md-12">
                             <input type="submit" name="updatesyndicate" class="btn btn-block btn-lg" value="حفظ">
                         </div>	
