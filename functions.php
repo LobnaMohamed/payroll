@@ -537,7 +537,7 @@
 		$con = connect();
 		$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['searchDateFrom'] ."' ";
 		$timesheetDate =$_POST['searchDateFrom'];
-		echo $timesheetDate;
+		//echo $timesheetDate;
 		$stmt = $con->prepare($checkDate_sql);
 		$stmt->execute();
 		$result = $stmt->fetchColumn();
@@ -552,14 +552,14 @@
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
-			echo $lastID;
+			//echo $lastID;
 		}else{
 			// if timesheet already exist get its ID and insert for remaining emp the timesheet
 			$getlastTSID_sql = "select ID  from timesheets where sheetDate =  '$timesheetDate' ";
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
-			echo $lastID;
+			//echo $lastID;
 
 		}
 
@@ -583,17 +583,21 @@
 				echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
-
-				$sql = "insert into salary(TS_id,emp_id) 
-						values ('$lastID','$empID')";
-				//echo $sql;
-				$stmt = $con->prepare($sql);
+				//check if ts_id already exists in salary:
+				$sql_check = "select TS_id from salary where TS_id ='$lastID'";
+				$stmt = $con->prepare($sql_check);
 				$stmt->execute();
+				$result = $stmt->fetchColumn();
+				if(! $result){
+	
+					$sql = "insert into salary(TS_id,emp_id) 
+					values ('$lastID','$empID')";
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
 
-			//}
-			//  print "}\n";
 		}
-		echo "done insertion";
+		//echo "done insertion";
 	}
 	//---------------edit timesheet for one employee-----------
 	function editTimesheet(){
@@ -1255,17 +1259,7 @@
 	}
 	//---------------calculate benefits of salary------------------
 	function calculateSalary24(){
-		$con = connect();		
-		// $sql = "select e.ID	,e.currentSalary,e.currentSpecialization,ts.presence_days,ms.social_insurance,ms.med_insurance,s.amount,
-		// 			   e.currentWorkAllowanceNature,ts.manufacturing_days,ts.overnight_days,ts.shift_days,l.incentivePercent,
-		// 			   j.specialization_amount,j.experience_amount,j.representation_amount,ts.ID as timesheetID
-		// 		from   employee e,timesheet ts,maritalStatus ms,syndicates s,level l,job j
-		// 		where  e.ID = ts.emp_id
-		// 			   and e.currentMS = ms.ID
-		// 			   and e.syndicate_id = s.ID
-		// 			   and e.currentLevel = l.ID
-		// 			   and e.currentJob = j.ID
-		// 			   and ts.sheetDate = '" . $_POST['dateFrom'] ."'";		
+		$con = connect();			
 		$sql = "select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
 				ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
 				j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.overnight_days,
@@ -1592,13 +1586,15 @@
 			foreach($result as $row){
 				$output .= 
 				"<tr>
+					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+					<input name='TS_id' type='hidden' value=".$row['TS_id'].">
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
 					<td>".  $row['totalBenefits']. "</td>
 					<td>".  $row['totalDeductions']. "</td>
 					<td>".  $row['netSalary']. "</td>
 					<td>
-						<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
+						<button type='button' class='btn btn-primary btn-sm wagesDetailsBtn' data-toggle='modal' 
 						data-target='#WagesDetailsModal' id=".$row['TS_id'] . $row['emp_id'].">
 						<i class='fa fa-info fa-lg' aria-hidden='true'></i>
 						</button>
@@ -1611,10 +1607,206 @@
 	}
 	//----------get wage details-----------------------------
 	function viewWagesDetails(){
-	// 	<td>
-	// 	<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' 
-	// 	data-target='#WagesDetailsModal' id=".array($row['emp_id'],$row['TS_id']).">
-	// 	<i class='fa fa-info fa-lg' aria-hidden='true'></i>
-	// 	</button>
-	// </td>
+	$sql = "select * from salary where TS_id ='".$_POST['wagesDetailssheetID']."'
+								AND emp_id ='".$_POST['wagesDetailsEmpID'] ."' ";
+	echo $sql;
+	$output = "
+		<div class='title'>
+			<div><img src='http://amoceg.com/wp-content/uploads/2018/05/AMOC_Logo.png' align='left'
+					style='max-width:100% ;'></div>
+			<div id='company'>
+				<h3>(O??E C?????I??E ?????E C???I??E (????</h3>
+				<h3> C??IC?E C??C?E ??O??? C??C??E </h3>
+				<h4>hi</h4>
+			</div>
+		</div>
+		<table>
+			<tr>
+				<th colspan='2'>" & Cells(4, 71).Value & " </th>
+				<th colspan='2'>" & Cells(4, 35).Value & "</th>
+				<th colspan='3'>" & Cells(4, 33).Value & "</th>
+				<th colspan='2'>" & Cells(4, 34).Value & "</th>
+			</tr>
+			<tr>
+				<td colspan='2'>" & Cells(r, 71).Value & "</td>
+				<td colspan='2'>" & Range("I1") & "</td>
+				<td colspan='3'>" & Cells(r, 33).Value & "</td>
+				<td colspan='2'>" & Cells(r, 34).Value & "</td>
+			</tr>
+			<tr>
+				<th style='background-color:#3c3c3db7'>C????I</th>
+				<th colspan='8'>C?C?E??C?CE</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td class='subHeader'>" & Cells(4, 58).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 59).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 60).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 61).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 62).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 63).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 64).Value & " </td>
+				<td class='subHeader'>" & Cells(4, 65).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>" & Cells(r, 58).Value & "</td>
+				<td>" & Cells(r, 59).Value & "</td>
+				<td>" & Cells(r, 60).Value & "</td>
+				<td>" & Cells(r, 61).Value & "</td>
+				<td>" & Cells(r, 62).Value & "</td>
+				<td>" & Cells(r, 63).Value & "</td>
+				<td>" & Cells(r, 64).Value & "</td>
+				<td>" & Cells(r, 65).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class='subHeader'>" & Cells(4, 50).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 54).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 51).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 55).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 52).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 56).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 53).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 57).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>" & Cells(r, 50).Value & "</td>
+				<td>" & Cells(r, 54).Value & "</td>
+				<td>" & Cells(r, 51).Value & "</td>
+				<td>" & Cells(r, 55).Value & "</td>
+				<td>" & Cells(r, 52).Value & "</td>
+				<td>" & Cells(r, 56).Value & "</td>
+				<td>" & Cells(r, 53).Value & "</td>
+				<td>" & Cells(r, 57).Value & "</td>
+			</tr>
+			<tr>
+				<td colspan='7'></td>
+				<td class='subHeader'>" & Cells(4, 48).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 49).Value & "</td>
+			</tr>
+			<tr>
+				<td colspan='7'></td>
+				<td>" & Cells(r, 48).Value & "</td>
+				<td>" & Cells(r, 49).Value & "</td>
+			</tr>
+			<tr class='total'>
+				<td>" & Cells(r, 47).Value & "</td>
+				<td colspan='8'>" & Cells(4, 47).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<th colspan='8'>C?C?E??C?CE</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td class='subHeader'>" & Cells(4, 25).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 29).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 26).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 30).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 27).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 31).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 28).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 32).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>" & Cells(r, 25).Value & "</td>
+				<td>" & Cells(r, 29).Value & "</td>
+				<td>" & Cells(r, 26).Value & "</td>
+				<td>" & Cells(r, 30).Value & "</td>
+				<td>" & Cells(r, 27).Value & "</td>
+				<td>" & Cells(r, 31).Value & "</td>
+				<td>" & Cells(r, 28).Value & "</td>
+				<td>" & Cells(r, 32).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class='subHeader'>" & Cells(4, 17).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 14).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 22).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 13).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 16).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 15).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 23).Value & "</td>
+				<td class='subHeader'>" & Cells(4, 24).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>" & Cells(r, 17).Value & "</td>
+				<td>" & Cells(r, 14).Value & "</td>
+				<td>" & Cells(r, 22).Value & "</td>
+				<td>" & Cells(r, 13).Value & "</td>
+				<td>" & Cells(r, 16).Value & "</td>
+				<td>" & Cells(r, 15).Value & "</td>
+				<td>" & Cells(r, 23).Value & "</td>
+				<td>" & Cells(r, 24).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<th colspan='8'> C?C?E??C?CE ?? C????I</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 9).Value & "</td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 10).Value & "</td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 11).Value & "</td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 6).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>" & Cells(r, 9).Value & "</td>
+				<td>" & Cells(r, 42).Value & "</td>
+				<td>" & Cells(r, 10).Value & "</td>
+				<td>" & Cells(r, 43).Value & "</td>
+				<td>" & Cells(r, 11).Value & "</td>
+				<td>" & Cells(r, 44).Value & "</td>
+				<td>" & Cells(r, 6).Value & "</td>
+				<td>" & Cells(r, 37).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 3).Value & "</td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 5).Value & "</td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 7).Value & "</td>
+				<td colspan='2' class='subHeader'>" & Cells(4, 8).Value & "</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>" & Cells(r, 3).Value & "</td>
+				<td>" & Cells(r, 36).Value & "</td>
+				<td>" & Cells(r, 5).Value & "</td>
+				<td>" & Cells(r, 38).Value & "</td>
+				<td>" & Cells(r, 7).Value & "</td>
+				<td>" & Cells(r, 40).Value & "</td>
+				<td>" & Cells(r, 8).Value & "</td>
+				<td>" & Cells(r, 41).Value & "</td>
+			</tr>
+			<tr class='total'>
+				<td>(" & Cells(r, 2).Value & ")</td>
+				<td colspan='8'>" & Cells(4, 2).Value & " </td>
+			</tr>
+			<tr class='total'>
+				<td>" & Cells(r, 1).Value & "</td>
+				<td colspan='8'> " & Cells(4, 1).Value & " </td>
+			</tr>
+			<tr>
+				<td colspan='9'></td>
+			</tr>
+			<tr class='hafez'>
+				<td>" & Cells(r, 72).Value & "</td>
+				<td colspan='8'>" & Cells(4, 72).Value & "</td>
+			</tr>
+		</table>
+		<div class='notice'>
+			<h4>:E?E??</h4>
+			<p>O??CE C??E? C?????E ??? C?E??I C?C??E???? ?C E?EE? ??E?I ?C???? ? ?C ?? ??C CO?C? ? ?? ?C?E C??C?E ??? ???ICE
+				C???EE ???? C?E?C?? ?? C??IC?E C??C?E ??O??? C??C??E</p>
+		</div>
+		<hr>
+		<div style='text-align: right;'>
+			<p>??C? C????? - ??C? C?E?C?? ??U? C??????CE</p>
+		</div>";
+		//echo $output;
 	}

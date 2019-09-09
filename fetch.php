@@ -110,26 +110,12 @@
 			
 		}
 		elseif(isset($_POST["insertTimesheet"])){
-			// 	$con = connect();
-			// //	print_r( $_POST);
-			// 	//$timesheetDate =$_POST['timesheetDate'];
-			// 	$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['searchDateFrom'] ."' ";
-			// 	// echo $checkDate_sql;
-			// 	$stmt = $con->prepare($checkDate_sql);
-			// 	$stmt->execute();
-			// 	$result = $stmt->fetchColumn();
-			// 	// if no timesheet for this date at all 
-			// 	if( !$result){
-				//echo"insert timesheet";
-				insertTimesheet();
-			    header("location:timesheetinsertion.php");
-			// }else{
-			// 	//if already exist insert for  remaining emp
-			// 	//echo "already exists";
-			// 	print_r( $_POST);
-			// 	$empwithnoTimesheetsql = "select emp_id from empTimesheet where TS_id != $result"; 
 
-			// }
+			insertTimesheet();
+			calculateSalary24();
+
+			header("location:timesheetinsertion.php");
+
 		}
 		elseif(isset($_POST["editTimesheet_empID"]) && isset($_POST["editTimesheet_ID"]) )  
 		{  
@@ -152,6 +138,9 @@
 			editTimesheet();
 			header("Location:timesheet.php");
 		//	getTimesheet();
+		}
+		elseif(isset($_POST["employeeID"]) && isset($_POST["sheetID"])){
+			viewWagesDetails();
 		}
 	
 	?>

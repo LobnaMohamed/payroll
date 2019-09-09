@@ -381,6 +381,40 @@ $(document).ready(function(){
 			}
 		});
 	});
+	//--------------get wages details for emp------------------
+	$(document).on('click','.wagesDetailsBtn', function(){
+		//var employee_id=$(this).attr("id");
+		var row = $(this).closest("tr");
+		var employeeID = row.find("input[name='emp_id']").val();
+		var sheetID = row.find("input[name='TS_id']").val();	
+		console.log(employeeID);
+		console.log(sheetID);
+
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{wagesDetailsEmpID:employeeID,
+				  wagesDetailssheetID:sheetID},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				// $('#currentProfileEmp_code').text(data.currentCode);
+				// $('#currentProfileEmp_level').text(data.empLevel);
+				// $('#currentProfileEmp_job').text(data.job);
+				// $('#currentProfileEmp_syndicate').text(data.syndicate);
+				// $('#currentProfileEmp_name').text(data.empName);
+				// $('#currentProfileEmp_MS').text(data.maritalStatus);
+				// $('#currentProfileEmp_contract').text(data.contractType);
+				// $('#currentProfileEmp_shift').text(data.currentShift);
+				// $('#currentProfileEmp_hireDate').text(data.hireDate);				
+				// $('#currentProfileEmp_DOB').text(data.DOB);
+				// $('#currentProfileEmp_salary').text(data.currentSalary);
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	
 	//--------------get level data in edit modal---------------
 	// $(document).on('click','.editLevelData', function(){
 	// });
