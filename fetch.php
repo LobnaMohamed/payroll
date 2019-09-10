@@ -139,7 +139,7 @@
 			header("Location:timesheet.php");
 		//	getTimesheet();
 		}
-		elseif(isset($_POST["employeeID"]) && isset($_POST["sheetID"])){
+		elseif(isset($_POST["wagesDetailsEmpID"]) && isset($_POST["wagesDetailssheetID"])){
 			viewWagesDetails();
 		}
 	

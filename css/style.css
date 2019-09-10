@@ -221,3 +221,95 @@ label{
   .delete_sanction{
     color: #940308;
 }
+/*************************MAIL CSS*************************************************/
+/******************************/
+.WagesDetailsModalbody {
+    /* width: 90%; */
+    margin: 0 auto;
+    font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+    text-underline-position: under;
+}
+
+@media only screen and (max-width: 600px) and (orientation: portrait) {
+   
+}
+#mailcompany {
+    display: inline-block;
+    text-decoration: underline;
+    text-underline-position: under;
+    color: #000
+}
+.mailtitle {
+    font-size: 16px;
+    border: 1px solid gray;
+    text-decoration: underline;
+}
+
+.mailtitle h3 {
+    margin-top: 4px;
+    /* margin-bottom: -5px; */
+    margin-right: 8px;
+    text-align: right;
+    padding-top: 2px;
+}
+
+.mailtitle h4 {
+    margin: 7px;
+    margin-right: 188px;
+    padding-top: -16px;
+    text-align: center;
+}
+
+.mailTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.mailTable th,
+.mailTable td {
+    padding: 5px;
+    border: 5px solid #f2f2f2;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mailTable tr {
+    background-color: #ddd;
+    font-size: 13px;
+    color: #000
+}
+
+.mailTable th {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    background-color: #a40006;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+}
+
+.mailnotice {
+    text-align: right;
+    font-weight: bold;
+    color: #a40006;
+    margin-right: 14px;
+}
+
+.mailnotice h4 {
+    font-size: 25px;
+    margin: 0;
+    text-decoration: underline;
+}
+
+.mailnotice p {
+    margin: 0;
+    padding-top: 5px;
+}
+
+.mailtotal {
+    background-color: #78787ab7;
+}
+
+.mailsubHeader {
+    background-color: #bebdbdb7;
+}

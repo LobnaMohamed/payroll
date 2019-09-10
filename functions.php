@@ -1607,206 +1607,220 @@
 	}
 	//----------get wage details-----------------------------
 	function viewWagesDetails(){
-	$sql = "select * from salary where TS_id ='".$_POST['wagesDetailssheetID']."'
-								AND emp_id ='".$_POST['wagesDetailsEmpID'] ."' ";
-	echo $sql;
-	$output = "
-		<div class='title'>
-			<div><img src='http://amoceg.com/wp-content/uploads/2018/05/AMOC_Logo.png' align='left'
-					style='max-width:100% ;'></div>
-			<div id='company'>
-				<h3>(O??E C?????I??E ?????E C???I??E (????</h3>
-				<h3> C??IC?E C??C?E ??O??? C??C??E </h3>
-				<h4>hi</h4>
-			</div>
-		</div>
-		<table>
-			<tr>
-				<th colspan='2'>" & Cells(4, 71).Value & " </th>
-				<th colspan='2'>" & Cells(4, 35).Value & "</th>
-				<th colspan='3'>" & Cells(4, 33).Value & "</th>
-				<th colspan='2'>" & Cells(4, 34).Value & "</th>
-			</tr>
-			<tr>
-				<td colspan='2'>" & Cells(r, 71).Value & "</td>
-				<td colspan='2'>" & Range("I1") & "</td>
-				<td colspan='3'>" & Cells(r, 33).Value & "</td>
-				<td colspan='2'>" & Cells(r, 34).Value & "</td>
-			</tr>
-			<tr>
-				<th style='background-color:#3c3c3db7'>C????I</th>
-				<th colspan='8'>C?C?E??C?CE</th>
-			</tr>
-			<tr>
-				<td></td>
-				<td class='subHeader'>" & Cells(4, 58).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 59).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 60).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 61).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 62).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 63).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 64).Value & " </td>
-				<td class='subHeader'>" & Cells(4, 65).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>" & Cells(r, 58).Value & "</td>
-				<td>" & Cells(r, 59).Value & "</td>
-				<td>" & Cells(r, 60).Value & "</td>
-				<td>" & Cells(r, 61).Value & "</td>
-				<td>" & Cells(r, 62).Value & "</td>
-				<td>" & Cells(r, 63).Value & "</td>
-				<td>" & Cells(r, 64).Value & "</td>
-				<td>" & Cells(r, 65).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td class='subHeader'>" & Cells(4, 50).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 54).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 51).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 55).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 52).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 56).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 53).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 57).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>" & Cells(r, 50).Value & "</td>
-				<td>" & Cells(r, 54).Value & "</td>
-				<td>" & Cells(r, 51).Value & "</td>
-				<td>" & Cells(r, 55).Value & "</td>
-				<td>" & Cells(r, 52).Value & "</td>
-				<td>" & Cells(r, 56).Value & "</td>
-				<td>" & Cells(r, 53).Value & "</td>
-				<td>" & Cells(r, 57).Value & "</td>
-			</tr>
-			<tr>
-				<td colspan='7'></td>
-				<td class='subHeader'>" & Cells(4, 48).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 49).Value & "</td>
-			</tr>
-			<tr>
-				<td colspan='7'></td>
-				<td>" & Cells(r, 48).Value & "</td>
-				<td>" & Cells(r, 49).Value & "</td>
-			</tr>
-			<tr class='total'>
-				<td>" & Cells(r, 47).Value & "</td>
-				<td colspan='8'>" & Cells(4, 47).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<th colspan='8'>C?C?E??C?CE</th>
-			</tr>
-			<tr>
-				<td></td>
-				<td class='subHeader'>" & Cells(4, 25).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 29).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 26).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 30).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 27).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 31).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 28).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 32).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>" & Cells(r, 25).Value & "</td>
-				<td>" & Cells(r, 29).Value & "</td>
-				<td>" & Cells(r, 26).Value & "</td>
-				<td>" & Cells(r, 30).Value & "</td>
-				<td>" & Cells(r, 27).Value & "</td>
-				<td>" & Cells(r, 31).Value & "</td>
-				<td>" & Cells(r, 28).Value & "</td>
-				<td>" & Cells(r, 32).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td class='subHeader'>" & Cells(4, 17).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 14).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 22).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 13).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 16).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 15).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 23).Value & "</td>
-				<td class='subHeader'>" & Cells(4, 24).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>" & Cells(r, 17).Value & "</td>
-				<td>" & Cells(r, 14).Value & "</td>
-				<td>" & Cells(r, 22).Value & "</td>
-				<td>" & Cells(r, 13).Value & "</td>
-				<td>" & Cells(r, 16).Value & "</td>
-				<td>" & Cells(r, 15).Value & "</td>
-				<td>" & Cells(r, 23).Value & "</td>
-				<td>" & Cells(r, 24).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<th colspan='8'> C?C?E??C?CE ?? C????I</th>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 9).Value & "</td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 10).Value & "</td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 11).Value & "</td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 6).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>" & Cells(r, 9).Value & "</td>
-				<td>" & Cells(r, 42).Value & "</td>
-				<td>" & Cells(r, 10).Value & "</td>
-				<td>" & Cells(r, 43).Value & "</td>
-				<td>" & Cells(r, 11).Value & "</td>
-				<td>" & Cells(r, 44).Value & "</td>
-				<td>" & Cells(r, 6).Value & "</td>
-				<td>" & Cells(r, 37).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 3).Value & "</td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 5).Value & "</td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 7).Value & "</td>
-				<td colspan='2' class='subHeader'>" & Cells(4, 8).Value & "</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>" & Cells(r, 3).Value & "</td>
-				<td>" & Cells(r, 36).Value & "</td>
-				<td>" & Cells(r, 5).Value & "</td>
-				<td>" & Cells(r, 38).Value & "</td>
-				<td>" & Cells(r, 7).Value & "</td>
-				<td>" & Cells(r, 40).Value & "</td>
-				<td>" & Cells(r, 8).Value & "</td>
-				<td>" & Cells(r, 41).Value & "</td>
-			</tr>
-			<tr class='total'>
-				<td>(" & Cells(r, 2).Value & ")</td>
-				<td colspan='8'>" & Cells(4, 2).Value & " </td>
-			</tr>
-			<tr class='total'>
-				<td>" & Cells(r, 1).Value & "</td>
-				<td colspan='8'> " & Cells(4, 1).Value & " </td>
-			</tr>
-			<tr>
-				<td colspan='9'></td>
-			</tr>
-			<tr class='hafez'>
-				<td>" & Cells(r, 72).Value & "</td>
-				<td colspan='8'>" & Cells(4, 72).Value & "</td>
-			</tr>
-		</table>
-		<div class='notice'>
-			<h4>:E?E??</h4>
-			<p>O??CE C??E? C?????E ??? C?E??I C?C??E???? ?C E?EE? ??E?I ?C???? ? ?C ?? ??C CO?C? ? ?? ?C?E C??C?E ??? ???ICE
-				C???EE ???? C?E?C?? ?? C??IC?E C??C?E ??O??? C??C??E</p>
-		</div>
-		<hr>
-		<div style='text-align: right;'>
-			<p>??C? C????? - ??C? C?E?C?? ??U? C??????CE</p>
-		</div>";
-		//echo $output;
+		$con = connect();
+		$sql = "select * from salary where TS_id ='".$_POST['wagesDetailssheetID']."'
+									AND emp_id ='".$_POST['wagesDetailsEmpID'] ."' ";
+		//echo $sql;
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$output = "
+				<div class='mailtitle'>
+					<div><img src='images/amoc2.png' align='left'
+							style='max-width:100% ;'></div>
+					<div id='mailcompany'>
+						<h3>شركة الاسكندرية للزيوت المعدنية(أموك)</h3>
+						<h3>الادارة العامة للشئون المالية</h3>
+						<h4>قسيمة صرف مرتب</h4>
+					</div>
+				</div>
+				<table class='mailTable'>
+					<tr>
+						<th colspan='2'>رقم القيد </th>
+						<th colspan='3'>الاســــــم</th>
+						<th colspan='2'>التاريخ</th>
+						<th colspan='2'>عدد الايام</th>
+					</tr>
+					<tr>
+						<td colspan='2'></td>
+						<td colspan='3'></td>
+						<td colspan='2'></td>
+						<td colspan='2'></td>
+					</tr>
+					<tr>
+						<th colspan='8'>الاستحقاقات</th>
+						<th style='background-color:#3c3c3db7'>الرصيد</th>
+					</tr>
+					<tr>
+						
+						<td class='mailsubHeader'>1 </td>
+						<td class='mailsubHeader'> 2</td>
+						<td class='mailsubHeader'>3 </td>
+						<td class='mailsubHeader'>4 </td>
+						<td class='mailsubHeader'>5 </td>
+						<td class='mailsubHeader'>6 </td>
+						<td class='mailsubHeader'> 7</td>
+						<td class='mailsubHeader'>8 </td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>11</td>
+						<td>22</td>
+						<td>33</td>
+						<td>44</td>
+						<td>55</td>
+						<td>66</td>
+						<td>77</td>
+						<td>88</td>
+						<td>99</td>
+					</tr>
+					<tr>
+						
+						<td class='mailsubHeader'>a</td>
+						<td class='mailsubHeader'>b</td>
+						<td class='mailsubHeader'>c</td>
+						<td class='mailsubHeader'>d</td>
+						<td class='mailsubHeader'>e</td>
+						<td class='mailsubHeader'>f</td>
+						<td class='mailsubHeader'>g</td>
+						<td class='mailsubHeader'>h</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>aa</td>
+						<td>bb</td>
+						<td>cc</td>
+						<td>dd</td>
+						<td>ee</td>
+						<td>ff</td>
+						<td>gg</td>
+						<td>hh</td>
+						<td></td>
+					</tr>
+					<tr>
+						
+						<td class='mailsubHeader'>ii</td>
+						<td class='mailsubHeader'>jj</td>
+						<td colspan='7'></td>
+					</tr>
+					<tr>
+						
+						<td>ii</td>
+						<td>jj</td>
+						<td colspan='7'></td>
+					</tr>
+					<tr class='mailtotal'>
+						
+						<th colspan='8'> الاستقطاعات</th>
+						<td></td>
+					</tr>
+
+					<tr>
+						
+						<td class='mailsubHeader'>kk</td>
+						<td class='mailsubHeader'>ll</td>
+						<td class='mailsubHeader'>mm</td>
+						<td class='mailsubHeader'>nn</td>
+						<td class='mailsubHeader'>oo</td>
+						<td class='mailsubHeader'>pp</td>
+						<td class='mailsubHeader'>qq</td>
+						<td class='mailsubHeader'>rr</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>kk</td>
+						<td>ll</td>
+						<td>mm</td>
+						<td>nn</td>
+						<td>oo</td>
+						<td>pp</td>
+						<td>qq</td>
+						<td>rr</td>
+						<td></td>
+					</tr>
+					<tr>
+						
+						<td class='mailsubHeader'>ss</td>
+						<td class='mailsubHeader'>tt</td>
+						<td class='mailsubHeader'>uu</td>
+						<td class='mailsubHeader'>vv</td>
+						<td class='mailsubHeader'>ww</td>
+						<td class='mailsubHeader'>xx</td>
+						<td class='mailsubHeader'>yy</td>
+						<td class='mailsubHeader'>zz</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>ss</td>
+						<td>tt</td>
+						<td>uu</td>
+						<td>vv</td>
+						<td>ww</td>
+						<td>xx</td>
+						<td>yy</td>
+						<td>zz</td>
+						<td></td>
+					</tr>
+					<tr>
+						
+						<th colspan='8'> الاستقطاعات من الرصيد</th>
+						<td></td>
+					</tr>
+					<tr>
+						
+						<td colspan='2' class='mailsubHeader'> 9</td>
+						<td colspan='2' class='mailsubHeader'> 1</td>
+						<td colspan='2' class='mailsubHeader'> 11</td>
+						<td colspan='2' class='mailsubHeader'> 6</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						
+						<td colspan='2' class='mailsubHeader'></td>
+						<td colspan='2' class='mailsubHeader'> 5</td>
+						<td colspan='2' class='mailsubHeader'> 7</td>
+						<td colspan='2' class='mailsubHeader'> 8</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr class='mailtotal'>
+						
+						<td colspan='8'> 2</td>
+						<td> </td>
+					</tr>
+					<tr class='mailtotal'>
+						
+						<td colspan='8'>  1</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan='9'></td>
+					</tr>
+
+				</table>
+				<div class='mailnotice'>
+					<h4>:E?E??</h4>
+					<p>O??CE C??E? C?????E ??? C?E??I C?C??E???? ?C E?EE? ??E?I ?C???? ? ?C ?? ??C CO?C? ? ?? ?C?E C??C?E ??? ???ICE
+						C???EE ???? C?E?C?? ?? C??IC?E C??C?E ??O??? C??C??E</p>
+				</div>
+				<hr>
+				<div style='text-align: right;'>
+					<p>??C? C????? - ??C? C?E?C?? ??U? C??????CE</p>
+				</div>";
+
+		}
+
+		echo $output;
 	}

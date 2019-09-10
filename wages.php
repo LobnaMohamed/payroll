@@ -30,15 +30,15 @@
         </tbody>
     </table>
         <!-- view data modal -->
-    <div id="WagesDetailsModal" class="modal fade" role="document">
-        <div class="modal-dialog modal-lg">
+    <div id="WagesDetailsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
             <!-- Modal content-->
             <div class="modal-content ">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <!-- <h5 class="modal-title pagetitle text-center">المرتب 24 </h5> -->
                 </div>
-                <div class="modal-body row">
+                <div class="modal-body row WagesDetailsModalbody ">
                     <!-- <input type="hidden" name="employee_id" id="employee_id">   -->
                     <!-- <div class="embed-responsive embed-responsive-16by9">
                     <iframe class="embed-responsive-item" src="salarymail.php" allowfullscreen></iframe>

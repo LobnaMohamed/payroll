@@ -395,8 +395,10 @@ $(document).ready(function(){
 			method:"POST",
 			data:{wagesDetailsEmpID:employeeID,
 				  wagesDetailssheetID:sheetID},
-			dataType:"json",
+			//dataType:"json",
 			success:function(data){
+				$('.modal-body').html(data);
+				$("#WagesDetailsModal").modal('show');
 				console.log(data);
 				// $('#currentProfileEmp_code').text(data.currentCode);
 				// $('#currentProfileEmp_level').text(data.empLevel);
@@ -410,6 +412,8 @@ $(document).ready(function(){
 				// $('#currentProfileEmp_DOB').text(data.DOB);
 				// $('#currentProfileEmp_salary').text(data.currentSalary);
 			},error:function(error){
+				$('.modal-body').html(error.responseText);
+				$("#WagesDetailsModal").modal('show');
 				console.log(error);
 			}
 		});
