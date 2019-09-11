@@ -1608,7 +1608,9 @@
 	//----------get wage details-----------------------------
 	function viewWagesDetails(){
 		$con = connect();
-		$sql = "select * from salary where TS_id ='".$_POST['wagesDetailssheetID']."'
+		$sql = "select s.*,e.currentCode ,e.empName 
+				from salary s ,employee e
+				where TS_id ='".$_POST['wagesDetailssheetID']."'
 									AND emp_id ='".$_POST['wagesDetailsEmpID'] ."' ";
 		//echo $sql;
 		$stmt = $con->prepare($sql);
@@ -1633,10 +1635,10 @@
 						<th colspan='2'>عدد الايام</th>
 					</tr>
 					<tr>
-						<td colspan='2'></td>
-						<td colspan='3'></td>
-						<td colspan='2'></td>
-						<td colspan='2'></td>
+						<td colspan='2'>".$row['currentCode']."</td>
+						<td colspan='3'>".$row['empName']."</td>
+						<td colspan='2'>".$row['empName']."</td>
+						<td colspan='2'>".$row['empName']."</td>
 					</tr>
 					<tr>
 						<th colspan='8'>الاستحقاقات</th>
@@ -1644,63 +1646,70 @@
 					</tr>
 					<tr>
 						
-						<td class='mailsubHeader'>1 </td>
-						<td class='mailsubHeader'> 2</td>
-						<td class='mailsubHeader'>3 </td>
-						<td class='mailsubHeader'>4 </td>
-						<td class='mailsubHeader'>5 </td>
-						<td class='mailsubHeader'>6 </td>
-						<td class='mailsubHeader'> 7</td>
-						<td class='mailsubHeader'>8 </td>
+						<td class='mailsubHeader'>المرتب</td>
+						<td class='mailsubHeader'>أجر الحضور</td>
+						<td class='mailsubHeader'>بدل طبيعة</td>
+						<td class='mailsubHeader'>م.أجتماعيه</td>
+						<td class='mailsubHeader'>حافز علمين</td>
+						<td class='mailsubHeader'>تمثيل</td>
+						<td class='mailsubHeader'>بدل مهنى</td>
+						<td class='mailsubHeader'>خبرة</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>".$row['empName']."</td>
+						<td>".$row['attendancePay']."</td>
+						<td>".$row['natureOfworkAllowance']."</td>
+						<td>".$row['socialAid']."</td>
+						<td></td>
+						<td>".$row['representation']."</td>
+						<td>".$row['occupationalAllowance']."</td>
+						<td>".$row['experience']."</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td>11</td>
-						<td>22</td>
-						<td>33</td>
-						<td>44</td>
-						<td>55</td>
-						<td>66</td>
-						<td>77</td>
-						<td>88</td>
-						<td>99</td>
-					</tr>
-					<tr>
-						
-						<td class='mailsubHeader'>a</td>
-						<td class='mailsubHeader'>b</td>
-						<td class='mailsubHeader'>c</td>
-						<td class='mailsubHeader'>d</td>
-						<td class='mailsubHeader'>e</td>
-						<td class='mailsubHeader'>f</td>
-						<td class='mailsubHeader'>g</td>
-						<td class='mailsubHeader'>h</td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>aa</td>
-						<td>bb</td>
-						<td>cc</td>
-						<td>dd</td>
-						<td>ee</td>
-						<td>ff</td>
-						<td>gg</td>
-						<td>hh</td>
+						<td class='mailsubHeader'>علاوات خاصه</td>
+						<td class='mailsubHeader'>نوباتجية</td>
+						<td class='mailsubHeader'>منحة عيد العمال</td>
+						<td class='mailsubHeader'>وجبات نقدية</td>
+						<td class='mailsubHeader'>الحافز</td>
+						<td class='mailsubHeader'>وردية</td>
+						<td class='mailsubHeader'>بدل تخصص</td>
+						<td class='mailsubHeader'>بدل تصنيع</td>
 						<td></td>
 					</tr>
 					<tr>
 						
-						<td class='mailsubHeader'>ii</td>
-						<td class='mailsubHeader'>jj</td>
+						<td>".$row['specialBonus']."</td>
+						<td>".$row['overnightShift']."</td>
+						<td>".$row['laborDayGrant']."</td>
+						<td>".$row['tiffinAllowance']."</td>
+						<td>".$row['incentive']."</td>
+						<td>".$row['shift']."</td>
+						<td>".$row['specializationAllowance']."</td>
+						<td>".$row['manufacturingAllowance']."</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						
+						<td class='mailsubHeader'>استحقاق</td>
+						<td class='mailsubHeader'>حافز إضافى</td>
 						<td colspan='7'></td>
 					</tr>
 					<tr>
 						
-						<td>ii</td>
-						<td>jj</td>
+						<td>".$row['otherDues']."</td>
+						<td>".$row['shift']."</td>
 						<td colspan='7'></td>
 					</tr>
 					<tr class='mailtotal'>
+						
+						<td colspan='8'>اجمالى الدخل</td>
+						<td></td>
+					</tr>
+					<tr>
 						
 						<th colspan='8'> الاستقطاعات</th>
 						<td></td>
@@ -1708,48 +1717,48 @@
 
 					<tr>
 						
-						<td class='mailsubHeader'>kk</td>
-						<td class='mailsubHeader'>ll</td>
-						<td class='mailsubHeader'>mm</td>
-						<td class='mailsubHeader'>nn</td>
-						<td class='mailsubHeader'>oo</td>
-						<td class='mailsubHeader'>pp</td>
-						<td class='mailsubHeader'>qq</td>
-						<td class='mailsubHeader'>rr</td>
+						<td class='mailsubHeader'>مدة سابقة</td>
+						<td class='mailsubHeader'>كارت بريميوم</td>
+						<td class='mailsubHeader'>علاج الأسر</td>
+						<td class='mailsubHeader'>استقطاع أخر</td>
+						<td class='mailsubHeader'>ن.بترول</td>
+						<td class='mailsubHeader'>جزاءات</td>
+						<td class='mailsubHeader'>موبايل</td>
+						<td class='mailsubHeader'>قرض بنك NBE</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td>kk</td>
-						<td>ll</td>
-						<td>mm</td>
-						<td>nn</td>
-						<td>oo</td>
-						<td>pp</td>
-						<td>qq</td>
-						<td>rr</td>
+						<td>".$row['pastPeriod']."</td>
+						<td>".$row['perimiumCard']."</td>
+						<td>".$row['familyHealthInsurance']."</td>
+						<td>".$row['otherDeduction']."</td>
+						<td>".$row['petroleumSyndicate']."</td>
+						<td>".$row['sanctions']."</td>
+						<td>".$row['mobil']."</td>
+						<td>".$row['loan']."</td>
 						<td></td>
 					</tr>
 					<tr>
 						
-						<td class='mailsubHeader'>ss</td>
-						<td class='mailsubHeader'>tt</td>
-						<td class='mailsubHeader'>uu</td>
-						<td class='mailsubHeader'>vv</td>
-						<td class='mailsubHeader'>ww</td>
-						<td class='mailsubHeader'>xx</td>
-						<td class='mailsubHeader'>yy</td>
-						<td class='mailsubHeader'>zz</td>
+						<td class='mailsubHeader'>صندوق خدمات عاملين</td>
+						<td class='mailsubHeader'>جنيهات مرحله</td>
+						<td class='mailsubHeader'>التأمينات</td>
+						<td class='mailsubHeader'>معاش تكميلى</td>
+						<td class='mailsubHeader'>الضريبة</td>
+						<td class='mailsubHeader'>اتصالات</td>
+						<td class='mailsubHeader'>الدمغة</td>
+						<td class='mailsubHeader'>بنك القاهرة</td>
 						<td></td>
 					</tr>
 					<tr>
-						<td>ss</td>
-						<td>tt</td>
-						<td>uu</td>
-						<td>vv</td>
-						<td>ww</td>
-						<td>xx</td>
-						<td>yy</td>
-						<td>zz</td>
+						<td>".$row['empServiceFund']."</td>
+						<td></td>
+						<td>".$row['socialInsurances']."</td>
+						<td></td>
+						<td></td>
+						<td>".$row['etisalatNet']."</td>
+						<td></td>
+						<td></td>
 						<td></td>
 					</tr>
 					<tr>
@@ -1759,10 +1768,10 @@
 					</tr>
 					<tr>
 						
-						<td colspan='2' class='mailsubHeader'> 9</td>
-						<td colspan='2' class='mailsubHeader'> 1</td>
-						<td colspan='2' class='mailsubHeader'> 11</td>
-						<td colspan='2' class='mailsubHeader'> 6</td>
+						<td colspan='2' class='mailsubHeader'>بتروتريد</td>
+						<td colspan='2' class='mailsubHeader'>	سلفة مدارس 2019</td>
+						<td colspan='2' class='mailsubHeader'>إيهاب سنتر</td>
+						<td colspan='2' class='mailsubHeader'>سلف عاملين</td>
 						<td></td>
 					</tr>
 					<tr>
@@ -1778,10 +1787,10 @@
 					</tr>
 					<tr>
 						
-						<td colspan='2' class='mailsubHeader'></td>
-						<td colspan='2' class='mailsubHeader'> 5</td>
-						<td colspan='2' class='mailsubHeader'> 7</td>
-						<td colspan='2' class='mailsubHeader'> 8</td>
+						<td colspan='2' class='mailsubHeader'>رحلات</td>
+						<td colspan='2' class='mailsubHeader'>أدوية</td>
+						<td colspan='2' class='mailsubHeader'>سلفة اجتماعية</td>
+						<td colspan='2' class='mailsubHeader'>رحلات نصف العام</td>
 						<td></td>
 					</tr>
 					<tr>
@@ -1797,27 +1806,22 @@
 					</tr>
 					<tr class='mailtotal'>
 						
-						<td colspan='8'> 2</td>
+						<td colspan='8'>اجمالى الاستقطاع</td>
 						<td> </td>
 					</tr>
 					<tr class='mailtotal'>
 						
-						<td colspan='8'>  1</td>
+						<td colspan='8'>صافى الدخل</td>
 						<td></td>
 					</tr>
-					<tr>
-						<td colspan='9'></td>
-					</tr>
-
 				</table>
 				<div class='mailnotice'>
-					<h4>:E?E??</h4>
-					<p>O??CE C??E? C?????E ??? C?E??I C?C??E???? ?C E?EE? ??E?I ?C???? ? ?C ?? ??C CO?C? ? ?? ?C?E C??C?E ??? ???ICE
-						C???EE ???? C?E?C?? ?? C??IC?E C??C?E ??O??? C??C??E</p>
+					<h4>تنبيه:</h4>
+					<p>شيكات القبض المرسلة على البريد الالكتروني لا تعتبر مستند قانوني و ما هي إلا اشعار و في حالة الحاجة إلى مفردات المرتب يرجى التواصل مع الإدارة العامة للشئون المالية</p>
 				</div>
 				<hr>
 				<div style='text-align: right;'>
-					<p>??C? C????? - ??C? C?E?C?? ??U? C??????CE</p>
+					<p>قطاع الأجور - قطاع البرامج ونظم المعلومات</p>
 				</div>";
 
 		}

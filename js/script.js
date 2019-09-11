@@ -419,15 +419,6 @@ $(document).ready(function(){
 		});
 	});
 	
-	//--------------get level data in edit modal---------------
-	// $(document).on('click','.editLevelData', function(){
-	// });
-	//--------------get contracts data in edit modal---------------
-	//--------------get marital status data in edit modal---------------
-	//--------------get jobs data in edit modal---------------
-	//--------------get syndicates data in edit modal---------------
-
-	
  
 	//-----------search forms---------------------------- 
 	$('#searchDateTo,#searchDateFrom,#searchTo,#search').bind('change keyup',function(){
@@ -466,6 +457,7 @@ $(document).ready(function(){
 				else if(currentURL == 'wages.php'){
 					
 				   $('#wagesDatabody').html(data);
+				   $('#salaryDescription').html(data);
 
 				}
 				else if(currentURL == 'deductions.php'){

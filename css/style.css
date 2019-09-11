@@ -307,7 +307,7 @@ label{
 }
 
 .mailtotal {
-    background-color: #78787ab7;
+    background-color: #78787ab7 !important;
 }
 
 .mailsubHeader {
