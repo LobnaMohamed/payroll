@@ -18,8 +18,8 @@
 			</div> 			
 		<!-- </form>
 	    <form class="form-horizontal row" id=updateDeductionsForm method="POST" >  -->
-			
-	    	<table id="deductions" class="table table-striped table-bordered table-responsive">		
+			<div class= "table-responsive">
+	    	<table id="deductions" class="table table-striped table-bordered  table-condensed ">		
 				<thead>
 					<tr>
 						<th>رقم القيد</th>
@@ -37,6 +37,7 @@
 
 				</tbody>
 			</table>
+			</div>
 			<div>
 				<input type="submit" name="updateDeductions" value="إدخـــــــال" class="btn btn-primary col-sm-2 col-sm-offset-5">
 			</div>			

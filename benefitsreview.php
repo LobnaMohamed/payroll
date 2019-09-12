@@ -20,7 +20,7 @@ include 'header.php';
 		<!-- </form>
 	    <form class="form-horizontal row" id=updatebenefitsForm method="POST" >  -->
 			
-	    	<table id="benefits" class="table table-striped table-bordered table-responsive">		
+	    	<table id="benefits" class="table table-striped table-bordered table-responsive table-condensed ">		
 				<thead>
 					<tr>
 						<th>رقم القيد</th>
@@ -40,6 +40,7 @@ include 'header.php';
                         <th>حافز</th>
                         <th>وردية</th>
                         <th>استحقاق</th>
+                        <th>حافز اضافى</th>
  
 				    </tr>		
 				</thead>

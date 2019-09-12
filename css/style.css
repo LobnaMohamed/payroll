@@ -313,3 +313,9 @@ label{
 .mailsubHeader {
     background-color: #bebdbdb7;
 }
+input[type="number"] {
+    width: 100%; 
+    box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+}

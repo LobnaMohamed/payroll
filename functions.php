@@ -864,7 +864,7 @@
 
 			$sql= "select e.currentCode,e.empName,empt.emp_id ,empt.TS_id,s.attendancePay,s.natureOfworkAllowance,s.laborDayGrant,
 						s.socialAid,s.representation,s.occupationalAllowance,s.experience,s.specialBonus,s.overnightShift,
-						s.tiffinAllowance,s.incentive,s.shift,s.specializationAllowance,s.manufacturingAllowance,s.otherDues
+						s.tiffinAllowance,s.incentive,s.additionalIncentive,s.shift,s.specializationAllowance,s.manufacturingAllowance,s.otherDues
 					from employee e inner join empTimesheet empt
 						on e.ID = empt.emp_id inner join salary s 
 						on empt.emp_id = s.emp_id and empt.TS_id = s.TS_id
@@ -902,6 +902,8 @@
 					
 					<td>".  $row['shift']. "</td>
 					<td>".  $row['otherDues']. "</td>
+					<td>".  $row['additionalIncentive']. "</td>
+
 					</tr>";
 					
 
@@ -1289,13 +1291,15 @@
 			$labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
 			$tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
 		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * $currentDays;//الحافز
-		    $shift = 75 * $row['shift_days']; // وردية
+		    $additionalincentive = $row['currentSalary'] * $row['incentivePercent'] * 0.5;//حافز اضافى
+			
+			$shift = 75 * $row['shift_days']; // وردية
 			$specializationAllowance = $currentDays * ($row['specialization_amount']+ ($row['currentSalary']/4)) ; // بدل تخصص
 		    $specialBonus = 0; // علاوات خاصة
 			$otherDues = 0; // استحقاق
 			$totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
 			$manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
-			$incentive+$shift+$specializationAllowance+$specialBonus+$otherDues ; // اجمالى الاستحقاق
+			$incentive+$shift+$specializationAllowance+$specialBonus+$otherDues+$additionalincentive ; // اجمالى الاستحقاق
 
 
 			$getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
@@ -1343,6 +1347,7 @@
 					 labordayGrant =$labordayGrant,
 					 tiffinAllowance =$tiffinAllowance,
 					 incentive =$incentive,
+					 additionalIncentive =$additionalincentive, 
 					 specializationAllowance =$specializationAllowance,
 					 
 					 familyHealthInsurance =$familyHealthInsurance,
@@ -1608,10 +1613,12 @@
 	//----------get wage details-----------------------------
 	function viewWagesDetails(){
 		$con = connect();
-		$sql = "select s.*,e.currentCode ,e.empName 
-				from salary s ,employee e
-				where TS_id ='".$_POST['wagesDetailssheetID']."'
-									AND emp_id ='".$_POST['wagesDetailsEmpID'] ."' ";
+		$sql = "select s.*,e.currentCode ,e.empName,empt.presence_days,t.sheetDate
+				from employee e,salary s inner join empTimesheet empt 
+								on s.emp_id = empt.emp_id and s.TS_id = empt.TS_id
+								inner join timesheets t on empt.TS_id = t.ID
+				where s.TS_id ='".$_POST['wagesDetailssheetID']."'
+					AND s.emp_id ='".$_POST['wagesDetailsEmpID'] ."' ";
 		//echo $sql;
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
@@ -1637,8 +1644,8 @@
 					<tr>
 						<td colspan='2'>".$row['currentCode']."</td>
 						<td colspan='3'>".$row['empName']."</td>
-						<td colspan='2'>".$row['empName']."</td>
-						<td colspan='2'>".$row['empName']."</td>
+						<td colspan='2'>".$row['sheetDate']."</td>
+						<td colspan='2'>".$row['presence_days']."</td>
 					</tr>
 					<tr>
 						<th colspan='8'>الاستحقاقات</th>
@@ -1701,13 +1708,13 @@
 					<tr>
 						
 						<td>".$row['otherDues']."</td>
-						<td>".$row['shift']."</td>
+						<td>".$row['additionalIncentive']."</td>
 						<td colspan='7'></td>
 					</tr>
 					<tr class='mailtotal'>
 						
 						<td colspan='8'>اجمالى الدخل</td>
-						<td></td>
+						<td>".$row['totalBenefits']."</td>
 					</tr>
 					<tr>
 						
@@ -1807,12 +1814,12 @@
 					<tr class='mailtotal'>
 						
 						<td colspan='8'>اجمالى الاستقطاع</td>
-						<td> </td>
+						<td>".$row['totalDeductions']."</td>
 					</tr>
 					<tr class='mailtotal'>
 						
 						<td colspan='8'>صافى الدخل</td>
-						<td></td>
+						<td>".$row['netSalary']."</td>
 					</tr>
 				</table>
 				<div class='mailnotice'>

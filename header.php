@@ -79,13 +79,16 @@
 						</ul>
 					</div>
 					<div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> إدخالات الاستقطاعات
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستقطاعات
 						<span class="caret"></span></button>
+						
+						<li class="dropdown-header">ادخالات الاستقطاعات</li>
 						<ul class="dropdown-menu dropdown-menu-right">
 						  <li><a href="deductions.php"> استقطاعات أخرى</a></li>
 						  <!-- <li><a href="#">علاج أسر</a></li> -->
 						  <li><a href="sanctions.php">جزاءات</a></li>
-
+						  <li class="dropdown-header">الاستقطاعات من الرصيد</li>
+						  <li><a href="deductiontype.php">أوجه الاستقطاع</a></li>
 						</ul>
 					</div>
 					<div class="dropdown">
