@@ -318,7 +318,35 @@
 		$result = $stmt->fetchColumn();
 		echo $result;
 	}
+	//---------------get deduction types---------------------------
+	function getDeductionTypes(){
+		$page =  basename($_SERVER['REQUEST_URI']);
+		$output="";
+		$con = connect();
+		$sql = "select * from deductionTypes ";
+
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if($page == 'deductiontype.php'){
+			foreach($result as $row){
+				echo '<button  class="btn  btn-lg managements editsyndicateData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" 
+				data-target="#editsyndicateModal" id="'.$row['deductionTypeID'].'">'. $row['deductionType'] .'</button>';
+			}
+			echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' 
+				data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
+		}elseif($page == 'deductionfromcredit.php'){
+			echo "<option value=0 >all</option>";
+
+	    	foreach($result as $row){
+				
+			    echo "<option value=" .$row['deductionTypeID'].">" . $row['deductionType'] . "</option>";
+			}
+		}
+		
 	
+		//echo $output;
+	}
 	//---------------get timesheet function------------------------
 	function getTimesheet(){
 		$output="";	

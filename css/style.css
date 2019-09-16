@@ -109,7 +109,7 @@ label{
 #timesheet th{
     font-size: 16px;
 }
-#timesheet th ,#deductions th,#empData th,#jobData th, #sanctions th,#benefits th{
+#timesheet th ,#deductions th,#empData th,#jobData th, #sanctions th,#benefits th,#Deductionfromcredit th{
     background-color: #999999;
 }
 #confirmedVacReport{
@@ -140,7 +140,7 @@ label{
     color: #940308;
 }
 .managements-container,.MaritalStatus-container,.levels-container,
-.timesheet-container,.job-container,.empdata-container,{
+.timesheet-container,.job-container,.empdata-container{
     margin: 0 auto;
 }   
 .managements{

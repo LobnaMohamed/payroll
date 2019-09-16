@@ -4,7 +4,7 @@
 <div class="container">
     <header class="row text-center">
         <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>مرتب 24</div>  
-            <input class="form-control" name="salaryDescription" id="salaryDescription" type="text"> 
+            <!-- <input class="form-control" name="salaryDescription" id="salaryDescription" type="text">  -->
     </header>	  
     <form class="navbar-form row" id="searchEmp"  method="POST">
         <div class="form-group add-on ">

@@ -73,7 +73,7 @@
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> الحــصر
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
-						  <li><a href="timesheetinsertion.php">ادخال الحــصر </a></li>
+						  	<li><a href="timesheetinsertion.php">ادخال الحــصر </a></li>
 							<li><a href="timesheet.php">الحـــصر</a></li>
 	
 						</ul>
@@ -81,23 +81,24 @@
 					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستقطاعات
 						<span class="caret"></span></button>
-						
-						<li class="dropdown-header">ادخالات الاستقطاعات</li>
 						<ul class="dropdown-menu dropdown-menu-right">
-						  <li><a href="deductions.php"> استقطاعات أخرى</a></li>
-						  <!-- <li><a href="#">علاج أسر</a></li> -->
-						  <li><a href="sanctions.php">جزاءات</a></li>
-						  <li class="dropdown-header">الاستقطاعات من الرصيد</li>
-						  <li><a href="deductiontype.php">أوجه الاستقطاع</a></li>
+							<li class="dropdown-header">ادخالات الاستقطاعات</li>
+							<li><a href="deductions.php"> استقطاعات أخرى</a></li>
+							<!-- <li><a href="#">علاج أسر</a></li> -->
+							<li><a href="sanctions.php">جزاءات</a></li>
+							<li class="dropdown-header">الاستقطاعات من الرصيد</li>
+							<li><a href="deductiontype.php">أوجه الاستقطاع</a></li>
+							<li><a href="deductionfromcredit.php">الاستقطاع من الرصيد</a></li>
+							
 						</ul>
+
 					</div>
 					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستحقاقات
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
 							<li><a href="benefitsreview.php">إستحقاقات</a></li>
-							
-						  <li><a href="benefits.php">ادخال الإستحقاق</a></li>
+							<li><a href="benefits.php">ادخال الإستحقاق</a></li>
 						</ul>
 					</div>
 					<!-- <a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a> -->
