@@ -1189,7 +1189,7 @@
 					$monthAmount = "";
 					
 					while( $remainingAmount > 0){
-						echo( $_POST['dedAmount'][$DedTypeID] );
+					
 						switch ($remainingAmount) {
 							case in_array($remainingAmount, $r1) :
 								$monthAmount = 50;
@@ -1212,7 +1212,7 @@
 							//calculate remaining amount	
 						}
 						echo "monthAmount: " .$monthAmount;
-						$remainingAmount = $_POST['dedAmount'][$DedTypeID] - $monthAmount ;
+						$remainingAmount =$remainingAmount - $monthAmount ;
 						$add_installment = "insert into creditDeductions(emp_id,deductionType_id,
 											deductionDate,totalAmount,monthlyValue,remainingValue) 
 											values ($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
