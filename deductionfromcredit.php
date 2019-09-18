@@ -24,7 +24,7 @@
                         <tr>
                             <th>رقم القيد</th>
                             <th>الاسم</th>
-                            <th>التــاريخ</th> 
+                            <th>تــاريخ تسجيل الاستقطاع</th> 
                             <th>نوع الاستقطاع</th>
                             <th>المبلغ</th>
                             <th>القسط</th>
@@ -32,7 +32,7 @@
                         </tr>		
                     </thead>
                     <tbody id="Deductionfromcreditbody">
-
+                        <?php getCreditDeductions(); ?>
                     </tbody>
                 </table>
 			</div>		

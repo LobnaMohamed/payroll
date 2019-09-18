@@ -19,7 +19,23 @@
 		    }
 		return $con;
 	}	
+	// --------------get Employee function-----------------------
+	function getEmpDropDown(){
+		$con = connect();
+		$sql=" select ID,empName,currentCode
+					from employee 
+					ORDER BY currentCode";
 
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		echo "<option selected  value='0'></option>";
+		foreach($result as $row){
+
+			echo "<option value=" .$row['ID'].">" . $row['currentCode'] ."   ".$row['empName']. "</option>";
+		}
+		
+	}
 	// Function to get the client ip address
 	function get_client_ip_env() {
 	    $ipaddress = '';
@@ -1021,20 +1037,20 @@
 					<input name='emp_id' type='hidden' value=".$row['emp_id'].">
 					<input name='tsID' type='hidden' value=".$row['TS_id'].">
 					<td>
-						<input type='number' class='form-control' name='otherDeductionText[$tsindex][$empindex]' value=".$row['otherDeduction'].">
+						<input type='number' class='form-control mb-2' name='otherDeductionText[$tsindex][$empindex]' value=".$row['otherDeduction'].">
 					</td> 
 
 					<td>
-						<input type='number' class='form-control' name='mobilText[$tsindex][$empindex]' value=".$row['mobil'].">
+						<input type='number' class='form-control mb-2' name='mobilText[$tsindex][$empindex]' value=".$row['mobil'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='etisalatNetText[$tsindex][$empindex]'  value=".$row['etisalatNet'].">
+						<input type='number' class='form-control mb-2' name='etisalatNetText[$tsindex][$empindex]'  value=".$row['etisalatNet'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='perimiumCardText[$tsindex][$empindex]'  value=".$row['perimiumCard'].">
+						<input type='number' class='form-control mb-2' name='perimiumCardText[$tsindex][$empindex]'  value=".$row['perimiumCard'].">
 					</td>
 					<td>
-						<input type='number' class='form-control' name='pastPeriodText[$tsindex][$empindex]'  value=".$row['pastPeriod'].">
+						<input type='number' class='form-control mb-2' name='pastPeriodText[$tsindex][$empindex]'  value=".$row['pastPeriod'].">
 					</td>
 					</tr>";
 				}
@@ -1083,6 +1099,137 @@
 
 		
 		echo $output;
+	}
+	//---------------get deductions from credit--------------------------
+	function getCreditDeductions(){
+		$output ="";
+		$con = connect();
+		//check if there are any values in salary for that date:
+		$sql = "select cd.*,e.currentCode,e.empName,dt.deductionType
+				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
+								inner join deductionTypes dt 
+								on cd.deductionType_id = dt.deductionTypeID ";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		// $timesheetID = $stmt->fetchColumn();
+		foreach ($result as $row) {
+			$output .= "<tr>
+			<td>".  $row['currentCode']. "</td>
+			<td>".  $row['empName']. "</td>
+			<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+			<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
+			<td>".$row['deductionDate']."</td> 
+			<td>".$row['deductionType']."</td> 
+
+			<td>".$row['totalAmount']."</td> 
+			<td>".$row['monthlyValue']."</td> 
+			<td>".$row['remainingValue']."</td> 
+			
+			</tr>";
+		}
+
+		echo $output;
+	}
+	//---------------get deduction items in a form---------
+	function deductionItems(){
+		$sql = "";
+		$output ="<div class='row'>";
+		$con = connect();
+		//check if there are any values in salary for that date:
+		$sql = "select dt.*
+				from deductionTypes dt  ";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		// $timesheetID = $stmt->fetchColumn();
+		foreach ($result as $row) {                
+			$output .=
+				"<div class='col-md-6'>
+					<fieldset >
+						<legend>".$row['deductionType']."</legend>
+						<label  for='dedDate'>تاريخ التسجيل</label>
+						<input class='form-control' type ='date' id='dedDate[".$row['deductionTypeID']."]' 
+						name='dedDate[".$row['deductionTypeID']."]' >
+
+						<label  for='dedAmount'>المبلغ</label>
+						<input class='form-control'  id='dedAmount[".$row['deductionTypeID']."]' 
+						name='dedAmount[".$row['deductionTypeID']."]' placeholder='ادخل القيمة الكلية..'>
+						<input type='hidden'  id=".$row['deductionTypeID']." name=".$row['deductionTypeID']." >
+						
+					</fieldset>
+					<br>
+				</div>";
+		}
+		$output .= "</div>";
+		echo $output;
+	}
+	//---------------insert deductions from credit-------------------
+	function insertDedFromCredit(){
+		$con = connect();
+		$empID = $_POST['getEmpForDed'];
+		
+		//---------------deduction from credit insertion ---------------------
+		foreach ($_POST['dedDate'] as $DedTypeID => $datevalue) {
+			if($_POST['dedAmount'][$DedTypeID] != 0){
+
+				$sql = "insert into creditDeductions(emp_id,deductionType_id,deductionDate,totalAmount) 
+					values ($empID,$DedTypeID,'$datevalue', " .$_POST['dedAmount'][$DedTypeID].")";
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				if($DedTypeID == 5){ //ادوية
+					//divide deductions according to rules:
+					//ranges of deductions for medicines:
+					$r1 = range(0, 500);
+					$r2 = range(501, 1000);
+					$r3 = range(1001, 2000);
+					$r4 = range(2001, 4000);
+					$r5 = range(4001, 5000);
+					$remainingAmount =  $_POST['dedAmount'][$DedTypeID];
+					$monthAmount = "";
+					
+					while( $remainingAmount > 0){
+						echo( $_POST['dedAmount'][$DedTypeID] );
+						switch ($remainingAmount) {
+							case in_array($remainingAmount, $r1) :
+								$monthAmount = 50;
+								break;
+							case in_array($remainingAmount, $r2):
+								$monthAmount = 100;
+								break;
+							case in_array($remainingAmount, $r3):
+								$monthAmount = 150;
+								break;
+							case in_array($remainingAmount, $r4):
+								$monthAmount = 200;
+								break;
+							case in_array($remainingAmount, $r5):
+								$monthAmount = 400;
+								break;
+							case ($remainingAmount > 5000) :
+								$monthAmount = 500;
+								break;
+							//calculate remaining amount	
+						}
+						echo "monthAmount: " .$monthAmount;
+						$remainingAmount = $_POST['dedAmount'][$DedTypeID] - $monthAmount ;
+						$add_installment = "insert into creditDeductions(emp_id,deductionType_id,
+											deductionDate,totalAmount,monthlyValue,remainingValue) 
+											values ($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
+													$monthAmount,$remainingAmount)";
+						// echo $add_installment;
+						echo"<br>";
+						echo $remainingAmount;
+						echo"<br>";
+
+
+					}	
+				}
+			}
+		}	
+
+
+	//echo "done insertion";
 	}
 	//---------------get other benefits--------------------
 	function getBenefits(){

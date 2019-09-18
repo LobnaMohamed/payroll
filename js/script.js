@@ -643,5 +643,38 @@ $(document).ready(function(){
         	}
 		});		
 	});
+	//-----------search emp to add deductions from credit---------------------------- 
+	$('#deductionFromCreditinsertion').on('submit',function(e){
+	//	e.preventDefault();
+		//get dates between 2 dates
+		var value = $('#getEmpForDed').val();
+		// var valueTo =  $('#searchTo').val();
+		// var dateTo_value = $('#searchDateTo').val();
+		// var dateFrom_value = $('#searchDateFrom').val();
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log($('form#deductionFromCreditinsertion').serialize());
+		$.ajax({
+			url:'fetch.php',
+			method:"POST",
+			data: $('form#deductionFromCreditinsertion').serialize()
+				// searchTo:valueTo,
+				// dateFrom:dateFrom_value,
+				// dateTo:dateTo_value,
+				//pageurl:currentURL
+			,
+			// dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#deductionFromCreditinsertion').trigger("reset");
+				// if(currentURL == 'insertDedfromcredit.php'){
+				// 	//console.log(data);
+				// 	$('#empName').val(data);
+				// }
+			},
+			error: function(error) {
+				console.log(error);
+			}
+		});	
+	});
 
 });

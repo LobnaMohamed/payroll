@@ -142,5 +142,8 @@
 		elseif(isset($_POST["wagesDetailsEmpID"]) && isset($_POST["wagesDetailssheetID"])){
 			viewWagesDetails();
 		}
+		elseif(isset($_POST["submitDedFromCredit"]) ){
+			insertDedFromCredit();
+		}
 	
 	?>

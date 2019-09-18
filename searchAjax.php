@@ -47,4 +47,8 @@
 
 		getBenefits();
 	}
+	//elseif($currentURL == 'insertDedfromcredit.php'){
+
+	// 	$sql = "select empName from employee where ID = ".$_POST['search']."";
+	// }
 	?>
