@@ -5,6 +5,7 @@
 	<div class="container">
 		
 		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>تسجيل استقطاع من رصيد </div>
+		
 		<form class="navbar-form row"  id="deductionFromCreditinsertion" method="POST" action="fetch.php">
 			<div class="form-group add-on ">
 
@@ -12,11 +13,11 @@
 				<select class="form-control" name="getEmpForDed" id="getEmpForDed">
 					<?php getEmpDropDown(); ?>
 				</select>
-				
+			</div>
 				<hr>
                 <?php  deductionItems(); ?>
 				<!-- <hr> -->
-			</div>
+			
 			<!-- <div class = "row "> -->
 				<div class="col-sm-12 ">
 					<button class ="btn btn-primary btn-lg col-sm-2 col-sm-offset-5 " 

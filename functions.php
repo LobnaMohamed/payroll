@@ -1145,20 +1145,29 @@
 		// $timesheetID = $stmt->fetchColumn();
 		foreach ($result as $row) {                
 			$output .=
-				"<div class='col-md-6'>
-					<fieldset >
-						<legend>".$row['deductionType']."</legend>
-						<label  for='dedDate'>تاريخ التسجيل</label>
-						<input class='form-control' type ='date' id='dedDate[".$row['deductionTypeID']."]' 
+				"<div class='col-sm-6'>
+					<fieldset>
+						<legend >".$row['deductionType']."</legend>
+						
+						<label  for='dedDate'>تاريخ التسجيل:</label>
+						<input class='form-control'  type ='date' id='dedDate[".$row['deductionTypeID']."]' 
 						name='dedDate[".$row['deductionTypeID']."]' >
-
-						<label  for='dedAmount'>المبلغ</label>
+					
+					
+						<label class=' for='dedAmount'>المبلغ:</label>
 						<input class='form-control'  id='dedAmount[".$row['deductionTypeID']."]' 
 						name='dedAmount[".$row['deductionTypeID']."]' placeholder='ادخل القيمة الكلية..'>
-						<input type='hidden'  id=".$row['deductionTypeID']." name=".$row['deductionTypeID']." >
-						
-					</fieldset>
-					<br>
+							
+						";
+						if($row['deductionTypeID'] != 5){//medicines
+							$output .="
+								<br><label  for='dedmonthsNo'>عدد الشهور:</label>
+								<input class='form-control'  id='dedmonthsNo[".$row['deductionTypeID']."]' 
+								name='dedmonthsNo[".$row['deductionTypeID']."]' placeholder='ادخل عدد الشهور ..'>";
+						}
+			$output .=	
+						"<input type='hidden'  id=".$row['deductionTypeID']." name=".$row['deductionTypeID']." >
+					</fieldset><br>
 				</div>";
 		}
 		$output .= "</div>";
@@ -1168,15 +1177,16 @@
 	function insertDedFromCredit(){
 		$con = connect();
 		$empID = $_POST['getEmpForDed'];
-		
+		$add_installment = "insert into creditDeductions(emp_id,deductionType_id,
+							deductionDate,totalAmount,monthlyValue,remainingValue) values ";
 		//---------------deduction from credit insertion ---------------------
 		foreach ($_POST['dedDate'] as $DedTypeID => $datevalue) {
 			if($_POST['dedAmount'][$DedTypeID] != 0){
 
-				$sql = "insert into creditDeductions(emp_id,deductionType_id,deductionDate,totalAmount) 
-					values ($empID,$DedTypeID,'$datevalue', " .$_POST['dedAmount'][$DedTypeID].")";
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
+				// $sql = "insert into creditDeductions(emp_id,deductionType_id,deductionDate,totalAmount) 
+				// 	values ($empID,$DedTypeID,'$datevalue', " .$_POST['dedAmount'][$DedTypeID].")";
+				// $stmt = $con->prepare($sql);
+				// $stmt->execute();
 				if($DedTypeID == 5){ //ادوية
 					//divide deductions according to rules:
 					//ranges of deductions for medicines:
@@ -1186,8 +1196,8 @@
 					$r4 = range(2001, 4000);
 					$r5 = range(4001, 5000);
 					$remainingAmount =  $_POST['dedAmount'][$DedTypeID];
-					$monthAmount = "";
 					
+					// $effectiveDate = $datevalue;
 					while( $remainingAmount > 0){
 					
 						switch ($remainingAmount) {
@@ -1211,26 +1221,43 @@
 								break;
 							//calculate remaining amount	
 						}
-						echo "monthAmount: " .$monthAmount;
+						//echo "monthAmount: " .$monthAmount;
 						$remainingAmount =$remainingAmount - $monthAmount ;
-						$add_installment = "insert into creditDeductions(emp_id,deductionType_id,
-											deductionDate,totalAmount,monthlyValue,remainingValue) 
-											values ($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
-													$monthAmount,$remainingAmount)";
+						
+						$add_installment .=	"($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
+													$monthAmount,$remainingAmount),";
 						// echo $add_installment;
+						// echo"<br>";
+						// echo $remainingAmount;
 						echo"<br>";
-						echo $remainingAmount;
+						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+
+					}
+					
+				}else{ //باقى الاستقطاعات حسب عدد الشهور
+					$remainingAmount = $_POST['dedAmount'][$DedTypeID] - intval($_POST['dedAmount'][$DedTypeID]) ;
+					$monthAmount =  $_POST['dedAmount'][$DedTypeID] / $_POST['dedmonthsNo'][$DedTypeID];
+					while( $remainingAmount > 0){
+						$remainingAmount = $remainingAmount - $monthAmount ;
+						$add_installment .="($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
+						$monthAmount,$remainingAmount),";
+						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+						
+							//calculate remaining amount	
+						}
 						echo"<br>";
+						
 
-
-					}	
+					}
 				}
+
 			}
-		}	
-
-
-	//echo "done insertion";
-	}
+			
+			$trimmed_add_installment =  rtrim($add_installment,",");	
+			echo $trimmed_add_installment;
+			// $stmt = $con->prepare($sql);
+			// $stmt->execute();
+	}	
 	//---------------get other benefits--------------------
 	function getBenefits(){
 		$sql = "";

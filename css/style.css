@@ -19,10 +19,10 @@ label{
     font-size: 110%;
     /* display:block; */
 }
-.form-control{
+/* .form-control{
     font-size: 17px;
     
-}
+} */
 .form-control input[type="text"], input[type="date"]{
     text-align: right;
 }
