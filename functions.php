@@ -2,7 +2,7 @@
 	//include 'connect.php';
 	// --------------connection to database function-------------
 	function connect(){
-		$servername = "LOBNA-PC";
+		$servername = "LOBNA";
         // $username = "username";
         // $password = "password";
         
@@ -1235,15 +1235,38 @@
 					}
 					
 				}else{ //باقى الاستقطاعات حسب عدد الشهور
-					$remainingAmount = $_POST['dedAmount'][$DedTypeID] - intval($_POST['dedAmount'][$DedTypeID]) ;
-					$monthAmount =  $_POST['dedAmount'][$DedTypeID] / $_POST['dedmonthsNo'][$DedTypeID];
+					//----get quotient of division------------
+					$quotientAmount =  intval($_POST['dedAmount'][$DedTypeID] / $_POST['dedmonthsNo'][$DedTypeID]);
+					$remainderAmount = fmod($_POST['dedAmount'][$DedTypeID] ,$_POST['dedmonthsNo'][$DedTypeID]);
+					echo "quotient". $quotientAmount ;
+					echo "<br>";
+					echo "remainderAmount". $remainderAmount;
+					echo "<br>";
+					//------------first month will deduct quotient value plus remainder---------------
+					
+					$firstMonthAmount = $quotientAmount + $remainderAmount ; //اول قسط
+					$remainingAmount = $_POST['dedAmount'][$DedTypeID]  - $firstMonthAmount;
+					echo "firstMonthAmount". $firstMonthAmount;
+					echo "<br>";
+					echo "remainingAmount". $remainingAmount;
+					
+					//------------add first month in sql statement---------------------
+					$add_installment .="($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
+										$firstMonthAmount,$remainingAmount),";
+					$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+					
 					while( $remainingAmount > 0){
-						$remainingAmount = $remainingAmount - $monthAmount ;
+						$remainingAmount = $remainingAmount - $quotientAmount ;
 						$add_installment .="($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
-						$monthAmount,$remainingAmount),";
+						$quotientAmount,$remainingAmount),";
 						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+						echo "<br>";
 						
-							//calculate remaining amount	
+						echo "quotient". $quotientAmount ;
+						echo "<br>";
+						echo "remainingAmount". $remainingAmount;
+						
+						
 						}
 						echo"<br>";
 						
