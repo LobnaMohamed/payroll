@@ -1125,6 +1125,8 @@
 			<td>".$row['totalAmount']."</td> 
 			<td>".$row['monthlyValue']."</td> 
 			<td>".$row['remainingValue']."</td> 
+			<td> <button  class='btn  btn-sm managements editManagementData ' data-toggle='modal'
+			 data-target='#editManagementModal' id=''>edit</button></td>
 			
 			</tr>";
 		}
@@ -1278,8 +1280,8 @@
 			
 			$trimmed_add_installment =  rtrim($add_installment,",");	
 			echo $trimmed_add_installment;
-			// $stmt = $con->prepare($sql);
-			// $stmt->execute();
+			$stmt = $con->prepare($trimmed_add_installment);
+			$stmt->execute();
 	}	
 	//---------------get other benefits--------------------
 	function getBenefits(){
