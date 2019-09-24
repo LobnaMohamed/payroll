@@ -2,7 +2,7 @@
 	//include 'connect.php';
 	// --------------connection to database function-------------
 	function connect(){
-		$servername = "LOBNA";
+		$servername = "LOBNA-PC";
         // $username = "username";
         // $password = "password";
         
