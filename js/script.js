@@ -679,7 +679,7 @@ $(document).ready(function(){
 
 	//--------------view Current Credit Deductions For Emp profile------------------
 	$(document).on('click','.editdedFromCredit', function(){
-		//var employee_id=$(this).attr("id");
+		var employee_id=$(this).attr("id");
 		//console.log(employee_id);
 		$.ajax({
 			url:"fetch.php",
