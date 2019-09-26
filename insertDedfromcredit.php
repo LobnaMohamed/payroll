@@ -13,7 +13,7 @@
 							data-target="#viewdedFromCreditModal" >استقطاعات منتهية</button>
 				</div>
 				<div class='col-sm-3 '>
-					<button type='button' class="btn btn-lg btn-success" data-toggle="modal"
+					<button type='button' class="btn btn-lg btn-success editdedFromCredit " data-toggle="modal"
 						data-target="#editdedFromCreditModal" >استقطاعات جارية</button>
 				</div>
 
@@ -28,6 +28,14 @@
 			<hr>
 			<?php  deductionItems(); ?>
 				<!-- <hr> -->
+
+			<!-- <div class = "row "> -->
+				<div class="col-sm-12 ">
+					<button class ="btn btn-primary btn-lg col-sm-2 col-sm-offset-5 " 
+					type="Submit" name="submitDedFromCredit" >حـــــفظ<i class="fa fa-save fa-fw save-icon"></i></button>			
+				</div>	
+
+		</form>
 			<!-- Edit Modal -->
 			<div id="editdedFromCreditModal" class="modal fade" role="dialog">
 				<div class="modal-dialog modal-lg">
@@ -38,7 +46,7 @@
 							<h3 class="modal-title ">استقطاعات جارية لـ <span> emp name </span> رقم قيد <span> emp id </span> </h3>
 						</div>
 						<div class="modal-body row">
-							<form method="POST" id="editEmpForm" name="editEmpForm" action = "fetch.php">
+							<form method="POST" id="editdedFromCreditForm" name="editdedFromCreditForm" action = "fetch.php">
 								<table class="table table-bordered table-responsive">
 									<tbody>
 										<tr>											
@@ -47,13 +55,6 @@
 											<th>المبلغ</th>
 											<th>ينتهى فى</th>
 											<th>تسديد المبلغ </th>
-										</tr>
-										<tr>
-											<td id=""></td>
-											<td id=""></td>
-											<td id=""></td>
-											<td id=""></td>
-											<td id=""></td>										
 										</tr>
 
 									</tbody>
@@ -102,13 +103,5 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div class = "row "> -->
-				<div class="col-sm-12 ">
-					<button class ="btn btn-primary btn-lg col-sm-2 col-sm-offset-5 " 
-					type="Submit" name="submitDedFromCredit" >حـــــفظ<i class="fa fa-save fa-fw save-icon"></i></button>			
-				</div>	
-
-		</form>
-
 	</div> 
 	<?php	include 'footer.php'; ?>

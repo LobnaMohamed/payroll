@@ -1133,6 +1133,37 @@
 
 		echo $output;
 	}
+	//---------------get CURRENT deductions from credit in modal--------------------------
+	function getCurrentCreditDeductionsForEmp(){
+		$output ="";
+		$con = connect();
+	
+		$sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
+					min(cd.deductionDate) as startDate,max(cd.deductionDate) as endDate
+				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
+								inner join deductionTypes dt 
+								on cd.deductionType_id = dt.deductionTypeID 
+							where  cd.emp_id = 2
+				group by  cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			$output .= "<tr>
+			<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+			<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
+			<td>".$row['deductionType']."</td> 
+			<td>".$row['startDate']."</td> 
+			<td>".$row['totalAmount']."</td> 
+			<td>".$row['endDate']."</td> 
+			<td> <button  class='btn  btn-sm' data-toggle='modal'
+				data-target='#editManagementModal' id=''>edit</button></td>
+			
+			</tr>";
+		}
+
+		echo $output;
+	}
 	//---------------get deduction items in a form---------
 	function deductionItems(){
 		$sql = "";
