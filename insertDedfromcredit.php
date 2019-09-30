@@ -9,7 +9,7 @@
 		<form class="navbar-form "  id="deductionFromCreditinsertion" method="POST" action="fetch.php">
 			<div class="form-group row add-on ">
 				<div class='col-sm-3'>
-					<button type='button' class="btn  btn-lg btn-primary" data-toggle="modal"
+					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"
 							data-target="#viewdedFromCreditModal" >استقطاعات منتهية</button>
 				</div>
 				<div class='col-sm-3 '>
@@ -43,20 +43,24 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h3 class="modal-title ">استقطاعات جارية لـ <span> emp name </span> رقم قيد <span> emp id </span> </h3>
+							<h3 class="modal-title "> استقطاعات جارية لـ <span id="empName"> </span> رقم قيد <span id="empCode">  </span> </h3>
+						
 						</div>
 						<div class="modal-body row">
 							<form method="POST" id="editdedFromCreditForm" name="editdedFromCreditForm" action = "fetch.php">
 								<table class="table table-bordered table-responsive">
-									<tbody>
-										<tr>											
-											<th>نوع الاستقطاع</th>
-											<th>تاريخ الاستقطاع</th>
-											<th>المبلغ</th>
-											<th>ينتهى فى</th>
-											<th>تسديد المبلغ </th>
-										</tr>
+								<thead>
+									<tr>											
+										<th>نوع الاستقطاع</th>
+										<th>تاريخ الاستقطاع</th>
+										<th>المبلغ</th>
+										<th>ينتهى فى</th>
+										<th>تسديد المبلغ </th>
+									</tr>
 
+								</thead>
+									<tbody id="currentDedEditBody">
+										
 									</tbody>
 								</table>
 								<div class="form-group col-md-3 col-md-offset-4 ">
@@ -76,27 +80,22 @@
 					<div class="modal-content ">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h3 class="modal-title "> استقطاعات منتهية لـ <span> emp name </span> رقم قيد <span> emp id </span> </h3>
+							<h3 class="modal-title "> استقطاعات منتهية لـ <span id="empName1"> </span> رقم قيد <span id="empCode1">  </span> </h3>
+							<!-- <h3 class="modal-title "> استقطاعات جارية لـ <span id="empName"> </span> رقم قيد <span id="empCode">  </span> </h3> -->
+						
 						</div>
 						<div class="modal-body row">
 							<!-- <input type="hidden" name="employee_id" id="employee_id">   -->
 							<table class="table table-bordered table-responsive">
-								<tbody>
+								<thead>
 									<tr>
 										<th>نوع الاستقطاع</th>
 										<th>تاريخ الاستقطاع</th>
 										<th>المبلغ</th>
 										<th>تاريخ الانتهاء</th>
 									</tr>
-									<tr>
-										<td id=""></td>
-										<td id=""></td>
-										<td id=""></td>
-										<td id=""></td>
-										
-
-									</tr>
-
+								</thead>
+								<tbody id ="endedDedEditBody">
 								</tbody>
 							</table>
 						</div>

@@ -145,5 +145,10 @@
 		elseif(isset($_POST["submitDedFromCredit"]) ){
 			insertDedFromCredit();
 		}
-	
+		elseif(isset($_POST["editDed_EmpID"]) ){
+			getCurrentCreditDeductionsForEmp();
+		}
+		elseif(isset($_POST["endedDed_EmpID"]) ){
+			getEndedCreditDeductionsForEmp();
+		}
 	?>

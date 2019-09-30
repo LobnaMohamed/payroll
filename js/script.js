@@ -677,32 +677,42 @@ $(document).ready(function(){
 		});	
 	});
 
-	//--------------view Current Credit Deductions For Emp profile------------------
+	//--------------get data to view Current Credit Deductions For Emp ------------------
 	$(document).on('click','.editdedFromCredit', function(){
-		var employee_id=$(this).attr("id");
-		//console.log(employee_id);
+		var employee_id=$('#getEmpForDed').val();
+		console.log(employee_id);
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
-			//data:{currentProfileEmpID:employee_id},
+			data:{editDed_EmpID:employee_id},
 			dataType:"json",
 			success:function(data){
-				console.log(data);
-				$('#currentProfileEmp_code').text(data.currentCode);
-				$('#currentProfileEmp_level').text(data.empLevel);
-				$('#currentProfileEmp_job').text(data.job);
-				$('#currentProfileEmp_syndicate').text(data.syndicate);
-				$('#currentProfileEmp_name').text(data.empName);
-				$('#currentProfileEmp_MS').text(data.maritalStatus);
-				$('#currentProfileEmp_contract').text(data.contractType);
-				$('#currentProfileEmp_shift').text(data.currentShift);
-				$('#currentProfileEmp_hireDate').text(data.hireDate);				
-				$('#currentProfileEmp_DOB').text(data.DOB);
-				$('#currentProfileEmp_salary').text(data.currentSalary);	
+				$('#currentDedEditBody').html(data.tableOutput);
+				$('#empName').html(data.empName);
+				$('#empCode').html(data.empCode);
 			},error:function(error){
 				console.log(error);
 			}
 		});
 	});
+	//--------------get data to view ended Credit Deductions For Emp ------------------
+	$(document).on('click','.viewEndeddedFromCredit', function(){
+		var employee_id=$('#getEmpForDed').val();
+		console.log(employee_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{endedDed_EmpID:employee_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#endedDedEditBody').html(data.tableOutput);
+				$('#empName1').html(data.empName);
+				$('#empCode1').html(data.empCode);
 
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
 });

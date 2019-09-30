@@ -1143,8 +1143,9 @@
 				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
 								inner join deductionTypes dt 
 								on cd.deductionType_id = dt.deductionTypeID 
-							where  cd.emp_id = 2
-				group by  cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType";
+							where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
+				group by  cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType
+				having month(GETDATE()) < month(max(cd.deductionDate))";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -1157,12 +1158,46 @@
 			<td>".$row['totalAmount']."</td> 
 			<td>".$row['endDate']."</td> 
 			<td> <button  class='btn  btn-sm' data-toggle='modal'
-				data-target='#editManagementModal' id=''>edit</button></td>
+				data-target='#editManagementModal' id=''>pay</button></td>
 			
 			</tr>";
 		}
 
-		echo $output;
+		echo json_encode( array("tableOutput" => $output,
+								"empCode" => $row['currentCode'],
+								"empName" => $row['empName']));
+	}
+	//---------------get ENDED deductions from credit in modal--------------------------
+	function getEndedCreditDeductionsForEmp(){
+		$output ="";
+		$con = connect();
+	
+		$sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
+					min(cd.deductionDate) as startDate,max(cd.deductionDate) as endDate
+				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
+								inner join deductionTypes dt 
+								on cd.deductionType_id = dt.deductionTypeID 
+							where  cd.emp_id = " . $_POST['endedDed_EmpID'] . "
+							
+				group by  cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType
+				having month(GETDATE()) > month(max(cd.deductionDate))";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			$output .= "<tr>
+			<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+			<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
+			<td>".$row['deductionType']."</td> 
+			<td>".$row['startDate']."</td> 
+			<td>".$row['totalAmount']."</td> 
+			<td>".$row['endDate']."</td> 
+			</tr>";
+		}
+
+		echo json_encode( array("tableOutput" => $output,
+								"empCode" => $row['currentCode'],
+								"empName" => $row['empName']));
 	}
 	//---------------get deduction items in a form---------
 	function deductionItems(){
