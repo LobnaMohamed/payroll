@@ -2,7 +2,16 @@
 $(document).ready(function(){
 
 	'use strict';
-
+	$.extend({ alert: function (message, title) {
+		$("<div></div>").dialog( {
+		  buttons: { "Ok": function () { $(this).dialog("close"); } },
+		  close: function (event, ui) { $(this).remove(); },
+		  resizable: false,
+		  title: title,
+		  modal: true
+		}).text(message);
+	  }
+	  });
 	//scroll down
 	$("#scroll_down").click(function() {
 		$('html, body').animate({
@@ -696,7 +705,7 @@ $(document).ready(function(){
 		});
 	});
 	//--------------get data to view ended Credit Deductions For Emp ------------------
-	$(document).on('click','.viewEndeddedFromCredit', function(){
+	$(document).on('click','.viewEndeddedFromCredit', function(e){
 		var employee_id=$('#getEmpForDed').val();
 		console.log(employee_id);
 		$.ajax({
@@ -706,13 +715,25 @@ $(document).ready(function(){
 			dataType:"json",
 			success:function(data){
 				console.log(data);
-				$('#endedDedEditBody').html(data.tableOutput);
-				$('#empName1').html(data.empName);
-				$('#empCode1').html(data.empCode);
+				if ($('#empCode1').val() != ''){
+					$('#endedDedEditBody').html(data.tableOutput);
+					$('#empName1').html(data.empName);
+					$('#empCode1').html(data.empCode);
+				}else{
+					
+					$('#viewdedFromCreditModal').modal('hide')
+
+					alert("error");
+					
+				}
+				
 
 			},error:function(error){
 				console.log(error);
+				//alert("لم تقم يإختيار موظف <span><i class='fa fa-exclamation-triangle'></i></span>");
+				//$("<div>Test message</div>").dialog();
 			}
 		});
 	});
+
 });

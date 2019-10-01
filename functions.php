@@ -1149,29 +1149,44 @@
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
-		foreach ($result as $row) {
-			$output .= "<tr>
-			<input name='emp_id' type='hidden' value=".$row['emp_id'].">
-			<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
-			<td>".$row['deductionType']."</td> 
-			<td>".$row['startDate']."</td> 
-			<td>".$row['totalAmount']."</td> 
-			<td>".$row['endDate']."</td> 
-			<td> <button  class='btn  btn-sm' data-toggle='modal'
-				data-target='#editManagementModal' id=''>pay</button></td>
-			
-			</tr>";
-		}
+		if($result){
+			foreach ($result as $row) {
+				$output .= "<tr>
+				<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+				<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
+				<td>".$row['deductionType']."</td> 
+				<td>".$row['startDate']."</td> 
+				<td>".$row['totalAmount']."</td> 
+				<td>".$row['endDate']."</td> 
+				<td> <button  class='btn  btn-sm' data-toggle='modal'
+					data-target='#editManagementModal' id=''>pay</button></td>
+				
+				</tr>";
+			}
+	
+			echo json_encode( array("tableOutput" => $output,
+									"empCode" => $row['currentCode'],
+									"empName" => $row['empName']));
 
-		echo json_encode( array("tableOutput" => $output,
-								"empCode" => $row['currentCode'],
-								"empName" => $row['empName']));
+		}else{
+			$sql = "select TOP 1 e.currentCode,e.empName
+					from employee e 
+					where  e.ID = " . $_POST['editDed_EmpID'] . "";
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetch();
+			$output = "<td colspan='5'>لا يوجـــد استقطاعات جارية </td> ";
+			echo json_encode( array("tableOutput" => $output,
+									"empCode" => $result['currentCode'],
+									"empName" => $result['empName']));
+		}
+		
 	}
 	//---------------get ENDED deductions from credit in modal--------------------------
 	function getEndedCreditDeductionsForEmp(){
 		$output ="";
 		$con = connect();
-	
+
 		$sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
 					min(cd.deductionDate) as startDate,max(cd.deductionDate) as endDate
 				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
@@ -1184,20 +1199,34 @@
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
-		foreach ($result as $row) {
-			$output .= "<tr>
-			<input name='emp_id' type='hidden' value=".$row['emp_id'].">
-			<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
-			<td>".$row['deductionType']."</td> 
-			<td>".$row['startDate']."</td> 
-			<td>".$row['totalAmount']."</td> 
-			<td>".$row['endDate']."</td> 
-			</tr>";
+		if($result){
+			foreach ($result as $row) {
+				$output .= "<tr>
+				<input name='emp_id' type='hidden' value=".$row['emp_id'].">
+				<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
+				<td>".$row['deductionType']."</td> 
+				<td>".$row['startDate']."</td> 
+				<td>".$row['totalAmount']."</td> 
+				<td>".$row['endDate']."</td> 
+				</tr>";
+			}
+	
+			echo json_encode( array("tableOutput" => $output,
+									"empCode" => $row['currentCode'],
+									"empName" => $row['empName']));
+		}else{
+			$sql = "select TOP 1 e.currentCode,e.empName
+					from employee e 
+					where  e.ID = " . $_POST['endedDed_EmpID'] . "";
+			$stmt = $con->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetch();
+			$output = "<td colspan='4'>لا يوجـــد استقطاعات منتهية </td> ";
+			echo json_encode( array("tableOutput" => $output,
+									"empCode" => $result['currentCode'],
+									"empName" => $result['empName']));
 		}
-
-		echo json_encode( array("tableOutput" => $output,
-								"empCode" => $row['currentCode'],
-								"empName" => $row['empName']));
+		
 	}
 	//---------------get deduction items in a form---------
 	function deductionItems(){
