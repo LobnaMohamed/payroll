@@ -696,9 +696,20 @@ $(document).ready(function(){
 			data:{editDed_EmpID:employee_id},
 			dataType:"json",
 			success:function(data){
-				$('#currentDedEditBody').html(data.tableOutput);
-				$('#empName').html(data.empName);
-				$('#empCode').html(data.empCode);
+				console.log(data);
+				console.log(data.empCode);
+
+				if (data.empCode != null){
+					$('#currentDedEditBody').html(data.tableOutput);
+					$('#empName').html(data.empName);
+					$('#empCode').html(data.empCode);
+				}else{
+					
+					$('#editdedFromCreditModal').modal('hide')
+
+					alert("لم تقم بإختيار أى موظف..");
+					
+				}
 			},error:function(error){
 				console.log(error);
 			}
@@ -706,6 +717,7 @@ $(document).ready(function(){
 	});
 	//--------------get data to view ended Credit Deductions For Emp ------------------
 	$(document).on('click','.viewEndeddedFromCredit', function(e){
+		// e.preventDefault();
 		var employee_id=$('#getEmpForDed').val();
 		console.log(employee_id);
 		$.ajax({
@@ -715,16 +727,18 @@ $(document).ready(function(){
 			dataType:"json",
 			success:function(data){
 				console.log(data);
-				if ($('#empCode1').val() != ''){
+				console.log(data.empCode);
+
+				if (data.empCode != null){
 					$('#endedDedEditBody').html(data.tableOutput);
 					$('#empName1').html(data.empName);
 					$('#empCode1').html(data.empCode);
 				}else{
 					
-					$('#viewdedFromCreditModal').modal('hide')
-
-					alert("error");
+					$('#viewdedFromCreditModal').modal('hide');
 					
+					alert("لم تقم بإختيار أى موظف..");
+					// $("<div>Test message</div>").dialog();
 				}
 				
 

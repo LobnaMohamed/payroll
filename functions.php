@@ -1143,7 +1143,7 @@
 				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
 								inner join deductionTypes dt 
 								on cd.deductionType_id = dt.deductionTypeID 
-							where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
+				where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
 				group by  cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType
 				having month(GETDATE()) < month(max(cd.deductionDate))";
 		$stmt = $con->prepare($sql);
@@ -1169,9 +1169,9 @@
 									"empName" => $row['empName']));
 
 		}else{
-			$sql = "select TOP 1 e.currentCode,e.empName
-					from employee e 
-					where  e.ID = " . $_POST['editDed_EmpID'] . "";
+			$sql = "select TOP 1 currentCode,empName
+					from employee
+					where  ID = " . $_POST['editDed_EmpID'] . "";
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetch();
@@ -1215,9 +1215,9 @@
 									"empCode" => $row['currentCode'],
 									"empName" => $row['empName']));
 		}else{
-			$sql = "select TOP 1 e.currentCode,e.empName
-					from employee e 
-					where  e.ID = " . $_POST['endedDed_EmpID'] . "";
+			$sql = "select TOP 1 currentCode,empName
+					from employee 
+					where  ID = " . $_POST['endedDed_EmpID'] . "";
 			$stmt = $con->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetch();
