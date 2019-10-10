@@ -1251,15 +1251,15 @@
 						name='dedDate[".$row['deductionTypeID']."]' >
 					
 					
-						<label class=' for='dedAmount'>المبلغ:</label>
-						<input class='form-control'  id='dedAmount[".$row['deductionTypeID']."]' 
+						<label  for='dedAmount'>المبلغ:</label>
+						<input class='form-control formControlWidth'  id='dedAmount[".$row['deductionTypeID']."]' 
 						name='dedAmount[".$row['deductionTypeID']."]' placeholder='ادخل القيمة الكلية..'>
 							
 						";
 						if($row['deductionTypeID'] != 5){//medicines
 							$output .="
 								<br><label  for='dedmonthsNo'>عدد الشهور:</label>
-								<input class='form-control'  id='dedmonthsNo[".$row['deductionTypeID']."]' 
+								<input class='form-control formControlWidth'  id='dedmonthsNo[".$row['deductionTypeID']."]' 
 								name='dedmonthsNo[".$row['deductionTypeID']."]' placeholder='ادخل عدد الشهور ..'>";
 						}
 			$output .=	
@@ -1276,24 +1276,53 @@
 		$empID = $_POST['getEmpForDed'];
 		$add_installment = "insert into creditDeductions(emp_id,deductionType_id,
 							deductionDate,totalAmount,monthlyValue,remainingValue) values ";
+		//divide deductions according to rules:
+		//ranges of deductions for medicines:
+		$r1 = range(0, 500);
+		$r2 = range(501, 1000);
+		$r3 = range(1001, 2000);
+		$r4 = range(2001, 4000);
+		$r5 = range(4001, 5000);
 		//---------------deduction from credit insertion ---------------------
 		foreach ($_POST['dedDate'] as $DedTypeID => $datevalue) {
 			if($_POST['dedAmount'][$DedTypeID] != 0){
-
-				// $sql = "insert into creditDeductions(emp_id,deductionType_id,deductionDate,totalAmount) 
-				// 	values ($empID,$DedTypeID,'$datevalue', " .$_POST['dedAmount'][$DedTypeID].")";
-				// $stmt = $con->prepare($sql);
-				// $stmt->execute();
 				if($DedTypeID == 5){ //ادوية
-					//divide deductions according to rules:
-					//ranges of deductions for medicines:
-					$r1 = range(0, 500);
-					$r2 = range(501, 1000);
-					$r3 = range(1001, 2000);
-					$r4 = range(2001, 4000);
-					$r5 = range(4001, 5000);
-					$remainingAmount =  $_POST['dedAmount'][$DedTypeID];
+					//get max date of current deduction:
+					$getmaxDate="select max(deductionDate) as endDate
+								from  creditDeductions 			
+								where  emp_id = $empID and deductionType_id = $DedTypeID
+								having month($datevalue) <= month(max(deductionDate))";
+					$stmt = $con->prepare($getmaxDate);
+					$stmt->execute();
+					$result = $stmt->fetch();
+					$maxDate = $result['deductionDate'];
+					//check if there any current meds deductions:
+					$checkSql = "	select totalAmount,deductionDate,remainingValue
+									from  creditDeductions 			
+									where  emp_id = $empID and deductionType_id =$DedTypeID
+									and month( $datevalue) = month(deductionDate)";
+					$stmt = $con->prepare($checkSql);
+					$stmt->execute();
+					$result = $stmt->fetch();
 					
+					if($result){
+						$remainingAmount = $result['remainingValue'] + $_POST['dedAmount'][$DedTypeID]; //new remaining amount 
+						$updateSql = "update creditDeductions
+										set	totalAmount = ".$result['totalAmount']." + ".$_POST['dedAmount'][$DedTypeID] .",
+											monthlyValue = $monthAmount,
+											remainingValue = $remainingAmount
+										where emp_id = $empID and deductionType_id =$DedTypeID 
+										and  month( $datevalue) = month(deductionDate) ";
+						
+						while($datevalue < $maxDate){
+
+						}
+						
+						
+					}else{
+						$remainingAmount =  $_POST['dedAmount'][$DedTypeID];
+					}
+
 					// $effectiveDate = $datevalue;
 					while( $remainingAmount > 0){
 					
@@ -1316,17 +1345,13 @@
 							case ($remainingAmount > 5000) :
 								$monthAmount = 500;
 								break;
-							//calculate remaining amount	
+	
 						}
-						//echo "monthAmount: " .$monthAmount;
+
 						$remainingAmount =$remainingAmount - $monthAmount ;
 						
 						$add_installment .=	"($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
 													$monthAmount,$remainingAmount),";
-						// echo $add_installment;
-						// echo"<br>";
-						// echo $remainingAmount;
-						echo"<br>";
 						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
 
 					}
