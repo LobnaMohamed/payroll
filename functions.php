@@ -1105,7 +1105,7 @@
 		$output ="";
 		$con = connect();
 		//check if there are any values in salary for that date:
-		$sql = "select cd.*,e.currentCode,e.empName,dt.deductionType
+		$sql = "select cd.*,e.currentCode,e.empName,dt.deductionType,cd.endDate
 				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
 								inner join deductionTypes dt 
 								on cd.deductionType_id = dt.deductionTypeID ";
@@ -1123,8 +1123,8 @@
 			<td>".$row['deductionType']."</td> 
 
 			<td>".$row['totalAmount']."</td> 
-			<td>".$row['monthlyValue']."</td> 
-			<td>".$row['remainingValue']."</td> 
+			<td>".$row['endDate']."</td> 
+
 			<td> <button  class='btn  btn-sm managements editManagementData ' data-toggle='modal'
 			 data-target='#editManagementModal' id=''>edit</button></td>
 			
