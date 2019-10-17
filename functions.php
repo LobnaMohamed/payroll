@@ -369,16 +369,11 @@
 		$con = connect();
 		$sql= '';		
 		if(!empty($_POST['dateFrom'])){
-			// $sql = "select t.*,e.currentCode,e.empName
-			// 		from employee e,timesheet t
-			// 		where t.emp_id = e.ID
-			// 				and month(t.sheetDate)= month('".$_POST['timesheetDate']."')";	
-			//--------------------------------------------------------------
 			//payroll_new database
 			$sql= "select t.*,e.currentCode,e.empName,empt.*
 					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
 						inner join employee e on empt.emp_id = e.ID
-					and month(t.sheetDate)=  month('".$_POST['dateFrom']."')";
+					and t.sheetDate= '".$_POST['dateFrom']."'";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -473,21 +468,13 @@
 		$output="";	
 		$con = connect();
 		$sql= '';		
-		// $sql="select t.*,e.currentCode,e.empName
-		// 		from employee e,timesheet t
-		// 		where t.emp_id = e.ID
-		// 				and month(t.sheetDate) = month(getdate())";
 		
 		if(!empty($_POST['dateFrom'])){	
-			// $sql= "select t.*,e.currentCode,e.empName,empt.*
-			// 		from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-			// 			inner join employee e on empt.emp_id = e.ID
-			// 		and month(t.sheetDate)=  month('".$_POST['timesheetDate']."')";
 			$sql = "select  e.empName,e.currentCode,e.ID
 					from	employee e
 					where e.ID not in (select empt.emp_id
 					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-					where month(t.sheetDate)=  month('".$_POST['dateFrom']."')) ";
+					where t.sheetDate= '".$_POST['dateFrom']."' ";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -497,14 +484,6 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if( $result ){
-			// $sql = "select  e.empName,e.currentCode,e.ID
-			// 		from	employee e
-			// 		where e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%'";
-			
-
-			// $stmt = $con->prepare($sql2);
-			// $stmt->execute();
-			// $result = $stmt->fetchAll();
 			foreach($result as $row){
 				$empindex = $row['ID'];
 				$output .= "<tr>
@@ -973,7 +952,7 @@
 		//check if there are any values in salary for that date:
 		$sql = "select ID
 				from timesheets
-				where month(sheetDate) = month('".$_POST['dateFrom']."')";
+				where sheetDate = '".$_POST['dateFrom']."'";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$timesheetID = $stmt->fetchColumn();
@@ -1137,15 +1116,6 @@
 	function getCurrentCreditDeductionsForEmp(){
 		$output ="";
 		$con = connect();
-	
-		// $sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
-		// 			min(cd.deductionDate) as startDate,max(cd.deductionDate) as endDate
-		// 		from employee e inner join creditDeductions cd on e.ID = cd.emp_id
-		// 						inner join deductionTypes dt 
-		// 						on cd.deductionType_id = dt.deductionTypeID 
-		// 		where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
-		// 		group by  cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType
-		// 		having month(GETDATE()) < month(max(cd.deductionDate))";
 		$sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
 					cd.deductionDate,cd.endDate
 				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
@@ -1246,8 +1216,8 @@
 		// $timesheetID = $stmt->fetchColumn();
 		foreach ($result as $row) {                
 			$output .=
-				"<div class='col-sm-6'>
-					<fieldset>
+				"<div class='col-sm-6 panel panel-default'>
+					<fieldset class='form-group '>
 						<legend >".$row['deductionType']."</legend>
 						
 						<label  for='dedDate'>تاريخ التسجيل:</label>
@@ -1268,147 +1238,12 @@
 						}
 			$output .=	
 						"<input type='hidden'  id=".$row['deductionTypeID']." name=".$row['deductionTypeID']." >
-					</fieldset><br>
+					</fieldset>
 				</div>";
 		}
 		$output .= "</div>";
 		echo $output;
 	}
-	//---------------insert deductions from credit-------------------
-	function OLDinsertDedFromCredit(){
-		$con = connect();
-		$empID = $_POST['getEmpForDed'];
-		$add_installment = "insert into creditDeductions(emp_id,deductionType_id,
-							deductionDate,totalAmount,monthlyValue,remainingValue) values ";
-		//divide deductions according to rules:
-		//ranges of deductions for medicines:
-		$r1 = range(0, 500);
-		$r2 = range(501, 1000);
-		$r3 = range(1001, 2000);
-		$r4 = range(2001, 4000);
-		$r5 = range(4001, 5000);
-		//---------------deduction from credit insertion ---------------------
-		foreach ($_POST['dedDate'] as $DedTypeID => $datevalue) {
-			if($_POST['dedAmount'][$DedTypeID] != 0){
-				if($DedTypeID == 5){ //ادوية
-					//get max date of current deduction:
-					$getmaxDate="select max(deductionDate) as endDate
-								from  creditDeductions 			
-								where  emp_id = $empID and deductionType_id = $DedTypeID
-								having month($datevalue) <= month(max(deductionDate))";
-					$stmt = $con->prepare($getmaxDate);
-					$stmt->execute();
-					$result = $stmt->fetch();
-					$maxDate = $result['deductionDate'];
-					//check if there any current meds deductions:
-					$checkSql = "	select totalAmount,deductionDate,remainingValue
-									from  creditDeductions 			
-									where  emp_id = $empID and deductionType_id =$DedTypeID
-									and month( $datevalue) = month(deductionDate)";
-					$stmt = $con->prepare($checkSql);
-					$stmt->execute();
-					$result = $stmt->fetch();
-					
-					if($result){
-						$remainingAmount = $result['remainingValue'] + $_POST['dedAmount'][$DedTypeID]; //new remaining amount 
-						$updateSql = "update creditDeductions
-										set	totalAmount = ".$result['totalAmount']." + ".$_POST['dedAmount'][$DedTypeID] .",
-											monthlyValue = $monthAmount,
-											remainingValue = $remainingAmount
-										where emp_id = $empID and deductionType_id =$DedTypeID 
-										and  month( $datevalue) = month(deductionDate) ";
-						
-						while($datevalue < $maxDate){
-
-						}
-						
-						
-					}else{
-						$remainingAmount =  $_POST['dedAmount'][$DedTypeID];
-					}
-
-					// $effectiveDate = $datevalue;
-					while( $remainingAmount > 0){
-					
-						switch ($remainingAmount) {
-							case in_array($remainingAmount, $r1) :
-								$monthAmount = 50;
-								break;
-							case in_array($remainingAmount, $r2):
-								$monthAmount = 100;
-								break;
-							case in_array($remainingAmount, $r3):
-								$monthAmount = 150;
-								break;
-							case in_array($remainingAmount, $r4):
-								$monthAmount = 200;
-								break;
-							case in_array($remainingAmount, $r5):
-								$monthAmount = 400;
-								break;
-							case ($remainingAmount > 5000) :
-								$monthAmount = 500;
-								break;
-	
-						}
-
-						$remainingAmount =$remainingAmount - $monthAmount ;
-						
-						$add_installment .=	"($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
-													$monthAmount,$remainingAmount),";
-						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
-
-					}
-					
-				}else{ //باقى الاستقطاعات حسب عدد الشهور
-					//----get quotient of division------------
-					$quotientAmount =  intval($_POST['dedAmount'][$DedTypeID] / $_POST['dedmonthsNo'][$DedTypeID]);
-					$remainderAmount = fmod($_POST['dedAmount'][$DedTypeID] ,$_POST['dedmonthsNo'][$DedTypeID]);
-					echo "quotient". $quotientAmount ;
-					echo "<br>";
-					echo "remainderAmount". $remainderAmount;
-					echo "<br>";
-					//------------first month will deduct quotient value plus remainder---------------
-					
-					$firstMonthAmount = $quotientAmount + $remainderAmount ; //اول قسط
-					$remainingAmount = $_POST['dedAmount'][$DedTypeID]  - $firstMonthAmount;
-					echo "firstMonthAmount". $firstMonthAmount;
-					echo "<br>";
-					echo "remainingAmount". $remainingAmount;
-					
-					//------------add first month in sql statement---------------------
-					$add_installment .="($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
-										$firstMonthAmount,$remainingAmount),";
-					$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
-					
-					while( $remainingAmount > 0){
-						$remainingAmount = $remainingAmount - $quotientAmount ;
-						$add_installment .="($empID,$DedTypeID,'$datevalue',".$_POST['dedAmount'][$DedTypeID].",
-						$quotientAmount,$remainingAmount),";
-						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
-						echo "<br>";
-						
-						echo "quotient". $quotientAmount ;
-						echo "<br>";
-						echo "remainingAmount". $remainingAmount;
-						
-						
-						}
-						echo"<br>";
-						
-
-					}
-				}
-
-			}
-			
-			$trimmed_add_installment =  rtrim($add_installment,",");	
-			echo $trimmed_add_installment;
-			$stmt = $con->prepare($trimmed_add_installment);
-			$stmt->execute();
-	}	
-
-
 	//---------------insert deductions from credit-------------------
 	function insertDedFromCredit(){
 		//print_r($_POST);
@@ -1629,7 +1464,7 @@
 		//check if there are any values in salary for that date:
 		$sql = "select ID
 				from timesheets
-				where month(sheetDate) = month('".$_POST['dateFrom']."')";
+				where sheetDate = '".$_POST['dateFrom']."'";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$timesheetID = $stmt->fetchColumn();
@@ -1724,7 +1559,7 @@
 		//-------------------------------------------------------------
 		$sql = "select ID
 				from timesheets
-				where month(sheetDate) = month('".$_POST['dateFrom']."')";
+				where sheetDate= '".$_POST['dateFrom']."'";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$timesheetID = $stmt->fetchColumn();

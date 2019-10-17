@@ -7,22 +7,31 @@
 		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>تسجيل استقطاع من رصيد </div>
 		
 		<form class="navbar-form "  id="deductionFromCreditinsertion" method="POST" action="fetch.php">
-			<div class="form-group row add-on ">
-				<div class='col-sm-3'>
+			<div class="row add-on ">
+				<div class='col-sm-2'>
+					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"
+							data-target="#" >upload file</button>
+				</div>
+				<div class='col-sm-2'>
+					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"
+							data-target="#" >toggle view</button>
+				</div>
+				<div class='col-sm-2'>
 					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"
 							data-target="#viewdedFromCreditModal" >استقطاعات منتهية</button>
 				</div>
-				<div class='col-sm-3 '>
+				<div class='col-sm-2 '>
 					<button type='button' class="btn btn-lg btn-success editdedFromCredit " data-toggle="modal"
 						data-target="#editdedFromCreditModal" >استقطاعات جارية</button>
 				</div>
 
-				<div class='col-sm-6 '>
+				<div class='col-sm-3 '>
 					<label for = "getEmpForDed">رقم القيد:</label>
 					<select class="form-control" name="getEmpForDed" id="getEmpForDed">
 						<?php getEmpDropDown(); ?>
 					</select>
 				</div>
+					
 			</div>
 
 			<hr>

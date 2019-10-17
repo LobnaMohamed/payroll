@@ -11,11 +11,20 @@
 			<div class="empdata-container row">
 				<div class="table-responsive row">
 					<form class="navbar-form row" role="search" id="searchEmp" method="POST">
-						<div class="col-md-2">
-							عدد العاملين:
-							<?php  getEmpCount() ?>
+						<div class=" col-md-2">
+							<label>
+								عدد العاملين:
+								<?php  getEmpCount() ?>
+							</label>							
 						</div>
-						<div class="form-group add-on col-md-10">
+						<div  class="col-md-2">
+							<button type="button" class="btn btn-primary" data-toggle="modal"data-target="#addEmpModal">
+								<label> إضافة موظف جديد</label><i class='fa fa-plus-circle'></i>
+							</button>
+							
+							
+						</div>
+						<div class="form-group add-on col-md-8">
 							<label for = "search">رقم القيد / الاسم :</label>
 							<input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">
 							<!-- <div class="input-group-btn">
@@ -24,15 +33,16 @@
 						</div>
 						<button id="scroll_down" class="btn btn-lg btn-default form-control" type="button"><i class='fa fa-2x fa-angle-double-down '></i></button>
 						<button id="scroll_up" class="btn btn-lg btn-default form-control hide" type="button"><i class='fa fa-2x fa-angle-double-up '></i></button>
-			
+						
 					</form>
 					<table id="empData" class="table table-striped table-bordered">
 							<thead >
 								<tr>
 									<th>رقم القيد</th>
 									<th>الاسم</th>
-									<th colspan=3><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEmpModal"><i class='fa fa-plus-circle'></button></th>
-								
+									<th>تعديل</th>
+									<th>ملف الموظف الحالى</th>
+									<th>تاريخ الموظف </th>								
 								</tr>
 							</thead>
 						<tbody id="empDatabody">
