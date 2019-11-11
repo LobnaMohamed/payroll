@@ -25,6 +25,8 @@
                 <th>بالخصم</th>
                 <th>السنوى</th>
                 <th>التصنيع</th>
+                <th>تقييم الأداء</th>
+
                 <th>وردية</th>
                 <th>نوباتجية</th>
                 <th>ملاحظات</th>
@@ -82,11 +84,13 @@
                             <input class="form-control" id="annualDaysEdit" name="annualDaysEdit">
                             <label for= "casualDaysEdit"> عارضة</label>
                             <input class="form-control" id="casualDaysEdit" name="casualDaysEdit">
-                            
+                            <label for= "evaluationEdit"> تقييم الاداء</label>
+                            <input class="form-control" id="evaluationEdit" name="evaluationEdit">
                         </div>
-                        <div  class="form-group col-md-10 col-md-offset-1">
+                        <div  class="form-group col-md-12 ">
                             <label for= "notesEdit"> ملاحظات</label>
                             <input class="form-control" id="notesEdit" name="notesEdit">
+                            
                         </div>  
                         <div class="form-group col-md-3 col-md-offset-4 ">
                             <input type="submit" name="UpdateTimesheet" class="btn btn-success" id ="UpdateTimesheet"  value="حفـــــظ" >

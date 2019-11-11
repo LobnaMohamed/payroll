@@ -2,6 +2,7 @@
 $(document).ready(function(){
 
 	'use strict';
+
 	$.extend({ alert: function (message, title) {
 		$("<div></div>").dialog( {
 		  buttons: { "Ok": function () { $(this).dialog("close"); } },
@@ -553,6 +554,8 @@ $(document).ready(function(){
 				$('#absenceDaysEdit').val(data.absence_days) ;
 				$('#sickLeaveDaysEdit').val(data.sickLeave_days);
 				$('#manufacturingDaysEdit').val(data.manufacturing_days);
+				$('#evaluationPercentEdit').val(data.manufacturing_days);
+
 				$('#overnightDaysEdit').val(data.overnight_days) ;
 				$('#shiftDaysEdit').val(data.shift_days) ;
 				$('#annualDaysEdit').val(data.annual_days);

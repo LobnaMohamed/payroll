@@ -450,6 +450,7 @@
 					<td>".  $row['deduction_days']. "</td>
 					<td>".  $row['annual_days']. "</td>
 					<td>".  $row['manufacturing_days']. "</td>
+					<td>".  $row['evaluationPercent']. "</td>
 					<td>".  $row['shift_days']. "</td>
 					<td>".  $row['overnight_days']. "</td>
 					<td>".  $row['notes']. "</td>
@@ -474,7 +475,7 @@
 					from	employee e
 					where e.ID not in (select empt.emp_id
 					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-					where t.sheetDate= '".$_POST['dateFrom']."' ";
+					where t.sheetDate='".$_POST['dateFrom']."')";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -511,6 +512,9 @@
 					</td>
 					<td>
 						<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0>
+					</td>
+					<td>
+						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=100>
 					</td>
 					<td>
 						<input class='form-control' name='shift_days[".$row['ID']."]' value=0>
@@ -595,14 +599,16 @@
 				$annual = $_POST['annual_days'][$empID];
 				$casual = $_POST['casual_days'][$empID];
 				$manufacturing = $_POST['manufacturing_days'][$empID];
+				$evaluation = $_POST['evaluationPercent'][$empID]/100;
+
 				$overnight = $_POST['overnight_days'][$empID];
 				$shift = $_POST['shift_days'][$empID];
 				$notes = $_POST['notes'][$empID];
 
 				$sql = "insert into empTimesheet(TS_id,emp_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
-								casual_days,manufacturing_days,overnight_days,shift_days,notes) 
+								casual_days,manufacturing_days,evaluationPercent,overnight_days,shift_days,notes) 
 						values ('$lastID','$empID','$value','$sickLeave','$deduction','$absence','$annual',
-								'$casual','$manufacturing','$overnight','$shift','$notes')";
+								'$casual','$manufacturing',$evaluation,'$overnight','$shift','$notes')";
 				echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
@@ -1665,7 +1671,7 @@
 		$sql = "select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
 				ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
 				j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.overnight_days,
-				empt.shift_days,empt.presence_days
+				empt.shift_days,empt.presence_days,empt.casual_days,empt.sickLeave_days 
 				from   employee e,timesheets ts,maritalStatus ms,syndicates s,level l,job j,empTimesheet empt
 				where  e.currentMS = ms.ID
 						and e.syndicate_id = s.ID
@@ -1679,6 +1685,7 @@
 		//$stmt->execute(array($_POST["searchDateFrom"]));
 		$result = $stmt->fetchAll();
 		foreach($result as $row){
+			//get days from timesheet;
 			$currentDays = ($row['presence_days'])/30; // عدد أيام الحضور/30
 			$attendancePay = $row['currentSalary'] * $currentDays;//اجر الحضور
 			$natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
