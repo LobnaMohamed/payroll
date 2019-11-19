@@ -49,6 +49,9 @@
 		elseif(isset($_POST["currentProfileEmpID"])){
 			getEmpCurrentProfile(); 
 		}
+		elseif(isset($_POST["historyEmpID"])){
+			getEmpHistoryMainData(); 
+		}
 		elseif(isset($_POST["level_id"])){
 			getLevelDetails();
 		}

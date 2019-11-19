@@ -391,6 +391,39 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	//--------------view emp history------------------
+	$(document).on('click','.viewEmpHistory', function(){
+		var employee_id=$(this).attr("id");
+		//var historyDate=$(this).attr("historyDate");
+
+		console.log(employee_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{historyEmpID:employee_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				//load main data:
+				$('#historyEmp_code').text(data.currentCode);
+				$('#historyEmp_name').text(data.empName);
+				$('#historyEmp_hireDate').text(data.hireDate);				
+				$('#historyEmp_DOB').text(data.DOB);
+				// $('#historyEmp_level').text(data.empLevel);
+				// $('#historyEmp_job').text(data.job);
+				// $('#historyEmp_syndicate').text(data.syndicate);
+				// $('#historyEmp_MS').text(data.maritalStatus);
+				// $('#historyEmp_contract').text(data.contractType);
+				// $('#historyEmp_shift').text(data.currentShift);
+				// $('#historyEmp_salary').text(data.currentSalary);
+
+				
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
 	//--------------get wages details for emp------------------
 	$(document).on('click','.wagesDetailsBtn', function(){
 		//var employee_id=$(this).attr("id");

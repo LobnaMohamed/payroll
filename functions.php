@@ -263,7 +263,7 @@
 					data-target='#viewcurrentEmpModal' id=".$row['ID']."><i class='fa fa-address-card-o fa-lg' aria-hidden='true'></i></button>
 				</td>
 				<td>
-					<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#viewEmphistoryModal'
+					<button type='button' class='btn btn-primary btn-sm viewEmpHistory' data-toggle='modal' data-target='#checkEmpHistoryModal'
 					 id=".$row['ID']."><i class='fa fa-history fa-lg' aria-hidden='true'></i></button>
 				</td>
 			</tr>";
@@ -275,6 +275,19 @@
 		//$output="";
 		$con = connect();		
 		$sql="select * from empCurrentProfile where ID = ".$_POST['currentProfileEmpID']."";
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		echo json_encode($result); 
+
+	}
+	// --------------get Employee history function-----------------------
+	function getEmpHistoryMainData(){
+		//$output="";
+		$con = connect();		
+		$sql="  select Id,empName,currentCode,DOB,hireDate 
+				from employee 
+				where ID = ".$_POST['historyEmpID']."" ;
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch();
@@ -1212,7 +1225,7 @@
 	//---------------get deduction items in a form---------
 	function deductionItems(){
 		$sql = "";
-		$output ="<div class='row'>";
+		$output ="<div class='row card'>";
 		$con = connect();
 		//check if there are any values in salary for that date:
 		$sql = "select * from deductionTypes";
@@ -1222,9 +1235,9 @@
 		// $timesheetID = $stmt->fetchColumn();
 		foreach ($result as $row) {                
 			$output .=
-				"<div class='col-sm-6 panel panel-default'>
+				"<div class='col-sm-6 '>
 					<fieldset class='form-group '>
-						<legend >".$row['deductionType']."</legend>
+						<div class='label'><legend >".$row['deductionType']."</legend></div>
 						
 						<label  for='dedDate'>تاريخ التسجيل:</label>
 						<input class='form-control'  type ='date' id='dedDate[".$row['deductionTypeID']."]' 

@@ -344,5 +344,68 @@
 			</div>
 		</div>
 
+		<!-- check emp history -->
+		<div id="checkEmpHistoryModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h3 class="modal-title text-center"> تعديل البيانات الموظف </h3>
+					</div>
+					<div class="modal-body row">
+						<form class="navbar-form row " method="POST" id="checkEmpHistoryForm" name="checkEmpHistoryForm" action = "fetch.php">
+						<div class="col-sm-6 col-sm-offset-2">
+							<label for="historyDate">التاريخ</label>
+							<input type ="date" name="historyDate" class="form-control " id ="historyDate" />
+						</div>
+						
+						</form>
+						<table class="table table-bordered table-responsive">
+							<tbody>
+								<tr>
+									<th >رقم القيد</th>
+									<th>الاسم</th>
+									<th>تاريخ الميلاد</th>
+									<th>تاريخ التعيين</th>
+								</tr>
+								<tr>
+									<td id="historyEmp_code"></td>
+									<td id="historyEmp_name"></td>
+									<td id="historyEmp_DOB"></td>
+									<td id="historyEmp_hireDate"></td>
+								</tr>
+								<tr>
+									<th>نوع العقد</th>
+									<th>المستوى الوظيفى</th>
+									<th>الحالة الاجتماعية</th>
+									<th>نهارى/ورادى</th>
+								</tr>
+								<tr>
+									<td id="historyEmp_contract"></td>
+									<td id="historyEmp_level"></td>
+									<td id="historyEmp_MS"></td>
+									<td id="historyEmp_shift"></td>
+								</tr>
+								<tr>
+									<th>النقابة</th>
+									<th>الوظيفة</th>
+									<th>المرتب الاساسى</th>
+								</tr>
+								<tr>
+									<td id="historyEmp_syndicate"></td>
+									<td id="historyEmp_job"></td>
+									<td id="historyEmp_salary"></td>
+
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">	
+					</div>
+				</div>
+			</div>
+		</div>	
+
 	</div>		
 	<?php include 'footer.php'; ?>
