@@ -386,7 +386,8 @@
 			$sql= "select t.*,e.currentCode,e.empName,empt.*
 					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
 						inner join employee e on empt.emp_id = e.ID
-					and t.sheetDate= '".$_POST['dateFrom']."'";
+					and month(t.sheetDate)= month('".$_POST['dateFrom']."')
+					and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -399,55 +400,8 @@
 			$output = "
 			<tr>
 			<td colspan='13' class='alert alert-warning'> 
-			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='#'>here</a>
+			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='timesheetinsertion.php'>here</a>
 			</td></tr>";
-			
-		// 	$sql = "select  e.empName,e.currentCode,e.ID
-		// 	from	employee e";
-
-		// $stmt = $con->prepare($sql);
-		// $stmt->execute();
-		// $result = $stmt->fetchAll();
-		// foreach($result as $row){
-		// 	$empindex = $row['ID'];
-		// 	$output .= "<tr>
-		// 		<td>".  $row['currentCode']. "</td>
-		// 		<td>".  $row['empName']. "</td>
-		// 		<td>". $_POST['timesheetDate']. "</td>
-		// 		<input name='emp_id' type='hidden' value=".$row['ID'].">
-		// 		<td>
-		// 			<input  class='form-control' name='presence_days[".$row['ID']."]' value=30>
-		// 		</td> 
-		// 		<td>
-		// 			<input  class='form-control' name='sickLeave_days[".$row['ID']."]' value=0>
-		// 		</td>  
-		// 		<td>
-		// 			<input class='form-control' name='deduction_days[".$row['ID']."]' value=0>
-		// 		</td>
-		// 		<td>
-		// 			<input class='form-control' name='absence_days[".$row['ID']."]' value=0>
-		// 		</td> 
-		// 		<td>
-		// 			<input class='form-control' name='annual_days[".$row['ID']."]' value=0>
-		// 		</td>
-		// 		<td>
-		// 			<input class='form-control' name='casual_days[".$row['ID']."]' value=0>
-		// 		</td>
-		// 		<td>
-		// 			<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0>
-		// 		</td>
-		// 		<td>
-		// 			<input class='form-control' name='shift_days[".$row['ID']."]' value=0>
-		// 		</td>
-		// 		<td>
-		// 			<input class='form-control' name='overnight_days[".$row['ID']."]' value=0>
-		// 		</td>
-		// 		<td>
-		// 			<input class='form-control' name='notes[".$row['ID']."]'>
-		// 		</td>
-					
-		// 	</tr>";
-		// }
 			
 		}else{
 			foreach($result as $row){
@@ -487,8 +441,9 @@
 			$sql = "select  e.empName,e.currentCode,e.ID
 					from	employee e
 					where e.ID not in (select empt.emp_id
-					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-					where t.sheetDate='".$_POST['dateFrom']."')";
+										from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+										where month(t.sheetDate)= month( '".$_POST['dateFrom']."')
+										and year(t.sheetDate)= year('".$_POST['dateFrom']."'))";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -506,37 +461,37 @@
 					
 					<input name='emp_id' type='hidden' value=".$row['ID'].">
 					<td>
-						<input class='form-control' name='presence_days[".$row['ID']."]' value=30>
+						<input class='form-control' name='presence_days[".$row['ID']."]' value=30  style='width: 100%'>
 					</td> 
 					<td>
-						<input class='form-control' name='sickLeave_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='sickLeave_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>  
 					<td>
-						<input class='form-control' name='deduction_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='deduction_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='absence_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='absence_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td> 
 					<td>
-						<input class='form-control' name='annual_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='annual_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='casual_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='casual_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=100>
+						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=100 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='shift_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='shift_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='overnight_days[".$row['ID']."]' value=0>
+						<input class='form-control' name='overnight_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='notes[".$row['ID']."]'>
+						<input class='form-control' name='notes[".$row['ID']."]' style='width: 100%'>
 					</td>
 					     
 				</tr>";
@@ -575,7 +530,8 @@
 	//===================insert  timesheet================
 	function insertTimesheet(){
 		$con = connect();
-		$checkDate_sql = "select distinct ID from timesheets where sheetDate ='" . $_POST['searchDateFrom'] ."' ";
+		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
+																	and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
 		$timesheetDate =$_POST['searchDateFrom'];
 		//echo $timesheetDate;
 		$stmt = $con->prepare($checkDate_sql);
@@ -595,7 +551,8 @@
 			//echo $lastID;
 		}else{
 			// if timesheet already exist get its ID and insert for remaining emp the timesheet
-			$getlastTSID_sql = "select ID  from timesheets where sheetDate =  '$timesheetDate' ";
+			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
+														and year(t.sheetDate)= year('".$_POST['dateFrom']."') ";
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
@@ -830,7 +787,7 @@
 		}
 		elseif($contractTypeEdit != $_POST['contractTypecurrentValue'] ){
 		    $contract_sql = "insert into emp_contract(emp_id,contract_id,empCode,contract_date)values($employee_ID,$contractTypeEdit,$empCodeEdit)";
-			$emp_sql = "UPDATE employee SET currentContract = $contractType WHERE ID= $employee_ID";		
+			$emp_sql = "UPDATE employee SET currentContract = $contractTypeEdit WHERE ID= $employee_ID";		
 			$stmt = $con->prepare($contract_sql);
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();

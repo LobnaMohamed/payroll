@@ -36,15 +36,15 @@
 					    echo $ip;   
 					 ?></a> -->
 				<div class="navbar-brand">
-					<span >
-						Computer Name: <?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?>
-						<img class= "logo col-sm-1" src="images/amoc2.png"> 
-					</span>
+					<img class= "logo col-sm-1" src="images/amoc2.png">
+					<span>شركة الأسكندرية للزيوت المعدنية ( أموك )</span> 
+					<br>
+					<span><?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']);?></span>
 				</div>
 			</div>
 			
 			<div class="navbar-header navbar-right navbar-brand">
-			  <span>شركة الأسكندرية للزيوت المعدنية ( أموك )</span>  
+			   
 			</div>
 			<ul class="nav navbar-nav pull-right">
 			
@@ -61,15 +61,6 @@
 						</ul>
 					</div>
 					<div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">المـــرتب
-						<span class="caret"></span></button>
-						<ul class="dropdown-menu dropdown-menu-right">
-							<li><a href="wages.php">مـرتب 24 </a></li>
-							<li><a href="#">منحـــة 10</a></li>
-							<li><a href="#">مـجمع</a></li>
-						</ul>
-					</div>
-					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> الحــصر
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
@@ -78,6 +69,16 @@
 	
 						</ul>
 					</div>
+					<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">المـــرتب
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li><a href="wages.php">مـرتب 24 </a></li>
+							<li><a href="#">منحـــة 10</a></li>
+							<li><a href="#">مـجمع</a></li>
+						</ul>
+					</div>
+
 					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستقطاعات
 						<span class="caret"></span></button>

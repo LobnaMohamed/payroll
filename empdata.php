@@ -351,7 +351,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h3 class="modal-title text-center"> تعديل البيانات الموظف </h3>
+						<h3 class="modal-title text-center">  تاريخ الموظف </h3>
 					</div>
 					<div class="modal-body row">
 						<form class="navbar-form row " method="POST" id="checkEmpHistoryForm" name="checkEmpHistoryForm" action = "fetch.php">

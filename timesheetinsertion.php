@@ -1,39 +1,60 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
+    require_once 'phpexcel/PHPExcel/IOFactory.php';
 ?>
 <div class="container">	
     <div class='page-header pagetitle col-sm-10 col-sm-offset-1'> ادخال الحـــصر</div>
     
-    <div class="timesheet-container">
+    <!-- <div class="timesheet-container"> -->
        
-        <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php">
-            <div class="form-group">
-                <label for="searchDateFrom">تاريخ الحصر:</label>
-                <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date">
-                <label for = "search">رقم القيد / الاسم :</label>
-                <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">  
+        <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-6">
+                   
+                    <div class="col-sm-4">
+                        <input name="result_file" type="file">
+                    </div>
+                    <div class="col-sm-2">
+                        <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
+                        <input type="submit" name="upload_excel" value="upload" class="btn btn-primary btn-rounded">
+                   
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                   
+                        <label for="searchDateFrom">تاريخ الحصر:</label>
+                        <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date">
+                        <label for = "search">رقم القيد / الاسم :</label>
+                        <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">  
+                     <!-- </div> -->
+                </div>
+
             </div>
-            <div class=" table table-responsive ">
+            
+
+            <!-- <div class=" table  "> -->
                 <!-- </form>
                 <form class="form-group row" id=timesheetinsertionForm method="POST" action="fetch.php"> -->
                 
-                <table id="timesheet" class="table table-striped table-bordered ">
+                <table id="timesheet" class="table table-striped table-bordered table-responsive">
                     <thead>
                         <tr>
-                            <th>رقم القيد</th>
-                            <th>الاسم</th>
-                            <th>الحضـور</th>
-                            <th>الانقطاع</th>
-                            <th>عارضة</th>
-                            <th>مرضى</th>
-                            <th>بالخصم</th>
-                            <th>السنوى</th>
-                            <th>التصنيع</th>
-                            <th>تقييم الاداء</th>
-                            <th>وردية</th>
-                            <th>نوباتجية</th>
-                            <th>ملاحظات</th>
+                            <th class="col-xs-1">رقم القيد</th>
+                            <th class="col-xs-1">الاسم</th>
+                            <th class="col-xs-1">الحضـور</th>
+                            <th class="col-xs-1">الانقطاع</th>
+
+                            <th class="col-xs-1">عارضة</th>
+                            <th class="col-xs-1">مرضى</th>
+                            <th class="col-xs-1">بالخصم</th>
+                            <th class="col-xs-1">السنوى</th>
+
+                            <th class="col-xs-1">التصنيع</th>
+                            <th class="col-xs-1">تقييم الاداء</th>
+                            <th class="col-xs-1">وردية</th>
+                            <th class="col-xs-1">نوباتجية</th>
+                            <th >ملاحظات</th>
 
                         </tr>
                     </thead>
@@ -43,9 +64,9 @@
                 <div>
                     <input type="submit" name="insertTimesheet" value="إدخـــــــال" class="btn btn-primary col-sm-2 col-sm-offset-5 insertTimesheet">    
                 </div>
-            </div>
+            <!-- </div> -->
         </form>
         
-    </div>
+    <!-- </div> -->
 </div>
 	<?php include 'footer.php'; ?>

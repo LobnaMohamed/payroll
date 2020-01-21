@@ -1,6 +1,8 @@
 <?php
 	session_start();
 	include 'functions.php';
+    require_once 'phpexcel/PHPExcel/IOFactory.php';
+
 		if(isset($_POST["empID"]))  
 		{  
 			//show data in emp modal
@@ -153,5 +155,77 @@
 		}
 		elseif(isset($_POST["endedDed_EmpID"]) ){
 			getEndedCreditDeductionsForEmp();
+		}
+
+		if(isset($_POST['upload_excel']))
+		{
+			echo"<pre>";
+			print_r($_POST);
+			print_r($_FILES);
+			echo"</pre>";
+
+			//check if date was choosen
+			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+				echo "set";
+				//checkif file is choosen
+				$con=connect();
+				$file_info = $_FILES["result_file"]["name"];
+				$file_directory = "uploads/";
+				//$new_file_name = date("dmY").".". $file_info["extension"];
+				$new_file_name = date("dmY").".". pathinfo($file_info, PATHINFO_EXTENSION);
+				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
+				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
+				$objReader	= PHPExcel_IOFactory::createReader($file_type);
+				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
+				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
+
+				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
+				$headers = array_shift($sheetData);
+				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
+				// 	'A2:' . $highestColumn . $highestRow,
+				// 	TRUE,TRUE,TRUE
+				// );
+				echo "<pre>";
+
+				print_r($headers);
+				echo "</pre>";
+				echo "---------------------------------- <br>";
+	
+				foreach ($sheetData as $row){
+					echo "row :<br>";
+					echo "<pre>";
+
+					print_r($row);
+					echo "</pre>";
+					// echo $value;
+					echo "---------------------------------- <br>";
+					
+					if(!empty($row['A'])){
+	
+						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
+						echo $sql;
+						$stmt = $con->prepare($sql);
+						$stmt->execute();
+						$result = $stmt->fetchColumn();
+						echo $result;
+						if( $result){
+							$sql = 'INSERT INTO empTimesheet (emp_id,TS_id,annual_days) VALUES ('.$result.',31,'.$row['C'].') ';
+							echo $sql;
+							
+							$stmt = $con->prepare($sql);
+							$stmt->execute();
+						}
+						
+					}
+		
+				}
+				$updatemsg = "File Successfully Imported!";
+				$updatemsgtype = 1;
+			
+			}else{
+				echo "you have to select date and choose file";
+			}
+
 		}
 	?>
