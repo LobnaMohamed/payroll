@@ -482,7 +482,7 @@
 						<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=100 style='width: 100%'>
+						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=1 style='width: 100%'>
 					</td>
 					<td>
 						<input class='form-control' name='shift_days[".$row['ID']."]' value=0 style='width: 100%'>
@@ -531,7 +531,7 @@
 	function insertTimesheet(){
 		$con = connect();
 		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
-																	and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
+																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
 		$timesheetDate =$_POST['searchDateFrom'];
 		//echo $timesheetDate;
 		$stmt = $con->prepare($checkDate_sql);
@@ -552,7 +552,7 @@
 		}else{
 			// if timesheet already exist get its ID and insert for remaining emp the timesheet
 			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
-														and year(t.sheetDate)= year('".$_POST['dateFrom']."') ";
+														and year(sheetDate)= year('".$_POST['searchDateFrom']."') ";
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
@@ -562,7 +562,13 @@
 
 
 		//---------------timesheet INSERTION---------------------
-		foreach ($_POST['presence_days'] as $empID => $value) {
+		//----------------either through file upload---------------
+		//----------------or insertion one by one------------------
+
+
+		//--------first option through insertion one by one-------
+		if(isset($_POST["insertTimesheet"])){
+			foreach ($_POST['presence_days'] as $empID => $value) {
 				$sickLeave = $_POST['sickLeave_days'][$empID];
 				$deduction = $_POST['deduction_days'][$empID];
 				$absence = $_POST['absence_days'][$empID];
@@ -579,7 +585,7 @@
 								casual_days,manufacturing_days,evaluationPercent,overnight_days,shift_days,notes) 
 						values ('$lastID','$empID','$value','$sickLeave','$deduction','$absence','$annual',
 								'$casual','$manufacturing',$evaluation,'$overnight','$shift','$notes')";
-				echo $sql;
+				//echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 				//check if ts_id already exists in salary:
@@ -589,15 +595,93 @@
 				$result = $stmt->fetchColumn();
 				if(! $result){
 	
-					$sql = "insert into salary(TS_id,emp_id) 
-					values ('$lastID','$empID')";
+					$sql = "insert into salary(TS_id,emp_id)values ('$lastID','$empID')";
 					$stmt = $con->prepare($sql);
 					$stmt->execute();
 				}
 
+			}
+
+		}
+		//--------second option through upload--------------------
+		elseif(isset($_POST['upload_excel'])){
+			// echo"<pre>";
+			// print_r($_POST);
+			// print_r($_FILES);
+			// echo"</pre>";
+
+			//check if date was choosen
+			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+				// echo "set";
+				//checkif file is choosen
+				$con=connect();
+				$file_info = $_FILES["result_file"]["name"];
+				$file_directory = "uploads/";
+				//$new_file_name = date("dmY").".". $file_info["extension"];
+				$new_file_name = date("dmY").".". pathinfo($file_info, PATHINFO_EXTENSION);
+				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
+				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
+				$objReader	= PHPExcel_IOFactory::createReader($file_type);
+				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
+				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
+
+				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
+				$headers = array_shift($sheetData);
+				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
+				// 	'A2:' . $highestColumn . $highestRow,
+				// 	TRUE,TRUE,TRUE
+				// );
+				// echo "<pre>";
+
+				// print_r($headers);
+				// echo "</pre>";
+				// echo "---------------------------------- <br>";
+	
+				foreach ($sheetData as $row){
+					// echo "row :<br>";
+					// echo "<pre>";
+
+					// print_r($row);
+					// echo "</pre>";
+					// // echo $value;
+					// echo "---------------------------------- <br>";
+					
+					if(!empty($row['A'])){
+	
+						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
+						echo $sql;
+						$stmt = $con->prepare($sql);
+						$stmt->execute();
+						$result = $stmt->fetchColumn();
+						echo $result;
+						if( $result){
+							$sql = "insert into empTimesheet(emp_id,TS_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
+							casual_days,manufacturing_days,evaluationPercent,overnight_days,shift_days,notes) 
+							values ($result,$lastID,".$row['C'].",".$row['F'].",".$row['G'].",".$row['D'].",".$row['H'].",
+							".$row['E'].",".$row['I'].",".$row['J'].",".$row['C'].",".$row['C'].",'".$row['K']."')";
+							
+							 echo $sql;
+							
+							$stmt = $con->prepare($sql);
+							$stmt->execute();
+						}
+						
+					}
+		
+				}
+				$updatemsg = "File Successfully Imported!";
+				$updatemsgtype = 1;
+			
+			}else{
+				echo "you have to select date and choose file";
+			}
+
 		}
 		//echo "done insertion";
 	}
+
+
 	//---------------edit timesheet for one employee-----------
 	function editTimesheet(){
 		// echo "<pre>";
@@ -1092,13 +1176,23 @@
 	function getCurrentCreditDeductionsForEmp(){
 		$output ="";
 		$con = connect();
-		$sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
-					cd.deductionDate,cd.endDate
-				from employee e inner join creditDeductions cd on e.ID = cd.emp_id
-								inner join deductionTypes dt 
-								on cd.deductionType_id = dt.deductionTypeID 
-				where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
-				and  month(GETDATE()) < month(endDate)";
+		// $sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
+		// 			cd.deductionDate,cd.endDate
+		// 		from employee e inner join creditDeductions cd on e.ID = cd.emp_id
+		// 						inner join deductionTypes dt on cd.deductionType_id = dt.deductionTypeID 
+		// 						inner join creditDedInstallments cdi on cdi.creditDed_id = cd.ID
+		// 		where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
+		// 		and  month(GETDATE()) < month(endDate)";
+
+				$sql = "select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
+							cd.endDate,cdi.remainingValue
+						from employee e inner join creditDeductions cd on e.ID = cd.emp_id
+								inner join deductionTypes dt on cd.deductionType_id = dt.deductionTypeID 
+								inner join creditDedInstallments cdi on cdi.creditDed_id = cd.ID
+						where  cd.emp_id = " . $_POST['editDed_EmpID'] . "
+							and  GETDATE() < endDate
+							and  month(cdi.installmentDate) = month(GETDATE())
+							and year(cdi.installmentDate) = year(GETDATE())";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -1108,11 +1202,10 @@
 				<input name='emp_id' type='hidden' value=".$row['emp_id'].">
 				<input name='dedID' type='hidden' value=".$row['deductionType_id'].">
 				<td>".$row['deductionType']."</td> 
-				<td>".$row['deductionDate']."</td> 
-				<td>".$row['totalAmount']."</td> 
+				<td>".$row['remainingValue']."</td> 
 				<td>".$row['endDate']."</td> 
 				<td> <button  class='btn  btn-sm' data-toggle='modal'
-					data-target='#editManagementModal' id=''>pay</button></td>
+					data-target='#editManagementModal' id='payDeduction'>pay</button></td>
 				
 				</tr>";
 			}
@@ -1647,7 +1740,7 @@
 						and e.syndicate_id = s.ID
 						and e.currentLevel = l.ID
 						and e.currentJob = j.ID
-						and ts.sheetDate = '" . $_POST['dateFrom'] ."'
+						and ts.sheetDate = '" . $_POST['searchDateFrom'] ."'
 						and e.ID = empt.emp_id
 						and ts.ID = empt.TS_id";			   
 		$stmt = $con->prepare($sql);

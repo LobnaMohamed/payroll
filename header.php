@@ -42,10 +42,6 @@
 					<span><?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']);?></span>
 				</div>
 			</div>
-			
-			<div class="navbar-header navbar-right navbar-brand">
-			   
-			</div>
 			<ul class="nav navbar-nav pull-right">
 			
 					<div class="dropdown">

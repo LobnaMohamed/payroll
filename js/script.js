@@ -578,10 +578,13 @@ $(document).ready(function(){
 				//console.log(data);
 				$('#emp_id').val(data.emp_id);
 				$('#sheetID').val(data.TS_id);
-
 				$('#emp_currentCode').val(data.currentCode);
-				$('#empName').val(data.empName);
-				$('#sheetDate').val(data.sheetDate);
+				$('#empName').val(data.empName); 
+				var d = new Date(data.sheetDate);
+				var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+				var year = d.getFullYear();
+				var dateStr = month + " / " + year;
+				$('#sheetDate').val(dateStr);
 				$('#presenceDaysEdit').val(data.presence_days) ;
 				$('#deductionDaysEdit').val(data.deduction_days);
 				$('#absenceDaysEdit').val(data.absence_days) ;
