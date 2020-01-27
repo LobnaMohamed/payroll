@@ -4,7 +4,7 @@
     require_once 'phpexcel/PHPExcel/IOFactory.php';
 ?>
 <div class="container">	
-    <div class='page-header pagetitle col-sm-10 col-sm-offset-1'> ادخال الحـــصر</div>
+    <div class='page-header pagetitle col-sm-10 col-sm-offset-1'> ادخال  أيام النوباتجية</div>
     
     <!-- <div class="timesheet-container"> -->
        
@@ -41,18 +41,10 @@
                     <thead>
                         <tr>
                             <th class="col-xs-1">رقم القيد</th>
-                            <th class="col-xs-1">الاسم</th>
-                            <th class="col-xs-1">الحضـور</th>
-                            <th class="col-xs-1">الانقطاع</th>
+                            <th class="col-xs-3">الاسم</th>
 
-                            <th class="col-xs-1">عارضة</th>
-                            <th class="col-xs-1">مرضى</th>
-                            <th class="col-xs-1">بالخصم</th>
-                            <th class="col-xs-1">السنوى</th>
-
-                            <th class="col-xs-1">التصنيع</th>
-                            <th class="col-xs-1">تقييم الاداء</th>
-                            <th >ملاحظات</th>
+                            <th class="col-xs-1">نوباتجية</th>
+                            <th class="col-xs-2">ملاحظات</th>
 
                         </tr>
                     </thead>
@@ -60,7 +52,7 @@
                     </tbody>
                 </table>
                 <div>
-                    <input type="submit" name="insertTimesheet" value="إدخـــــــال" class="btn btn-primary col-sm-2 col-sm-offset-5 insertTimesheet">    
+                    <input type="submit" name="insertovernight" value="إدخـــــــال" class="btn btn-primary col-sm-2 col-sm-offset-5 insertTimesheet">    
                 </div>
             <!-- </div> -->
         </form>

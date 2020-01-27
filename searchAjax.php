@@ -7,6 +7,13 @@
 		getTimesheet();
 	}elseif($currentURL == 'timesheetinsertion.php'){
 		getinsertTimesheet();
+
+	}elseif($currentURL == 'shiftinsertion.php'){
+		getinsertshiftDays();
+
+	}elseif($currentURL == 'overnightinsertion.php'){
+		getinsertovernightDays();
+		
 	}
 	elseif($currentURL == 'empdata.php'){
 

@@ -496,6 +496,12 @@ $(document).ready(function(){
 				else if(currentURL == 'timesheetinsertion.php'){
 					//console.log(data);
 					$('#timesheetbody').html(data);	 
+				}else if(currentURL == 'shiftinsertion.php'){
+					//console.log(data);
+					$('#timesheetbody').html(data);	 
+				}else if(currentURL == 'overnightinsertion.php'){
+					//console.log(data);
+					$('#timesheetbody').html(data);	 
 				}
 				else if(currentURL == 'wages.php'){
 					

@@ -60,8 +60,11 @@
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> الحــصر
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
-						  	<li><a href="timesheetinsertion.php">ادخال الحــصر </a></li>
-							<li><a href="timesheet.php">الحـــصر</a></li>
+							<li><a href="timesheetinsertion.php">ادخال الحــصر </a></li>
+						  	<li><a href="shiftinsertion.php">ادخال الوردية </a></li>
+						  	<li><a href="overnightinsertion.php">ادخال النوباتجية </a></li>
+							  
+							<li><a href="timesheet.php">مراجعة الحـــصر</a></li>
 	
 						</ul>
 					</div>

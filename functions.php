@@ -436,7 +436,7 @@
 		$output="";	
 		$con = connect();
 		$sql= '';		
-		
+		print_r($_POST);
 		if(!empty($_POST['dateFrom'])){	
 			$sql = "select  e.empName,e.currentCode,e.ID
 					from	employee e
@@ -485,12 +485,6 @@
 						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=1 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='shift_days[".$row['ID']."]' value=0 style='width: 100%'>
-					</td>
-					<td>
-						<input class='form-control' name='overnight_days[".$row['ID']."]' value=0 style='width: 100%'>
-					</td>
-					<td>
 						<input class='form-control' name='notes[".$row['ID']."]' style='width: 100%'>
 					</td>
 					     
@@ -527,7 +521,113 @@
 
 		echo $output;
 	}
+
+	//---------------get overnight function نوباتجية------------------------
+	function getinsertovernightDays(){
+		$output="";	
+		$con = connect();
+		$sql= '';		
+		
+		if(!empty($_POST['dateFrom'])){	
+			$sql = "select  e.empName,e.currentCode,e.ID
+					from	employee e
+					where e.ID not in (select empt.emp_id
+										from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+										where month(t.sheetDate)= month( '".$_POST['dateFrom']."')
+										and year(t.sheetDate)= year('".$_POST['dateFrom']."'))";
+		}
+		if(!empty($_POST['search'])){
+			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
+		}
+		
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if( $result ){
+			foreach($result as $row){
+				$empindex = $row['ID'];
+				$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					
+					<input name='emp_id' type='hidden' value=".$row['ID'].">
+					<td>
+						<input class='form-control' name='overnight_days[".$row['ID']."]' value=0 style='width: 100%'>
+					</td>
+					<td>
+						<input class='form-control' name='notes[".$row['ID']."]' style='width: 100%'>
+					</td>
+					     
+				</tr>";
+			}
+			
+		}else{
+			$output = "
+			<tr>
+			<td colspan='12' class='alert alert-warning'> 
+			<strong><i class='fa fa-exclamation-triangle'></i>
+			تم ادخال حصر لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
+			<a href='timesheet.php'>here</a>
+			</td></tr>";
+		}
+
+		echo $output;
+	}
+	//---------------get shift function ورادى------------------------
+	function getinsertshiftDays(){
+		$output="";	
+		$con = connect();
+		$sql= '';		
+		
+		if(!empty($_POST['dateFrom'])){	
+			$sql = "select  e.empName,e.currentCode,e.ID
+					from	employee e
+					where e.ID not in (select empt.emp_id
+										from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+										where month(t.sheetDate)= month( '".$_POST['dateFrom']."')
+										and year(t.sheetDate)= year('".$_POST['dateFrom']."'))";
+		}
+		if(!empty($_POST['search'])){
+			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
+		}
+		
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if( $result ){
+			foreach($result as $row){
+				$empindex = $row['ID'];
+				$output .= "<tr>
+					<td>".  $row['currentCode']. "</td>
+					<td>".  $row['empName']. "</td>
+					
+					<input name='emp_id' type='hidden' value=".$row['ID'].">
+					
+					<td>
+						<input class='form-control' name='shift_days[".$row['ID']."]' value=0 style='width: 100%'>
+					</td>
+					<td>
+						<input class='form-control' name='notes[".$row['ID']."]' style='width: 100%'>
+					</td>
+							
+				</tr>";
+			}
+			
+		}else{
+			$output = "
+			<tr>
+			<td colspan='12' class='alert alert-warning'> 
+			<strong><i class='fa fa-exclamation-triangle'></i>
+			تم ادخال حصر لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
+			<a href='timesheet.php'>here</a>
+			</td></tr>";
+		}
+
+		echo $output;
+	}
+
 	//===================insert  timesheet================
+	//======================================================
 	function insertTimesheet(){
 		$con = connect();
 		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
@@ -577,14 +677,14 @@
 				$manufacturing = $_POST['manufacturing_days'][$empID];
 				$evaluation = $_POST['evaluationPercent'][$empID]/100;
 
-				$overnight = $_POST['overnight_days'][$empID];
-				$shift = $_POST['shift_days'][$empID];
+				// $overnight = $_POST['overnight_days'][$empID];
+				// $shift = $_POST['shift_days'][$empID];
 				$notes = $_POST['notes'][$empID];
 
 				$sql = "insert into empTimesheet(TS_id,emp_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
-								casual_days,manufacturing_days,evaluationPercent,overnight_days,shift_days,notes) 
+								casual_days,manufacturing_days,evaluationPercent,notes) 
 						values ('$lastID','$empID','$value','$sickLeave','$deduction','$absence','$annual',
-								'$casual','$manufacturing',$evaluation,'$overnight','$shift','$notes')";
+								'$casual','$manufacturing',$evaluation,'$notes')";
 				//echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
@@ -618,7 +718,9 @@
 				$file_info = $_FILES["result_file"]["name"];
 				$file_directory = "uploads/";
 				//$new_file_name = date("dmY").".". $file_info["extension"];
-				$new_file_name = date("dmY").".". pathinfo($file_info, PATHINFO_EXTENSION);
+				// $new_file_name = date("dmY").".". pathinfo($file_info, PATHINFO_EXTENSION);
+				$new_file_name = date("d-m-Y")."_".$file_info;
+
 				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
 				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
 				$objReader	= PHPExcel_IOFactory::createReader($file_type);
@@ -657,9 +759,9 @@
 						echo $result;
 						if( $result){
 							$sql = "insert into empTimesheet(emp_id,TS_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
-							casual_days,manufacturing_days,evaluationPercent,overnight_days,shift_days,notes) 
+							casual_days,manufacturing_days,evaluationPercent,notes) 
 							values ($result,$lastID,".$row['C'].",".$row['F'].",".$row['G'].",".$row['D'].",".$row['H'].",
-							".$row['E'].",".$row['I'].",".$row['J'].",".$row['C'].",".$row['C'].",'".$row['K']."')";
+							".$row['E'].",".$row['I'].",".$row['J'].",'".$row['K']."')";
 							
 							 echo $sql;
 							
@@ -680,6 +782,149 @@
 		}
 		//echo "done insertion";
 	}
+	//====================insert overnight days======================
+	function insertovernightDays(){
+		$con = connect();
+		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
+																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
+		$timesheetDate =$_POST['searchDateFrom'];
+		//echo $timesheetDate;
+		$stmt = $con->prepare($checkDate_sql);
+		$stmt->execute();
+		$result = $stmt->fetchColumn();
+		if(! $result){
+			
+			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
+			$stmt = $con->prepare($timesheetsql);
+			$stmt->execute();
+	
+			$getlastTSID_sql = "select max(ID) from timesheets";
+			
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$lastID = $stmt->fetchColumn();
+			//echo $lastID;
+		}else{
+			// if timesheet already exist get its ID and insert for remaining emp the timesheet
+			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
+														and year(sheetDate)= year('".$_POST['searchDateFrom']."') ";
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$lastID = $stmt->fetchColumn();
+			//echo $lastID;
+
+		}
+
+
+		//---------------timesheet INSERTION---------------------
+		//----------------either through file upload---------------
+		//----------------or insertion one by one------------------
+
+
+		//--------first option through insertion one by one-------
+		if(isset($_POST["insertovernight"])){
+			foreach ($_POST['overnight_days'] as $empID => $value) {
+				$overnight = $_POST['overnight_days'][$empID];
+
+				$notes = $_POST['notes'][$empID];
+
+				$sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
+						values ('$lastID','$empID','$overnight','$notes')";
+				//echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				//check if ts_id already exists in salary:
+				$sql_check = "select TS_id from salary where TS_id ='$lastID'";
+				$stmt = $con->prepare($sql_check);
+				$stmt->execute();
+				$result = $stmt->fetchColumn();
+				if(! $result){
+	
+					$sql = "insert into salary(TS_id,emp_id)values ('$lastID','$empID')";
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
+
+			}
+
+		}
+		//--------second option through upload--------------------
+		elseif(isset($_POST['upload_excel'])){
+			//check if date was choosen
+			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+				// echo "set";
+				//checkif file is choosen
+				$con=connect();
+				$file_info = $_FILES["result_file"]["name"];
+				$file_directory = "uploads/";
+				//$new_file_name = date("dmY").".". $file_info["extension"];
+				$new_file_name = date("d-m-Y")."_".$file_info;
+				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
+				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
+				$objReader	= PHPExcel_IOFactory::createReader($file_type);
+				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
+				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
+
+				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
+				$headers = array_shift($sheetData);
+				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
+				// 	'A2:' . $highestColumn . $highestRow,
+				// 	TRUE,TRUE,TRUE
+				// );
+				// echo "<pre>";
+
+				// print_r($headers);
+				// echo "</pre>";
+				// echo "---------------------------------- <br>";
+	
+				foreach ($sheetData as $row){
+					// echo "row :<br>";
+					// echo "<pre>";
+
+					// print_r($row);
+					// echo "</pre>";
+					// // echo $value;
+					// echo "---------------------------------- <br>";
+					
+					if(!empty($row['A'])){
+	
+						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
+						echo $sql;
+						$stmt = $con->prepare($sql);
+						$stmt->execute();
+						$result = $stmt->fetchColumn();
+						echo $result;
+						if( $result){
+							$sql = "insert into empTimesheet(emp_id,TS_id,overnight_days,notes) 
+							values ($result,$lastID,".$row['C'].",".$row['F'].")";
+							
+							 echo $sql;
+							
+							$stmt = $con->prepare($sql);
+							$stmt->execute();
+						}
+						
+					}
+		
+				}
+				$updatemsg = "File Successfully Imported!";
+				$updatemsgtype = 1;
+			
+			}else{
+				echo "you have to select date and choose file";
+			}
+
+		}
+		//echo "done insertion";
+	}
+	//====================insert shift days===========================
+
+
+
+
+
+
 
 
 	//---------------edit timesheet for one employee-----------
@@ -910,15 +1155,10 @@
 		// $stmt->execute();
 		//echo json_encode($result); 
 	}
-	//---------------edit levels function-------------------------
-	function editLevel(){
 
-	}
-	//---------------edit contracts function----------------------
-	//---------------edit marital status function-----------------
-	//---------------edit jobs function---------------------------
-	//---------------edit syndicates function---------------------
-	//---------------get managments function-----------------------
+
+
+
 	function getManagement(){
 		$con = connect();
 		$sql= "SELECT ID,Management FROM managements" ;
@@ -1193,6 +1433,16 @@
 							and  GETDATE() < endDate
 							and  month(cdi.installmentDate) = month(GETDATE())
 							and year(cdi.installmentDate) = year(GETDATE())";
+				// select cd.deductionType_id,cd.emp_id,cd.totalAmount,e.currentCode,e.empName,dt.deductionType,
+				// 	cdi.*
+				// 	from employee e inner join creditDeductions cd on e.ID = cd.emp_id
+				// inner join deductionTypes dt on cd.deductionType_id = dt.deductionTypeID 
+				// inner join creditDedInstallments cdi on cdi.creditDed_id = cd.ID
+				// where  cd.emp_id = 2
+			
+				
+				// and  month(cdi.installmentDate) = month(GETDATE())
+				// and year(cdi.installmentDate) = year(GETDATE())
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
