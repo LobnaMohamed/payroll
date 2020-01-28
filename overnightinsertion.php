@@ -6,7 +6,7 @@
 <div class="container">	
     <div class='page-header pagetitle col-sm-10 col-sm-offset-1'> ادخال  أيام النوباتجية</div>
     
-    <!-- <div class="timesheet-container"> -->
+    <div class="timesheet-container">
        
         <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" enctype="multipart/form-data">
             <div class="row">
@@ -57,6 +57,6 @@
             <!-- </div> -->
         </form>
         
-    <!-- </div> -->
+    </div>
 </div>
 	<?php include 'footer.php'; ?>

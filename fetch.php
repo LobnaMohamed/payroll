@@ -119,7 +119,7 @@
 			insertTimesheet();
 			// calculateSalary24();
 
-			// header("location:timesheetinsertion.php");
+		     //header("location:timesheetinsertion.php");
 
 		}
 		elseif(isset($_POST["editTimesheet_empID"]) && isset($_POST["editTimesheet_ID"]) )  

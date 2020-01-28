@@ -89,8 +89,8 @@
 							<li class="dropdown-header">الاستقطاعات من الرصيد</li>
 							<li><a href="deductiontype.php">أوجه الاستقطاع</a></li>
 							<li><a href="deductionfromcredit.php">الاستقطاع من الرصيد</a></li>
-							<li><a href="insertDedfromcredit.php">ادخال الاستقطاعاع من الرصيد</a></li>
-
+							<li><a href="insertDedfromcredit.php">ادخال الاستقطاع من الرصيد</a></li>
+							<li><a href="uploadDedfromcredit.php"> excel ادخال الاستقطاع من الرصيد</a></li>
 							
 							
 						</ul>

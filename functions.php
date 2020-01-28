@@ -436,7 +436,7 @@
 		$output="";	
 		$con = connect();
 		$sql= '';		
-		print_r($_POST);
+		// print_r($_POST);
 		if(!empty($_POST['dateFrom'])){	
 			$sql = "select  e.empName,e.currentCode,e.ID
 					from	employee e
@@ -566,7 +566,7 @@
 			<tr>
 			<td colspan='12' class='alert alert-warning'> 
 			<strong><i class='fa fa-exclamation-triangle'></i>
-			تم ادخال حصر لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
+			تم ادخال نوباتجية لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
 			<a href='timesheet.php'>here</a>
 			</td></tr>";
 		}
@@ -618,7 +618,7 @@
 			<tr>
 			<td colspan='12' class='alert alert-warning'> 
 			<strong><i class='fa fa-exclamation-triangle'></i>
-			تم ادخال حصر لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
+			تم ادخال أيام الورادى لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
 			<a href='timesheet.php'>here</a>
 			</td></tr>";
 		}
@@ -752,18 +752,18 @@
 					if(!empty($row['A'])){
 	
 						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
-						echo $sql;
+						//echo $sql;
 						$stmt = $con->prepare($sql);
 						$stmt->execute();
 						$result = $stmt->fetchColumn();
-						echo $result;
+						//echo $result;
 						if( $result){
 							$sql = "insert into empTimesheet(emp_id,TS_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
 							casual_days,manufacturing_days,evaluationPercent,notes) 
 							values ($result,$lastID,".$row['C'].",".$row['F'].",".$row['G'].",".$row['D'].",".$row['H'].",
 							".$row['E'].",".$row['I'].",".$row['J'].",'".$row['K']."')";
 							
-							 echo $sql;
+							 //echo $sql;
 							
 							$stmt = $con->prepare($sql);
 							$stmt->execute();
@@ -819,8 +819,6 @@
 		//---------------timesheet INSERTION---------------------
 		//----------------either through file upload---------------
 		//----------------or insertion one by one------------------
-
-
 		//--------first option through insertion one by one-------
 		if(isset($_POST["insertovernight"])){
 			foreach ($_POST['overnight_days'] as $empID => $value) {
@@ -828,22 +826,27 @@
 
 				$notes = $_POST['notes'][$empID];
 
-				$sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
-						values ('$lastID','$empID','$overnight','$notes')";
+				// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
+				// 		values ('$lastID','$empID','$overnight','$notes')";
+
+				$sql ="UPDATE empTimesheet
+						set overnight_days = '$overnight'
+						WHERE TS_id = '$lastID'
+						and	  emp_id = '$empID'"; 
 				//echo $sql;
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 				//check if ts_id already exists in salary:
-				$sql_check = "select TS_id from salary where TS_id ='$lastID'";
-				$stmt = $con->prepare($sql_check);
-				$stmt->execute();
-				$result = $stmt->fetchColumn();
-				if(! $result){
+				// $sql_check = "select TS_id from salary where TS_id ='$lastID'";
+				// $stmt = $con->prepare($sql_check);
+				// $stmt->execute();
+				// $result = $stmt->fetchColumn();
+				// if(! $result){
 	
-					$sql = "insert into salary(TS_id,emp_id)values ('$lastID','$empID')";
-					$stmt = $con->prepare($sql);
-					$stmt->execute();
-				}
+				// 	$sql = "insert into salary(TS_id,emp_id)values('$lastID','$empID')";
+				// 	$stmt = $con->prepare($sql);
+				// 	$stmt->execute();
+				// }
 
 			}
 
@@ -896,10 +899,13 @@
 						$result = $stmt->fetchColumn();
 						echo $result;
 						if( $result){
-							$sql = "insert into empTimesheet(emp_id,TS_id,overnight_days,notes) 
-							values ($result,$lastID,".$row['C'].",".$row['F'].")";
-							
-							 echo $sql;
+							// $sql = "insert into empTimesheet(emp_id,TS_id,overnight_days,notes) 
+							// values ($result,$lastID,".$row['C'].",".$row['F'].")";
+							$sql ="UPDATE empTimesheet
+									set overnight_days = ".$row['C']."
+									WHERE TS_id = '$lastID'
+									and	  emp_id = '$result'"; 
+							//echo $sql;
 							
 							$stmt = $con->prepare($sql);
 							$stmt->execute();
@@ -919,13 +925,135 @@
 		//echo "done insertion";
 	}
 	//====================insert shift days===========================
+	function insertshiftDays(){
+		$con = connect();
+		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
+																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
+		$timesheetDate =$_POST['searchDateFrom'];
+		//echo $timesheetDate;
+		$stmt = $con->prepare($checkDate_sql);
+		$stmt->execute();
+		$result = $stmt->fetchColumn();
+		if(! $result){
+			
+			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
+			$stmt = $con->prepare($timesheetsql);
+			$stmt->execute();
+	
+			$getlastTSID_sql = "select max(ID) from timesheets";
+			
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$lastID = $stmt->fetchColumn();
+			//echo $lastID;
+		}else{
+			// if timesheet already exist get its ID and insert for remaining emp the timesheet
+			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
+														and year(sheetDate)= year('".$_POST['searchDateFrom']."') ";
+			$stmt = $con->prepare($getlastTSID_sql);
+			$stmt->execute();
+			$lastID = $stmt->fetchColumn();
+			//echo $lastID;
+
+		}
 
 
+		//---------------timesheet INSERTION---------------------
+		//----------------either through file upload---------------
+		//----------------or insertion one by one------------------
+		//--------first option through insertion one by one-------
+		if(isset($_POST["insertshift"])){
+			foreach ($_POST['shift_days'] as $empID => $value) {
+				$shift = $_POST['shift_days'][$empID];
 
+				$notes = $_POST['notes'][$empID];
 
+				// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
+				// 		values ('$lastID','$empID','$overnight','$notes')";
 
+				$sql ="UPDATE empTimesheet
+						set shift_days = '$shift'
+						WHERE TS_id = '$lastID'
+						and	  emp_id = '$empID'"; 
+				//echo $sql;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+			}
 
+		}
+		//--------second option through upload--------------------
+		elseif(isset($_POST['upload_excel'])){
+			//check if date was choosen
+			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+				// echo "set";
+				//checkif file is choosen
+				$con=connect();
+				$file_info = $_FILES["result_file"]["name"];
+				$file_directory = "uploads/";
+				//$new_file_name = date("dmY").".". $file_info["extension"];
+				$new_file_name = date("d-m-Y")."_".$file_info;
+				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
+				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
+				$objReader	= PHPExcel_IOFactory::createReader($file_type);
+				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
+				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
 
+				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
+				$headers = array_shift($sheetData);
+				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
+				// 	'A2:' . $highestColumn . $highestRow,
+				// 	TRUE,TRUE,TRUE
+				// );
+				// echo "<pre>";
+
+				// print_r($headers);
+				// echo "</pre>";
+				// echo "---------------------------------- <br>";
+	
+				foreach ($sheetData as $row){
+					// echo "row :<br>";
+					// echo "<pre>";
+
+					// print_r($row);
+					// echo "</pre>";
+					// // echo $value;
+					// echo "---------------------------------- <br>";
+					
+					if(!empty($row['A'])){
+	
+						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
+						echo $sql;
+						$stmt = $con->prepare($sql);
+						$stmt->execute();
+						$result = $stmt->fetchColumn();
+						echo $result;
+						if( $result){
+							// $sql = "insert into empTimesheet(emp_id,TS_id,shift_days,notes) 
+							// values ($result,$lastID,".$row['C'].",".$row['F'].")";
+							$sql ="UPDATE empTimesheet
+									set shift_days = ".$row['C']."
+									WHERE TS_id = '$lastID'
+									and	  emp_id = '$result'"; 
+							//echo $sql;
+							
+							$stmt = $con->prepare($sql);
+							$stmt->execute();
+						}
+						
+					}
+		
+				}
+				$updatemsg = "File Successfully Imported!";
+				$updatemsgtype = 1;
+			
+			}else{
+				echo "you have to select date and choose file";
+			}
+
+		}
+		//echo "done insertion";
+	}
 
 	//---------------edit timesheet for one employee-----------
 	function editTimesheet(){
