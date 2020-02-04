@@ -731,6 +731,39 @@ $(document).ready(function(){
 		});	
 	});
 
+	//-----------UPLOAD deductions from credit---------------------------- 
+	$('#deductionFromCreditUpload').on('submit',function(e){
+		//	e.preventDefault();
+			//get dates between 2 dates
+			//var value = $('#getEmpForDed').val();
+			// var valueTo =  $('#searchTo').val();
+			// var dateTo_value = $('#searchDateTo').val();
+			// var dateFrom_value = $('#searchDateFrom').val();
+			var currentURL = document.location.href.match(/[^\/]+$/)[0];
+			console.log($('form#deductionFromCreditUpload').serialize());
+			$.ajax({
+				url:'fetch.php',
+				method:"POST",
+				data: $('form#deductionFromCreditUpload').serialize(),
+					// searchTo:valueTo,
+					// dateFrom:dateFrom_value,
+					// dateTo:dateTo_value,
+					//pageurl:currentURL
+				// dataType:"json",
+				success:function(data){
+					console.log(data);
+					$('#submitted').append("<div> file inserted</div>");
+					// if(currentURL == 'insertDedfromcredit.php'){
+					// 	//console.log(data);
+					// 	$('#empName').val(data);
+					// }
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});	
+	});
+
 	//--------------get data to view Current Credit Deductions For Emp ------------------
 	$(document).on('click','.editdedFromCredit', function(){
 		var employee_id=$('#getEmpForDed').val();

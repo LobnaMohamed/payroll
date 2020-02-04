@@ -8,13 +8,9 @@
 		
 		<form class="navbar-form "  id="deductionFromCreditinsertion" method="POST" action="fetch.php">
 			<div class="row add-on ">
-				<div class='col-sm-2'>
-					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"
-							data-target="#" >upload file</button>
-				</div>
-				<div class='col-sm-2'>
-					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"
-							data-target="#" >toggle view</button>
+
+				<div class='col-sm-4'>
+					<a href="uploadDedfromcredit.php" class="btn  btn-lg btn-primary">upload</a>
 				</div>
 				<div class='col-sm-2'>
 					<button type='button' class="btn  btn-lg btn-primary viewEndeddedFromCredit" data-toggle="modal"

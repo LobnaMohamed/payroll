@@ -364,7 +364,7 @@
 			}
 			echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' 
 				data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
-		}elseif($page == 'deductionfromcredit.php'){
+		}elseif($page == 'deductionfromcredit.php' || $page == 'uploadDedfromcredit.php'){
 			echo "<option value=0 >all</option>";
 
 	    	foreach($result as $row){
@@ -1283,10 +1283,6 @@
 		// $stmt->execute();
 		//echo json_encode($result); 
 	}
-
-
-
-
 	function getManagement(){
 		$con = connect();
 		$sql= "SELECT ID,Management FROM managements" ;
@@ -1901,7 +1897,216 @@
 		}
 			
 	}	
+	//---------------UPLOAD deductions from credit-------------------
+	function uploadDedFromCredit(){
+		//print_r($_POST);
+		$con = connect();
+		$empID = $_POST['getEmpForDed'];
+		
+		$add_installment ="insert into creditDedInstallments (creditDed_id,
+							installmentDate,monthlyValue,remainingValue) values ";
+		// $update_installment = "update creditdedIndtallments
+		// 					 set ";					
+		//divide deductions according to rules:
+		//ranges of deductions for medicines:
+		$r1 = range(0, 500);
+		$r2 = range(501, 1000);
+		$r3 = range(1001, 2000);
+		$r4 = range(2001, 4000);
+		$r5 = range(4001, 5000);
+		//---------------deduction from credit insertion ---------------------
+		foreach ($_POST['dedDate'] as $DedTypeID => $datevalue) {
+			
+			if($_POST['dedAmount'][$DedTypeID] != 0){
+				if($DedTypeID == 5){ //ادوية
+					$add_deduction = "insert into creditDeductions(emp_id,deductionType_id,
+										deductionDate,totalAmount) output INSERTED.ID values($empID,$DedTypeID,'$datevalue',
+										".$_POST['dedAmount'][$DedTypeID].")";
+					echo $add_deduction;
+					$stmt = $con->prepare($add_deduction);
+				    $stmt->execute();	
+					$insertedID = $stmt->fetchcolumn();
+					
+					echo( $insertedID);
+					$checkSql = "	select max(ID) as ID,endDate
+									from creditDeductions 			
+									where  emp_id = $empID and deductionType_id =$DedTypeID
+									and endDate >=  '$datevalue'
+									group by endDate ";
+					$stmt = $con->prepare($checkSql);
+					$stmt->execute();
+					$result = $stmt->fetchAll();
+					
+					if($result){
+						foreach ($result as $row){
+							print_r($row);
+							// if there are any current deductions of meds:
+							//get the remaining value and update accordingly	
+							$getRemainingAmount = "select remainingValue
+													from creditDedInstallments 
+													where creditDed_id =".$row['ID']." and installmentDate =  DATEADD(month, -1, '$datevalue')";
+							$stmt = $con->prepare($getRemainingAmount);
+							$stmt->execute();
+							$remainingAmount_result = $stmt->fetchcolumn();
+							//echo $getRemainingAmount ;
+							$remainingAmount = $remainingAmount_result + $_POST['dedAmount'][$DedTypeID]; //new remaining amount 
+							//for update:
+							while( $remainingAmount > 0){
+								switch ($remainingAmount) {
+									case in_array($remainingAmount, $r1) :
+										$monthAmount = 50;
+										break;
+									case in_array($remainingAmount, $r2):
+										$monthAmount = 100;
+										break;
+									case in_array($remainingAmount, $r3):
+										$monthAmount = 150;
+										break;
+									case in_array($remainingAmount, $r4):
+										$monthAmount = 200;
+										break;
+									case in_array($remainingAmount, $r5):
+										$monthAmount = 400;
+										break;
+									case ($remainingAmount > 5000) :
+										$monthAmount = 500;
+										break;
+			
+								}
+								if($datevalue <= $row['endDate']){
+									$remainingAmount =$remainingAmount - $monthAmount ;
+									$updateInstallment = "update creditDedInstallments
+															set	monthlyValue = $monthAmount,
+																remainingValue = $remainingAmount
+															where creditDed_id =".$row['ID']."	and installmentDate =  '$datevalue'";
+									echo 	$updateInstallment;			
+									$stmt = $con->prepare($updateInstallment);
+									$stmt->execute();
+								}else{
+									$remainingAmount =$remainingAmount - $monthAmount ;
+									$add_installment .=	"( $insertedID,'$datevalue',$monthAmount,$remainingAmount),";
+								}
+								
+			
+								
+								$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+							}
+							
+						}
+					}
 
+					else{
+						echo "no history meds";
+						$remainingAmount =  $_POST['dedAmount'][$DedTypeID];
+						while( $remainingAmount > 0){
+					
+							switch ($remainingAmount) {
+								case in_array($remainingAmount, $r1) :
+									$monthAmount = 50;
+									break;
+								case in_array($remainingAmount, $r2):
+									$monthAmount = 100;
+									break;
+								case in_array($remainingAmount, $r3):
+									$monthAmount = 150;
+									break;
+								case in_array($remainingAmount, $r4):
+									$monthAmount = 200;
+									break;
+								case in_array($remainingAmount, $r5):
+									$monthAmount = 400;
+									break;
+								case ($remainingAmount > 5000) :
+									$monthAmount = 500;
+									break;
+		
+							}
+	
+							$remainingAmount =$remainingAmount - $monthAmount ;
+							
+							$add_installment .=	"( $insertedID,'$datevalue',$monthAmount,$remainingAmount),";
+							$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+							
+	
+						}
+					}
+					
+					$trimmed_add_installment =  rtrim($add_installment,",");	
+					echo $trimmed_add_installment;
+					$stmt = $con->prepare($trimmed_add_installment);
+					$stmt->execute();
+					//$endDateinsertedID = $stmt->fetchcolumn();
+					//get last deduction to calculate end date and insert it into table
+					$sql="select max(installmentDate) from creditDedInstallments where creditDed_id=$insertedID ";
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+					$endDate = $stmt->fetchColumn();
+					$addendDate = "update creditDeductions 
+									set endDate = '$endDate'
+									where ID =$insertedID ";
+					$stmt = $con->prepare($addendDate);
+					$stmt->execute();
+
+
+				}else{ //باقى الاستقطاعات حسب عدد الشهور
+					$endDate = date('Y-m-d', strtotime("+ ".($_POST['dedmonthsNo'][$DedTypeID]-1)." months", strtotime($datevalue)));
+					//echo $endDate; 
+					$add_deduction = "insert into creditDeductions(emp_id,deductionType_id,
+										deductionDate,totalAmount,months,endDate) output INSERTED.ID values($empID,$DedTypeID,'$datevalue',
+										".$_POST['dedAmount'][$DedTypeID].",".$_POST['dedmonthsNo'][$DedTypeID].",'$endDate')";
+										//echo $add_deduction;
+					$stmt = $con->prepare($add_deduction);
+					$stmt->execute();
+					$insertedID = $stmt->fetchcolumn();
+					
+					echo( $insertedID);
+					//----get quotient of division------------
+					
+					$quotientAmount =  intval($_POST['dedAmount'][$DedTypeID] / $_POST['dedmonthsNo'][$DedTypeID]);
+					$remainderAmount = fmod($_POST['dedAmount'][$DedTypeID] ,$_POST['dedmonthsNo'][$DedTypeID]);
+					// echo "quotient". $quotientAmount ;
+					// echo "<br>";
+					// echo "remainderAmount". $remainderAmount;
+					// echo "<br>";
+					//------------first month will deduct quotient value plus remainder---------------
+					
+					$firstMonthAmount = $quotientAmount + $remainderAmount ; //اول قسط
+					$remainingAmount = $_POST['dedAmount'][$DedTypeID]  - $firstMonthAmount;
+					// echo "firstMonthAmount". $firstMonthAmount;
+					// echo "<br>";
+					// echo "remainingAmount". $remainingAmount;
+					
+					//------------add first month in sql statement---------------------
+					$add_installment .="($insertedID,'$datevalue',$firstMonthAmount,$remainingAmount),";
+					
+					$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+					
+					while( $remainingAmount > 0){
+						$remainingAmount = $remainingAmount - $quotientAmount ;
+						$add_installment .="( $insertedID,'$datevalue',$quotientAmount,$remainingAmount),";
+						
+						$datevalue = date('Y-m-d', strtotime("+1 months", strtotime($datevalue)));
+						 echo "<br>";
+						
+						// echo "quotient". $quotientAmount ;
+						// echo "<br>";
+						// echo "remainingAmount". $remainingAmount;
+						
+						
+					}
+						echo"<br>";
+					
+					$trimmed_add_installment =  rtrim($add_installment,",");	
+					echo "out of scope";
+					echo $trimmed_add_installment;
+					$stmt = $con->prepare($trimmed_add_installment);
+					$stmt->execute();
+				}
+
+			}
+		}
+			
+	}	
 
 	//---------------get other benefits--------------------
 	function getBenefits(){
