@@ -49,7 +49,7 @@
 
                         </tr>
                     </thead>
-                    <tbody id="timesheetbody">
+                    <tbody id="shiftbody">
                     </tbody>
                 </table>
                 <div>

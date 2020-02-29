@@ -51,7 +51,7 @@
 
                         </tr>
                     </thead>
-                    <tbody id="timesheetbody">
+                    <tbody id="sickleavesbody">
                     </tbody>
                 </table>
                 <div>

@@ -498,13 +498,13 @@ $(document).ready(function(){
 					$('#timesheetbody').html(data);	 
 				}else if(currentURL == 'shiftinsertion.php'){
 					//console.log(data);
-					$('#timesheetbody').html(data);	 
+					$('#shiftbody').html(data);	 
 				}else if(currentURL == 'overnightinsertion.php'){
 					//console.log(data);
-					$('#timesheetbody').html(data);	 
+					$('#overnightbody').html(data);	 
 				}else if(currentURL == 'sickleavesinsertion.php'){
 					//console.log(data);
-					$('#timesheetbody').html(data);	 
+					$('#sickleavesbody').html(data);	 
 				}
 				else if(currentURL == 'wages.php'){
 					
@@ -559,10 +559,17 @@ $(document).ready(function(){
 			// dataType:"json",
 			success:function(data){
 			    if(currentURL == 'timesheetinsertion.php'){
-					console.log(data);
-					console.log("line 309");
 					$('#timesheetbody').html(data);	 
-				}		
+				}else if(currentURL == 'shiftinsertion.php'){
+					//console.log(data);
+					$('#shiftbody').html(data);	 
+				}else if(currentURL == 'overnightinsertion.php'){
+					//console.log(data);
+					$('#overnightbody').html(data);	 
+				}else if(currentURL == 'sickleavesinsertion.php'){
+					//console.log(data);
+					$('#sickleavesbody').html(data);	 
+				}
 			},
 			error: function(error) {
 				console.log(error);
