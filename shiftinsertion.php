@@ -42,9 +42,9 @@
                         <tr>
                             <th class="col-xs-1">رقم القيد</th>
                             <th class="col-xs-1">الاسم</th>
-
                             <th class="col-xs-1">وردية</th>
-
+                            <th class="col-xs-1">الفئة</th>
+                            <th class="col-xs-1">المقابل النقدى</th>
                             <th >ملاحظات</th>
 
                         </tr>

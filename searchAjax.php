@@ -14,6 +14,9 @@
 	}elseif($currentURL == 'overnightinsertion.php'){
 		getinsertovernightDays();
 		
+	}elseif($currentURL == 'sickleavesinsertion.php'){
+		getsickLeavesDays();
+		
 	}
 	elseif($currentURL == 'empdata.php'){
 

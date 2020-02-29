@@ -502,6 +502,9 @@ $(document).ready(function(){
 				}else if(currentURL == 'overnightinsertion.php'){
 					//console.log(data);
 					$('#timesheetbody').html(data);	 
+				}else if(currentURL == 'sickleavesinsertion.php'){
+					//console.log(data);
+					$('#timesheetbody').html(data);	 
 				}
 				else if(currentURL == 'wages.php'){
 					

@@ -63,7 +63,7 @@
 							<li><a href="timesheetinsertion.php">ادخال الحــصر </a></li>
 						  	<li><a href="shiftinsertion.php">ادخال الوردية </a></li>
 						  	<li><a href="overnightinsertion.php">ادخال النوباتجية </a></li>
-							  
+						  	<li><a href="sickleavesinsertion.php">ادخال المرضى </a></li>
 							<li><a href="timesheet.php">مراجعة الحـــصر</a></li>
 	
 						</ul>

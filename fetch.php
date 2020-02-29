@@ -119,7 +119,28 @@
 			insertTimesheet();
 			// calculateSalary24();
 
-		     //header("location:timesheetinsertion.php");
+		     header("location:timesheetinsertion.php");
+
+		}elseif(isset($_POST["insertovernight"]) || isset($_POST["upload_overnightexcel"])){
+
+			insertovernightDays();
+			// calculateSalary24();
+
+		     header("location:timesheetinsertion.php");
+
+		}elseif(isset($_POST["insertshift"]) || isset($_POST["upload_shiftexcel"])){
+
+			insertshiftDays();
+			// calculateSalary24();
+
+		     header("location:timesheetinsertion.php");
+
+		}elseif(isset($_POST["insertsickleaves"]) || isset($_POST["upload_sickleavesexcel"])){
+
+			insertsickleavesDays();
+			// calculateSalary24();
+
+		     header("location:timesheetinsertion.php");
 
 		}
 		elseif(isset($_POST["editTimesheet_empID"]) && isset($_POST["editTimesheet_ID"]) )  

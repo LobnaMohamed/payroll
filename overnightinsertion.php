@@ -44,6 +44,8 @@
                             <th class="col-xs-3">الاسم</th>
 
                             <th class="col-xs-1">نوباتجية</th>
+                            <th class="col-xs-1">الايام المستحقة</th>
+
                             <th class="col-xs-2">ملاحظات</th>
 
                         </tr>
