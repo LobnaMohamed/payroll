@@ -47,7 +47,7 @@
                             <th class="col-xs-1">عدد الايام</th>
                             <th class="col-xs-1">متصل / منفصل</th>
                             <th class="col-xs-1">عدد ايام الخصم</th>
-                            <th class="col-xs-1">قيمة الخصم</th>
+                            <!-- <th class="col-xs-1">قيمة الخصم</th> -->
 
                         </tr>
                     </thead>

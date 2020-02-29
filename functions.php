@@ -287,7 +287,8 @@
 		$con = connect();		
 		$sql="  select Id,empName,currentCode,DOB,hireDate 
 				from employee 
-				where ID = ".$_POST['historyEmpID']."" ;
+				where ID = ".$_POST['historyEmpID']."
+					  and date <= ".$_POST['historyDate']."" ;
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch();
@@ -678,9 +679,6 @@
 					</td>
 					<td>
 						<input class='form-control' name='real_sickLeaves[".$row['ID']."]' value=0 style='width: 100%'>
-					</td>
-					<td>
-						<input class='form-control' name='totalAmountDeducted[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 				</tr>";
 			}
@@ -1182,11 +1180,11 @@
 
 				
 				$real_sickLeaves =  $sick_leavesDays <=10 ? $sick_leavesDays : ( $sick_leavesDays/4);
-				$getBasicSalary = "select currentSalary from employee where ID =$empID ";
-				$stmt = $con->prepare($getBasicSalary);
-				$stmt->execute();
-				$basicSalary = $stmt->fetchColumn();
-				$totalAmountDeducted = ($basicSalary/30) * $real_sickLeaves;
+				// $getBasicSalary = "select currentSalary from employee where ID =$empID ";
+				// $stmt = $con->prepare($getBasicSalary);
+				// $stmt->execute();
+				// $basicSalary = $stmt->fetchColumn();
+				// $totalAmountDeducted = ($basicSalary/30) * $real_sickLeaves;
 
 				// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
 				// 		values ('$lastID','$empID','$overnight','$notes')";
@@ -1197,7 +1195,7 @@
 				// 		and	  emp_id = '$empID'"; 
 				//echo $sql;
 				$sql = "insert into emp_sickLeaves(TS_id,emp_id,sick_leavesDays,continious,startDate,endDate,real_sickLeaves,totalAmountDeducted)
-						 values($lastID,$empID,$sick_leavesDays,'$startDate','$endDate',$continious,$real_sickLeaves,$totalAmountDeducted)";
+						 values($lastID,$empID,$sick_leavesDays,'$startDate','$endDate',$continious,$real_sickLeaves)";
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 			}
@@ -1405,8 +1403,8 @@
 		$empNameEdit= isset($_POST['empNameEdit'])? filter_var($_POST['empNameEdit'],FILTER_SANITIZE_STRING) : '';
 		$empCodeEdit= isset($_POST['empCodeEdit'])? filter_var($_POST['empCodeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$contractTypeEdit= isset($_POST['contractTypeEdit'])? filter_var($_POST['contractTypeEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		//$jobEdit= isset($_POST['jobEdit'])? filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT):'';
-		$jobEdit=  filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT);
+		$jobEdit= isset($_POST['jobEdit'])? filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+		// $jobEdit=  filter_var($_POST['jobEdit'],FILTER_SANITIZE_NUMBER_INT);
 		$levelEdit = isset($_POST['levelEdit'])? filter_var($_POST['levelEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$shiftEdit= isset($_POST['shiftEdit'])? filter_var($_POST['shiftEdit'],FILTER_SANITIZE_STRING) :'';
 		$maritalstatusEdit= isset($_POST['maritalstatusEdit'])? filter_var($_POST['maritalstatusEdit'],FILTER_SANITIZE_NUMBER_INT) :'';
@@ -1415,23 +1413,10 @@
 		$basicsalaryEdit = $_POST['basicsalaryEdit'];
 		$syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
-		
-		// echo "job:";
-		// echo $jobEdit;
-		// echo "level:";
-
-		// echo $levelEdit;
-		// echo "ms:";
-
-		// echo $maritalstatusEdit;
-		// echo "contract:";
-
-		// echo $contractTypeEdit;
-
 		// echo "<br>";
-		echo "<pre>";
-		print_r($_POST);
-		echo "</pre>";
+		// echo "<pre>";
+		// print_r($_POST);
+		// echo "</pre>";
 		
 		//sql statements to be executed
 		if($jobEdit != $_POST['jobcurrentValue']){
@@ -1443,7 +1428,7 @@
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();	
-			echo "in job";
+			// echo "in job";
 		}
 		elseif($maritalstatusEdit != $_POST['MScurrentValue'] ){
 			$MS_sql = "insert into emp_maritalstatus(emp_id,marital_status_id,marital_status_date)values($employee_ID,$maritalstatusEdit,'$MSDate')";
@@ -1452,58 +1437,72 @@
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();
-			echo "in ms";
+			// echo "in ms";
 			
 		}
 		elseif($levelEdit != $_POST['levelcurrentValue']){
-		    $level_sql = "insert into emp_level(emp_id,level_id)values($employee_ID,$levelEdit)";
+		    $level_sql = "insert into emp_level(emp_id,level_id,level_date)values($employee_ID,$levelEdit,'$levelDate')";
 			$emp_sql = "UPDATE employee SET currentLevel = $levelEdit WHERE ID= $employee_ID";		
 			$stmt = $con->prepare($level_sql);
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();
-			echo "in level";
+			// echo "in level";
 			
 		}
 		elseif($contractTypeEdit != $_POST['contractTypecurrentValue'] ){
-		    $contract_sql = "insert into emp_contract(emp_id,contract_id,empCode,contract_date)values($employee_ID,$contractTypeEdit,$empCodeEdit)";
+			$contract_sql = "insert into emp_contract(emp_id,contract_id,empCode,contract_date)
+			values($employee_ID,$contractTypeEdit,$empCodeEdit,'$contractDate')";
 			$emp_sql = "UPDATE employee SET currentContract = $contractTypeEdit WHERE ID= $employee_ID";		
 			$stmt = $con->prepare($contract_sql);
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();
-			echo "in contract";
+			// echo "in contract";
 			
 		}
 		elseif($basicsalaryEdit != $_POST['basicSalarycurrentValue']){
 		    $basicSalary_sql = "insert into emp_basicsalary(emp_id,basicSalary,salaryDate)values($employee_ID,$basicsalaryEdit,'$basicSalaryDate')";
 			$emp_sql = "UPDATE employee SET currentSalary = $basicsalaryEdit WHERE ID= $employee_ID";
-			echo $basicSalary_sql;
-			echo 	$emp_sql	;
+			// echo $basicSalary_sql;
+			// echo 	$emp_sql	;
 			$stmt = $con->prepare($basicSalary_sql);
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();
-			echo "in salary";
+			// echo "in salary";
+			
+		}elseif($empNameEdit != $_POST['empNamecurrentValue']){
+			$emp_sql = "UPDATE employee SET empName = '$empNameEdit' WHERE ID= $employee_ID";
+			echo $emp_sql;
+			$stmt = $con->prepare($emp_sql);
+			$stmt->execute();
+			
+		}elseif($genderEdit != $_POST['genderEdit']){
+			$emp_sql = "UPDATE employee SET gender = '$genderEdit' WHERE ID= $employee_ID";
+			$stmt = $con->prepare($emp_sql);
+			$stmt->execute();
 			
 		}
+		elseif($syndicateEdit != $_POST['syndicateEdit']){
+		    // $syndicate_sql = "insert into emp_syndicate(emp_id,level_id,level_date)values($employee_ID,$levelEdit,$levelDate)";
+
+			$emp_sql = "UPDATE employee SET syndicate_id = $syndicateEdit WHERE ID= $employee_ID";
+			$stmt = $con->prepare($emp_sql);
+			$stmt->execute();
+			
+		}
+		elseif($educationEdit != $_POST['educationcurrentValue']){
+			// $syndicate_sql = "insert into emp_syndicate(emp_id,level_id,level_date)values($employee_ID,$levelEdit,$levelDate)";
+ 
+			 $emp_sql = "UPDATE employee SET education = '$educationEdit' WHERE ID= $employee_ID";
+			 $stmt = $con->prepare($emp_sql);
+			 $stmt->execute();
+			 
+		 }
 		else{
 			echo "nothing to edit";
 		}
-		// $emp_sql = "UPDATE employee
-		// 			SET currentCode = '$empCode',
-		// 				empName = '$empName',
-		// 				currentContract = '$contractType',
-		// 				currentJob = '$job',
-		// 				currentMS = '$maritalstatusEdit',
-		// 				currentLevel = '$level',
-		// 				currentShift = '$shiftEdit',
-		// 				currentSalary = '$basicsalaryEdit',
-		// 				gender = '$genderEdit'
-		// 			WHERE ID= '$employee_ID'";
-		// $con = connect();
-		// $stmt = $con->prepare($sql);
-		// $stmt->execute();
 		//echo json_encode($result); 
 	}
 	function getManagement(){

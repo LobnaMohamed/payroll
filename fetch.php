@@ -75,6 +75,7 @@
 		}
 		elseif(isset($_POST["UpdateEmp"])){
 			editEmp();
+			header("Location:empdata.php");
 		}
 		elseif(isset($_POST["calculateSalary24"])){
 			//check timesheet for the month
