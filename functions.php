@@ -2,7 +2,7 @@
 	//include 'connect.php';
 	// --------------connection to database function-------------
 	function connect(){
-		$servername = "LOBNA";
+		$servername = "LOBNA-PC";
         // $username = "username";
         // $password = "password";
         
@@ -285,10 +285,9 @@
 	function getEmpHistoryMainData(){
 		//$output="";
 		$con = connect();		
-		$sql="  select Id,empName,currentCode,DOB,hireDate 
-				from employee 
-				where ID = ".$_POST['historyEmpID']."
-					  and date <= ".$_POST['historyDate']."" ;
+		$sql="select ID,empName,currentCode,DOB,hireDate,gender,education
+				from employee
+				where ID = ".$_POST['historyEmpID']."" ;
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch();
