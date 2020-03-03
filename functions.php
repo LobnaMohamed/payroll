@@ -717,7 +717,7 @@
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
+			echo $lastID;
 		}else{
 			// if timesheet already exist get its ID and insert for remaining emp the timesheet
 			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
@@ -725,7 +725,7 @@
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
+			echo $lastID;
 
 		}
 
@@ -749,24 +749,28 @@
 				// $overnight = $_POST['overnight_days'][$empID];
 				// $shift = $_POST['shift_days'][$empID];
 				$notes = $_POST['notes'][$empID];
-
+				// echo "<br>";
 				$sql = "insert into empTimesheet(TS_id,emp_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
 								casual_days,manufacturing_days,evaluationPercent,notes) 
 						values ('$lastID','$empID','$value','$sickLeave','$deduction','$absence','$annual',
 								'$casual','$manufacturing',$evaluation,'$notes')";
-				//echo $sql;
+				// echo $sql;
+				
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 				//check if ts_id already exists in salary:
-				$sql_check = "select TS_id from salary where TS_id ='$lastID'";
+				$sql_check = "select TS_id from salary where TS_id =$lastID and emp_id =$empID ";
 				$stmt = $con->prepare($sql_check);
 				$stmt->execute();
+				// echo "<br>";
 				$result = $stmt->fetchColumn();
+				// echo "result = " . $result;
 				if(! $result){
 	
 					$sql = "insert into salary(TS_id,emp_id)values ('$lastID','$empID')";
+					// echo $sql;
 					$stmt = $con->prepare($sql);
-					$stmt->execute();
+					 $stmt->execute();
 				}
 
 			}
@@ -2564,7 +2568,13 @@
 			$overnightShift = ($row['overnight_days'] * 2) * ($row['currentSalary']/30) ; // نوباتجية
 			$labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
 			$tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
-		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * $currentDays;//الحافز
+
+			// for incentive check casual days and sick leaves 
+			/*sickleaves :
+			if sickleaves<=10 ,therefore deduction will be all days value
+			if>10 deduct 0.25 *days values
+			*/
+		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * ($currentDays - $row['casual_days'] );//الحافز
 		    $additionalincentive = $row['currentSalary'] * $row['incentivePercent'] * 0.5;//حافز اضافى
 			
 			$shift = 75 * $row['shift_days']; // وردية
@@ -2574,15 +2584,13 @@
 			$totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
 			$manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
 			$incentive+$shift+$specializationAllowance+$specialBonus+$otherDues+$additionalincentive ; // اجمالى الاستحقاق
-
-
 			$getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
 			sanctions+mobil+loan+empServiceFund+socialInsurances+etisalatNet
 			from salary where emp_id =".$row['ID']." and TS_id = ".$row['timesheetID']." ";
 			$getdeductions_stmt = $con->prepare($getdeductions_sql);
 			$getdeductions_stmt->execute();
 			$totalDeductionsresult = $getdeductions_stmt->fetchColumn();
-			echo $totalDeductionsresult ;
+			//echo $totalDeductionsresult ;
 			//------------deductions calculations---------------------
 			//$sanction_days = 0;
 			//$pastPeriod = 0;//مدة سابقة
@@ -2631,12 +2639,12 @@
 					 empServiceFund = $empServiceFund,
 					 socialInsurances =$socialInsurances,
 					 totalBenefits = $totalbenefits,
-					 totalDeductions  =$totalDeductionsresult
+					 totalDeductions  =2
 					 WHERE TS_id = ".$row['timesheetID']."
 					 and emp_id =".$row['ID']." " ;
+
 			$stmt = $con->prepare($sql2);
 			$stmt->execute();
-			//echo $sql2;
 		}
 	}
 	//-------------update deductions----------------------
@@ -2851,7 +2859,12 @@
 						s.emp_id,s.TS_id,ts.sheetDate
 				from    employee e inner join salary s on e.ID = s.emp_id 
 						inner join timesheets ts 	on   s.TS_id =ts.ID
-				where ts.sheetDate =  '".$_POST['dateFrom']."'";
+				where month(ts.sheetDate) = month( '$date')
+				   and year(ts.sheetDate) = year( '$date')";
+				// echo $sql;
+		if(!empty($_POST['search'])){
+			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
+		}
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetchAll();

@@ -78,25 +78,30 @@
 			header("Location:empdata.php");
 		}
 		elseif(isset($_POST["calculateSalary24"])){
+			// echo"hiii";
 			//check timesheet for the month
-			$con = connect();
-			$sql=  "select count(s.TS_id)
-					from timesheet t,salary s
-					where t.ID=s.TS_id and t.emp_id = s.emp_id
-					and t.sheetDate = '" . $_POST['searchDateFrom'] ."'";
-			$stmt = $con->prepare($sql);
-			$stmt->execute(array($_POST["searchDateFrom"]));
-			$result = $stmt->fetchColumn();
-			//echo $result;
-			if($result <= 0){   //if this date already exists in salary table
+			//print_r($_POST);
+			// $con = connect();
+			// $sql=  "select count(s.TS_id)
+			// 		from timesheet t,salary s
+			// 		where t.ID=s.TS_id and t.emp_id = s.emp_id
+			// 		and month(t.sheetDate) = month('" . $_POST['searchDateFrom'] ."')
+			// 		and year(t.sheetDate) = year('" . $_POST['searchDateFrom'] ."')";
+			// $stmt = $con->prepare($sql);
+			// $stmt->execute(array($_POST["searchDateFrom"]));
+			// $result = $stmt->fetchColumn();
+			// //echo $result;
+			// if($result <= 0){   //if this date already exists in salary table
 				calculateSalary24();
-				getWagesTotals();
 				
-			}
-			else{
 				getWagesTotals();
+				// header("Location:wages.php");
 				
-			}
+			// }
+			// else{
+			// 	getWagesTotals();
+				
+			// }
 		}
 		elseif(isset($_POST["updatebenefits"])){
 		

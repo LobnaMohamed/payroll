@@ -576,6 +576,31 @@ $(document).ready(function(){
 			}
 		});	
 	});
+
+	$('#EmpSalary').on('submit',function(e){
+		 e.preventDefault();
+		var $form = $('#EmpSalary');
+		//var timesheet_date = $('#searchDateFrom').val();
+		//var emp = $('#search').val();
+		//	var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		// console.log(currentURL);
+		// console.log(timesheet_date);
+		console.log("hi");
+		$.ajax({
+			url:'calculatesalary24.php',
+			method:"POST",
+			data:$form.serialize(),
+			success:function(data){
+			    // if(currentURL == 'wages.php'){
+					$('#wagesDatabody').html(data);	 
+					console.log("in success func");
+				// }
+			},
+			error: function(error) {
+				console.log(error);
+			}
+		});	
+	});
 	//--------------get data into edit timesheet modal---------------------
 	$(document).on('click','.edittimsesheetData', function(){
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];

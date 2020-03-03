@@ -6,14 +6,15 @@
         <div class='page-header pagetitle col-sm-10 col-sm-offset-1'>مرتب 24</div>  
             <!-- <input class="form-control" name="salaryDescription" id="salaryDescription" type="text">  -->
     </header>	  
-    <form class="navbar-form row" id="searchEmp"  method="POST">
+    <form class="navbar-form row" id="EmpSalary"  method="POST" >
+                    <!-- onsubmit="return confirm('سيتم حساب المرتب..هل أنت متأكد؟');"> -->
         <div class="form-group add-on ">
             <label for = "search">رقم القيد :</label>
             <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">
             <label for = "searchDateFrom">التاريخ :</label>
             <input class="form-control" name="searchDateFrom" id="searchDateFrom" type="date" />
 
-            <!-- <input class="btn btn-primary form-control" type="submit" name="calculateSalary24" value="calculate salary" /> -->
+            <input class="btn btn-primary form-control" type="submit" id ="calculateSalary24" name="calculateSalary24" value="calculate salary" />
         </div>
     </form>
     <hr>
