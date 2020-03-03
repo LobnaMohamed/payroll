@@ -2901,7 +2901,7 @@
 	function viewWagesDetails(){
 		$con = connect();
 		$sql = "select s.*,e.currentCode ,e.empName,empt.presence_days,t.sheetDate
-				from employee e,salary s inner join empTimesheet empt 
+				from employee e inner join  salary s on e.Id = s.emp_id  inner join empTimesheet empt 
 								on s.emp_id = empt.emp_id and s.TS_id = empt.TS_id
 								inner join timesheets t on empt.TS_id = t.ID
 				where s.TS_id ='".$_POST['wagesDetailssheetID']."'
@@ -2911,16 +2911,17 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		foreach($result as $row){
+			// 	<div class='mailtitle'>
+			// 	<div><img src='images/amoc2.png' align='left'
+			// 			style='max-width:100% ;'></div>
+			// 	<div id='mailcompany'>
+			// 		<h3>شركة الاسكندرية للزيوت المعدنية(أموك)</h3>
+			// 		<h3>الادارة العامة للشئون المالية</h3>
+			// 		<h4>قسيمة صرف مرتب</h4>
+			// 	</div>
+			// </div>
 			$output = "
-				<div class='mailtitle'>
-					<div><img src='images/amoc2.png' align='left'
-							style='max-width:100% ;'></div>
-					<div id='mailcompany'>
-						<h3>شركة الاسكندرية للزيوت المعدنية(أموك)</h3>
-						<h3>الادارة العامة للشئون المالية</h3>
-						<h4>قسيمة صرف مرتب</h4>
-					</div>
-				</div>
+
 				<table class='mailTable'>
 					<tr>
 						<th colspan='2'>رقم القيد </th>
