@@ -132,21 +132,21 @@
 			insertovernightDays();
 			// calculateSalary24();
 
-		     header("location:timesheetinsertion.php");
+		     header("location:overnightinsertion.php");
 
 		}elseif(isset($_POST["insertshift"]) || isset($_POST["upload_shiftexcel"])){
 
 			insertshiftDays();
 			// calculateSalary24();
 
-		     header("location:timesheetinsertion.php");
+		     header("location:shiftinsertion.php");
 
 		}elseif(isset($_POST["insertsickleaves"]) || isset($_POST["upload_sickleavesexcel"])){
 
 			insertsickleavesDays();
 			// calculateSalary24();
 
-		     header("location:timesheetinsertion.php");
+		    //  header("location:sickleavesinsertion.php");
 
 		}
 		elseif(isset($_POST["editTimesheet_empID"]) && isset($_POST["editTimesheet_ID"]) )  
