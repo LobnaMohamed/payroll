@@ -68,14 +68,14 @@
 								<select class="form-control" id="addgender" name="addgender">
 									<option selected disabled hidden style='display: none' ></option>
 										<?php  
-										 	echo"<option value='ذكر'> ذكر</option>"; 
+										 	echo"<option selected value='ذكر'> ذكر</option>"; 
 										  echo"<option value='أنثى'>أنثى</option>"; 	
 										?>
 								</select>
 								<label for= "addDOB">تاريخ الميلاد</label>
 					    		<input type="date" class="form-control" id="addDOB" name="addDOB">
 								<label for= "addmaritalstatus">الحالة الاجتماعية</label>
-								<select class="form-control" id="addmaritalstatus" name="addmaritalstatus">
+								<select class="form-control" id="addmaritalstatus" name="addmaritalstatus" required>
 									<option selected disabled hidden style='display: none' value=''></option>
 										<?php  	get_marital_status(); ?>
 								</select>
@@ -83,7 +83,7 @@
 					    		<input type="text" class="form-control" id="adddesc_job" name="adddesc_job">
 								<input type="hidden" name="employee_id" id="employee_id">  
 								<label for= "addshift">نهارى/ورادى</label>
-								<select class="form-control" id="addshift" name="addshift">
+								<select class="form-control" id="addshift" name="addshift" required>
 									<option selected disabled hidden style='display: none' ></option>
 										<?php  
 										 	echo"<option value='نهارى'>نهارى</option>"; 
@@ -93,17 +93,17 @@
 							</div>	 
 							<div class="form-group col-md-4">
 								<label for= "addempName">اسم الموظف</label>
-								<input type="text" class="form-control" id="addempName" name="addempName" >
+								<input type="text" class="form-control" id="addempName" name="addempName" required>
 								<label for= "addhireDate">تاريخ التعيين</label>
-								<input type="date" class="form-control" id="addhireDate" name="addhireDate" >
+								<input type="date" class="form-control" id="addhireDate" name="addhireDate" required>
 
 								<label for= "addlevel">المستوى</label>
-								<select class="form-control" id="addlevel" name="addlevel" >
+								<select class="form-control" id="addlevel" name="addlevel" required >
 									<option selected disabled hidden style='display: none' value=''></option>
 										<?php  	getLevel();   ?>
 								</select>
 								<label for= "addjob">الوظيفة</label>
-								<select class="form-control" id="addjob" name="addjob">
+								<select class="form-control" id="addjob" name="addjob" required>
 									<option selected disabled hidden style='display: none' value=''></option>
 										<?php  	getJob();   ?>
 								</select>
@@ -114,18 +114,18 @@
 							</div>
 							<div class="form-group col-md-4">
 								<label for= "addempCode">رقم قيد الموظف</label>
-					    		<input type="number" class="form-control" id="addempCode" name="addempCode">
+					    		<input type="number" class="form-control" id="addempCode" name="addempCode" required>
 								<label for= "addcontractType">نوع العقد</label>
-					    		<select class="form-control" id="addcontractType" name="addcontractType">
+					    		<select class="form-control" id="addcontractType" name="addcontractType" required>
 									<option selected disabled hidden style='display: none' value=''></option>
 									<?php  	getContract();   ?>
 								</select>	
 								<label for= "addbasicsalary">المرتب الاساسى</label>
-					    		<input type="text" class="form-control" id="addbasicsalary" name="addbasicsalary">
+					    		<input  class="form-control" id="addbasicsalary" name="addbasicsalary" required>
 									
 								<label for= "addsyndicate">النقابة</label>
 								<select class="form-control" id="addsyndicate" name="addsyndicate">
-									<option selected disabled hidden style='display: none' value=''></option>
+									<!-- <option selected disabled hidden style='display: none' value= '0'></option> -->
 										<?php  	getsyndicate();   ?>
 								</select>
 								<label for= "addrepresentation"> بدل التمثيل</label>
@@ -254,9 +254,20 @@
 													<?php  	getJob();   ?>
 											</select>
 											<input type="hidden" id="jobcurrentValue" name="jobcurrentValue">											
-											
+
+
+											<!-- <label for= "shiftEdit">نهارى/ورادى</label>
+											<input type="text" class="form-control" id="shiftEdit" name="shiftEdit"> -->
+
 											<label for= "shiftEdit">نهارى/ورادى</label>
-											<input type="text" class="form-control" id="shiftEdit" name="shiftEdit">
+											<select class="form-control" id="shiftEdit" name="shiftEdit">
+												<option selected disabled hidden style='display: none' ></option>
+													<?php  
+														echo"<option value='نهارى'>نهارى</option>"; 
+														echo"<option value='ورادى'>ورادى</option>"; 	
+													?>
+											</select>
+											<input type="hidden" id="shiftcurrentValue" name="shiftcurrentValue">
 											<label for= "desc_jobEdit">الوظيفة الحالية</label>
 											<input type="text" class="form-control" id="desc_jobEdit" name="desc_jobEdit">
 											<input type="hidden" id="descjobcurrentValue" name="descjobcurrentValue">											
@@ -270,7 +281,7 @@
 											<input type="hidden" id="basicSalaryDatecurrentValue" name="basicSalaryDatecurrentValue">											
 																						
 											<label for= "basicsalaryEdit">المرتب الاساسى</label>
-											<input type="text" class="form-control" id="basicsalaryEdit" name="basicsalaryEdit">
+											<input  class="form-control" id="basicsalaryEdit" name="basicsalaryEdit">
 											<input type="hidden" id="basicSalarycurrentValue" name="basicSalarycurrentValue">											
 											
 										</div>

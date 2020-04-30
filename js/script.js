@@ -112,15 +112,16 @@ $(document).ready(function(){
 		$('.nav-tabs a[href="#tab5"]').tab('show')
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
 		var employee_id=$(this).attr("id");
-		console.log(employee_id);
+		//console.log(employee_id);
 		$.ajax({
 			url:"fetch.php",
 			method:"POST",
 			data:{empID:employee_id},
 			dataType:"json",
 			success:function(data){
-				//console.log(data);
+				console.log(data);
 				$('#employee_idEdit').val(data.ID);
+
 				$('#empNameEdit').val(data.empName);
 				$('#empNamecurrentValue').val(data.empName);
 				
@@ -128,14 +129,18 @@ $(document).ready(function(){
 				$('#empCodecurrentValue').val(data.currentCode);
 				
 				$('#genderEdit').val(data.gender);
-				
+				$('#gendercurrentValue').val(data.gender);
+
 				$('#desc_jobEdit').val(data.job_description);
-				$('#descjobcurrentValue').val(data.currentCode);
+				$('#descjobcurrentValue').val(data.job_description);
 				
 				$('#educationEdit').val(data.education);
 				$('#educationcurrentValue').val(data.education);
 				
 				$('#shiftEdit').val(data.currentShift);
+				$('#shiftcurrentValue').val(data.currentShift);
+
+
 				$('#syndicateEdit').val(data.syndicate_id);
 				$('#syndicatecurrentValue').val(data.syndicate_id);
 				
@@ -410,13 +415,13 @@ $(document).ready(function(){
 				$('#historyEmp_name').text(data.empName);
 				$('#historyEmp_hireDate').text(data.hireDate);				
 				$('#historyEmp_DOB').text(data.DOB);
-				// $('#historyEmp_level').text(data.empLevel);
-				// $('#historyEmp_job').text(data.job);
-				// $('#historyEmp_syndicate').text(data.syndicate);
-				// $('#historyEmp_MS').text(data.maritalStatus);
-				// $('#historyEmp_contract').text(data.contractType);
-				// $('#historyEmp_shift').text(data.currentShift);
-				// $('#historyEmp_salary').text(data.currentSalary);
+				$('#historyEmp_level').text(data.empLevel);
+				$('#historyEmp_job').text(data.job);
+				$('#historyEmp_syndicate').text(data.syndicate);
+				$('#historyEmp_MS').text(data.currentMS);
+				$('#historyEmp_contract').text(data.contractType);
+				$('#historyEmp_shift').text(data.currentShift);
+				$('#historyEmp_salary').text(data.currentSalary);
 
 				
 			},error:function(error){

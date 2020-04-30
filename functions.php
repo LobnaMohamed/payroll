@@ -1,22 +1,42 @@
 <?php
 	//include 'connect.php';
 	// --------------connection to database function-------------
-	function connect(){
-		$servername = "LOBNA-PC";
-        // $username = "username";
-        // $password = "password";
+	// function connect(){
+	// 	$servername = "LOBNA";
+    //     // $username = "username";
+    //     // $password = "password";
         
-        try {
-			//$con = new PDO("sqlsrvr:host=$servername;dbname=wages" );
-			$con = new PDO("sqlsrv:Server=$servername;Database=payroll_new");
-            // set the PDO error mode to exception
-            $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            //echo "Connected successfully"; 
-            }
-        catch(PDOException $e)
-            {
-            echo "Connection failed: " . $e->getMessage();
+    //     try {
+	// 		//$con = new PDO("sqlsrvr:host=$servername;dbname=wages" );
+	// 		$con = new PDO("sqlsrv:Server=$servername;Database=payroll_new");
+    //         // set the PDO error mode to exception
+    //         $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //         //echo "Connected successfully"; 
+    //         }
+    //     catch(PDOException $e)
+    //         {
+    //         echo "Connection failed: " . $e->getMessage();
+	// 	    }
+	// 	return $con;
+	// }	
+
+	function connect(){
+		$dsn = 'mysql:host=localhost;dbname=payroll_new';//data source name
+		$user= 'root';
+		$pass='';
+		$options = array (PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',	);
+
+		try{
+			//new connection to db
+				static $con;
+			    if ($con == NULL){ 
+			        $con =  new PDO($dsn, $user, $pass, $options);
+					$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
 		    }
+		}
+		catch(PDOexception $e){
+			echo "failed" . $e->getMessage();
+		}
 		return $con;
 	}	
 	// --------------get Employee function-----------------------
@@ -213,8 +233,16 @@
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
 	
 		}elseif($page == 'empdata.php'){
+			// echo "<option selected disabled hidden style='display: none' value= '0'></option>";
+			// echo "<option selected  value='0'>لا يوجد</option>";
 	    	foreach($result as $row){
-			    echo "<option value=" .$row['ID'].">" . $row['syndicate'] . "</option>";
+				if($row['ID'] == 1){
+					echo "<option selected  value= " .$row['ID'].">" . $row['syndicate'] . "</option>";
+
+				}else{
+					echo "<option value=" .$row['ID'].">" . $row['syndicate'] . "</option>";
+
+				}
 			}
 		}
 
@@ -285,7 +313,7 @@
 	function getEmpHistoryMainData(){
 		//$output="";
 		$con = connect();		
-		$sql="select ID,empName,currentCode,DOB,hireDate,gender,education
+		$sql="select ID,empName,currentCode,DOB,hireDate,gender,education,currentSalary,currentShift,currentMS,syndicate_id,currentContract
 				from employee
 				where ID = ".$_POST['historyEmpID']."" ;
 		$stmt = $con->prepare($sql);
@@ -1332,18 +1360,21 @@
 			$addempName= isset($_POST['addempName'])? filter_var($_POST['addempName'],FILTER_SANITIZE_STRING) : '';
 			$addempCode= isset($_POST['addempCode'])? filter_var($_POST['addempCode'],FILTER_SANITIZE_NUMBER_INT):'';
 			$addcontractType= isset($_POST['addcontractType'])? filter_var($_POST['addcontractType'],FILTER_SANITIZE_NUMBER_INT):'';
-			$addjob= isset($_POST['addjob'])? filter_var($_POST['addjob'],FILTER_SANITIZE_NUMBER_INT):'';
+			$addjob= isset($_POST['addjob'])? filter_var($_POST['addjob'],FILTER_SANITIZE_NUMBER_INT):null;
 			$addlevel = isset($_POST['addlevel'])? filter_var($_POST['addlevel'],FILTER_SANITIZE_NUMBER_INT):'';
 			$addshift= isset($_POST['addshift'])? filter_var($_POST['addshift'],FILTER_SANITIZE_STRING) :'';
 			$addmaritalstatus= isset($_POST['addmaritalstatus'])? filter_var($_POST['addmaritalstatus'],FILTER_SANITIZE_NUMBER_INT) :'';
-			$adddesc_job= isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : '';
-			$addeducation = isset($_POST['addeducation'])? filter_var($_POST['addeducation'],FILTER_SANITIZE_STRING) : '';
-			$addbasicsalary = isset($_POST['addbasicsalary'])? filter_var($_POST['addbasicsalary'],FILTER_SANITIZE_NUMBER_FLOAT) :'';
-			$addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_INT):'';
+			//$adddesc_job= isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : '';
+			$addeducation = !empty($_POST['addeducation'])? filter_var($_POST['addeducation'],FILTER_SANITIZE_STRING) : null;
+			// $addbasicsalary = isset($_POST['addbasicsalary'])? filter_var($_POST['addbasicsalary'],FILTER_SANITIZE_NUMBER_FLOAT) :null;
+			$addbasicsalary = $_POST['addbasicsalary'];
+
+			$addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_INT):null;
+			
 			$addgender = isset($_POST['addgender'])? filter_var($_POST['addgender'],FILTER_SANITIZE_STRING) : '';
-			$adddesc_job = isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : '';
-			$addhireDate = $_POST['addhireDate'];
-			$addDOB = $_POST['addDOB'];
+			$adddesc_job = isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : null;
+			$addhireDate = !empty($_POST['addhireDate']) ? $_POST['addhireDate']: null;
+			$addDOB = !empty($_POST['addDOB']) ? $_POST['addDOB']: null;
 			$addWorkAllowanceNature = isset($_POST['addWorkAllowanceNature'])? filter_var($_POST['addWorkAllowanceNature'],FILTER_SANITIZE_NUMBER_FLOAT) : '';
 			$addrepresentation = isset($_POST['addrepresentation'])? filter_var($_POST['addrepresentation'],FILTER_SANITIZE_NUMBER_FLOAT) : '';
 			// creating array of errors
@@ -1356,10 +1387,17 @@
 			} else {
 				$con = connect();
 				$employee_sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
-									currentSalary,syndicate_id,hireDate,education,DOB) 
-								VALUES ('".$addempCode."','".$addempName."','".$addcontractType."','".$addjob."','".$addlevel."','".$addshift."',
-								'".$addmaritalstatus."','".$addgender."','".$addbasicsalary."','".$addsyndicate."','".$addhireDate."'
-								,'".$addeducation."','".$addDOB."')" ;
+													currentSalary,syndicate_id,hireDate,education,DOB) 
+								VALUES ($addempCode,'$addempName',$addcontractType,$addjob,$addlevel,'$addshift',
+								$addmaritalstatus,'$addgender',$addbasicsalary,$addsyndicate,'$addhireDate'
+								,'$addeducation','$addDOB')" ;
+				// echo "<pre>";
+				// echo $_POST['addsyndicate'];
+				// echo $addsyndicate;
+				// echo "<br>";
+				// echo $employee_sql;
+				// echo "</pre>";
+
 				$stmt = $con->prepare($employee_sql);
 				$stmt->execute();
 				$empID_sql = "select ID FROM employee where currentCode =$addempCode "	;	
@@ -1390,7 +1428,7 @@
 
 
 				
-				echo "done";
+				//echo "done";
 			}
 	}
 	// --------------Edit Employee function-----------------------
@@ -1416,10 +1454,10 @@
 		$basicsalaryEdit = $_POST['basicsalaryEdit'];
 		$syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
 		$genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
-		// echo "<br>";
-		// echo "<pre>";
-		// print_r($_POST);
-		// echo "</pre>";
+		echo "<br>";
+		echo "<pre>";
+		print_r($_POST);
+		echo "</pre>";
 		
 		//sql statements to be executed
 		if($jobEdit != $_POST['jobcurrentValue']){
@@ -1433,7 +1471,7 @@
 			$stmt2->execute();	
 			// echo "in job";
 		}
-		elseif($maritalstatusEdit != $_POST['MScurrentValue'] ){
+		if($maritalstatusEdit != $_POST['MScurrentValue'] ){
 			$MS_sql = "insert into emp_maritalstatus(emp_id,marital_status_id,marital_status_date)values($employee_ID,$maritalstatusEdit,'$MSDate')";
 			$emp_sql = "UPDATE employee SET currentMS = $maritalstatusEdit WHERE ID= $employee_ID";		
 			$stmt = $con->prepare($MS_sql);
@@ -1443,7 +1481,7 @@
 			// echo "in ms";
 			
 		}
-		elseif($levelEdit != $_POST['levelcurrentValue']){
+		if($levelEdit != $_POST['levelcurrentValue']){
 		    $level_sql = "insert into emp_level(emp_id,level_id,level_date)values($employee_ID,$levelEdit,'$levelDate')";
 			$emp_sql = "UPDATE employee SET currentLevel = $levelEdit WHERE ID= $employee_ID";		
 			$stmt = $con->prepare($level_sql);
@@ -1453,7 +1491,7 @@
 			// echo "in level";
 			
 		}
-		elseif($contractTypeEdit != $_POST['contractTypecurrentValue'] ){
+		if($contractTypeEdit != $_POST['contractTypecurrentValue'] ){
 			$contract_sql = "insert into emp_contract(emp_id,contract_id,empCode,contract_date)
 			values($employee_ID,$contractTypeEdit,$empCodeEdit,'$contractDate')";
 			$emp_sql = "UPDATE employee SET currentContract = $contractTypeEdit WHERE ID= $employee_ID";		
@@ -1464,38 +1502,36 @@
 			// echo "in contract";
 			
 		}
-		elseif($basicsalaryEdit != $_POST['basicSalarycurrentValue']){
+		if($basicsalaryEdit != $_POST['basicSalarycurrentValue']){
 		    $basicSalary_sql = "insert into emp_basicsalary(emp_id,basicSalary,salaryDate)values($employee_ID,$basicsalaryEdit,'$basicSalaryDate')";
 			$emp_sql = "UPDATE employee SET currentSalary = $basicsalaryEdit WHERE ID= $employee_ID";
-			// echo $basicSalary_sql;
-			// echo 	$emp_sql	;
 			$stmt = $con->prepare($basicSalary_sql);
 			$stmt2 = $con->prepare($emp_sql);
 			$stmt->execute();
 			$stmt2->execute();
-			// echo "in salary";
-			
-		}elseif($empNameEdit != $_POST['empNamecurrentValue']){
+		}
+		if($empNameEdit != $_POST['empNamecurrentValue']){
 			$emp_sql = "UPDATE employee SET empName = '$empNameEdit' WHERE ID= $employee_ID";
 			echo $emp_sql;
 			$stmt = $con->prepare($emp_sql);
 			$stmt->execute();
 			
-		}elseif($genderEdit != $_POST['genderEdit']){
+		}
+		if($genderEdit != $_POST['gendercurrentValue']){
 			$emp_sql = "UPDATE employee SET gender = '$genderEdit' WHERE ID= $employee_ID";
 			$stmt = $con->prepare($emp_sql);
 			$stmt->execute();
 			
 		}
-		elseif($syndicateEdit != $_POST['syndicateEdit']){
+		if($syndicateEdit != $_POST['syndicatecurrentValue']){
 		    // $syndicate_sql = "insert into emp_syndicate(emp_id,level_id,level_date)values($employee_ID,$levelEdit,$levelDate)";
-
 			$emp_sql = "UPDATE employee SET syndicate_id = $syndicateEdit WHERE ID= $employee_ID";
 			$stmt = $con->prepare($emp_sql);
 			$stmt->execute();
+
 			
 		}
-		elseif($educationEdit != $_POST['educationcurrentValue']){
+		if($educationEdit != $_POST['educationcurrentValue']){
 			// $syndicate_sql = "insert into emp_syndicate(emp_id,level_id,level_date)values($employee_ID,$levelEdit,$levelDate)";
  
 			 $emp_sql = "UPDATE employee SET education = '$educationEdit' WHERE ID= $employee_ID";
@@ -2598,7 +2634,7 @@
 			$total_incentive = $incentive + $additionalincentive; 
 			$shift = $row['shiftcash']; // وردية
 			//check sick leaves and abscence and deduction
-			if($row['sickLeave_days'] >= 10 || $row['shiftcash'] >=10 || $row['shiftcash']>=10){
+			if($row['sickLeave_days'] >= 10 || $row['absense_days'] >=10 || $row['deduction_days']>=10){
 
 				$specializationAllowance = 0;
 			}else{
