@@ -685,7 +685,7 @@
 		$result = $stmt->fetchAll();
 		if( $result ){
 			foreach($result as $row){
-				$empindex = $row['ID'];
+				// $empindex = $row['ID'];
 				$output .= "<tr>
 					<td>".  $row['currentCode']. "</td>
 					<td>".  $row['empName']. "</td>
@@ -702,20 +702,20 @@
 						<input class='form-control' type = 'date' name='endDate[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' type = 'checkbox' name='continious[".$row['ID']."]' style='width: 100%'>
+						<input class='form-control' type = 'checkbox' name='continious[".$row['ID']."]' style='width: 100%' >
 					</td>
-					<td>
-						<input class='form-control' name='real_sickLeaves[".$row['ID']."]' value=0 style='width: 100%'>
-					</td>
+
 				</tr>";
 			}
-			
+				// 	<td>
+				// 	<input class='form-control' name='real_sickLeaves[".$row['ID']."]' value=0 style='width: 100%'>
+				// </td>
 		}else{
 			$output = "
 			<tr>
 			<td colspan='12' class='alert alert-warning'> 
 			<strong><i class='fa fa-exclamation-triangle'></i>
-			تم ادخال أيام الورادى لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
+			تم ادخال أيام المرضى لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
 			<a href='timesheet.php'>here</a>
 			</td></tr>";
 		}
@@ -925,32 +925,35 @@
 			foreach ($_POST['overnight_days'] as $empID => $value) {
 				
 				$overnight = $_POST['overnight_days'][$empID];
-				$overnightdeserveddays = $_POST['overnight_deserveddays'][$empID];
-				$notes = $_POST['notes'][$empID]!=null ? $_POST['notes'][$empID]:null ;
-
-				echo $notes;
-				// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
-				// 		values ('$lastID','$empID','$overnight','$notes')";
-
-				// $sql ="UPDATE empTimesheet
-				// 		set overnight_days = '$overnight'
-				// 		WHERE TS_id = '$lastID'
-				// 		and	  emp_id = '$empID'"; 
-				$sql = "insert into emp_overnight values($lastID,$empID,$overnight,$overnightdeserveddays,'$notes')";
-				echo $sql;
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
-				//check if ts_id already exists in salary:
-				// $sql_check = "select TS_id from salary where TS_id ='$lastID'";
-				// $stmt = $con->prepare($sql_check);
-				// $stmt->execute();
-				// $result = $stmt->fetchColumn();
-				// if(! $result){
+				if($overnight >0 ){
+					$overnightdeserveddays = $_POST['overnight_deserveddays'][$empID];
+					$notes = $_POST['notes'][$empID]!=null ? $_POST['notes'][$empID]:null ;
 	
-				// 	$sql = "insert into salary(TS_id,emp_id)values('$lastID','$empID')";
-				// 	$stmt = $con->prepare($sql);
-				// 	$stmt->execute();
-				// }
+					echo $notes;
+					// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
+					// 		values ('$lastID','$empID','$overnight','$notes')";
+	
+					// $sql ="UPDATE empTimesheet
+					// 		set overnight_days = '$overnight'
+					// 		WHERE TS_id = '$lastID'
+					// 		and	  emp_id = '$empID'"; 
+					$sql = "insert into emp_overnight values($lastID,$empID,$overnight,$overnightdeserveddays,'$notes')";
+					echo $sql;
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+					//check if ts_id already exists in salary:
+					// $sql_check = "select TS_id from salary where TS_id ='$lastID'";
+					// $stmt = $con->prepare($sql_check);
+					// $stmt->execute();
+					// $result = $stmt->fetchColumn();
+					// if(! $result){
+		
+					// 	$sql = "insert into salary(TS_id,emp_id)values('$lastID','$empID')";
+					// 	$stmt = $con->prepare($sql);
+					// 	$stmt->execute();
+					// }
+				}
+
 
 			}
 
@@ -1068,24 +1071,28 @@
 		//----------------or insertion one by one------------------
 		//--------first option through insertion one by one-------
 		if(isset($_POST["insertshift"])){
+			
 			foreach ($_POST['shift_days'] as $empID => $value) {
 				$shift = $_POST['shift_days'][$empID];
-				$cashperday = $_POST['cashperday'][$empID];
-				$total = $_POST['total'][$empID];
-				$notes = $_POST['notes'][$empID]!=null ? $_POST['notes'][$empID]:null ;
+				if($shift >0 ){
+					$cashperday = $_POST['cashperday'][$empID];
+					$total = $_POST['total'][$empID];
+					$notes = $_POST['notes'][$empID]!=null ? $_POST['notes'][$empID]:null ;
+	
+	
+					// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
+					// 		values ('$lastID','$empID','$overnight','$notes')";
+	
+					// $sql ="UPDATE empTimesheet
+					// 		set shift_days = '$shift'
+					// 		WHERE TS_id = '$lastID'
+					// 		and	  emp_id = '$empID'"; 
+					//echo $sql;
+					$sql = "insert into emp_shift values($lastID,$empID,$shift,$cashperday,$total,'$notes')";
+					$stmt = $con->prepare($sql);
+					$stmt->execute();
+				}
 
-
-				// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
-				// 		values ('$lastID','$empID','$overnight','$notes')";
-
-				// $sql ="UPDATE empTimesheet
-				// 		set shift_days = '$shift'
-				// 		WHERE TS_id = '$lastID'
-				// 		and	  emp_id = '$empID'"; 
-				//echo $sql;
-				$sql = "insert into emp_shift values($lastID,$empID,$shift,$cashperday,$total,'$notes')";
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
 			}
 
 		}
@@ -1203,32 +1210,44 @@
 		//----------------or insertion one by one------------------
 		//--------first option through insertion one by one-------
 		if(isset($_POST["insertsickleaves"])){
+			echo "<pre>";
+			print_r($_POST);
+			echo "</pre>";
+
 			foreach ($_POST['sick_leavesDays'] as $empID => $value) {
 				$sick_leavesDays = $_POST['sick_leavesDays'][$empID];
-				$startDate = $_POST['startDate'][$empID];
-				$endDate = $_POST['startDate'][$empID];
-				$continious = $_POST['continious'][$empID];
+				if($sick_leavesDays >0 ){
+					$startDate = $_POST['startDate'][$empID];
+					$endDate = $_POST['endDate'][$empID];
+					// $continious = $_POST['continious'][$empID];
+					$startimestamp = strtotime($startDate);
+					$endtimestamp = strtotime($endDate);
+					$continious = (isset($_POST['continious'][$empID])) ? 1 : 0;
+					$newstartdate_month = date("m", $startimestamp);
+					$newenddate_month = date("m", $endtimestamp);
+					$newstartdate_year = date("Y", $startimestamp);
+					$newenddate_year = date("Y", $endtimestamp);
+					$datediff = $endtimestamp - $startimestamp;
+	
+					$days =  round($datediff / (60 * 60 * 24)) +1;
+					echo "days : " . $days;
+					echo"<br>";
+					// if days > 10 and sick leaves are continous (true)
+					//echo $continious;
+					echo"<br>";
+					
+					if( $days > 10 && $continious == 1 ){ 
+						$real_sickLeaves = $sick_leavesDays/4;
+					}else{
+						$real_sickLeaves = $sick_leavesDays;
+					}
+					$sql = "insert into emp_sickLeaves(TS_id,emp_id,sick_leavesDays,startDate,endDate,continious,real_sickLeaves)
+							 values($lastID,$empID,$sick_leavesDays,'$startDate','$endDate',$continious,$real_sickLeaves)";
+					$stmt = $con->prepare($sql);
+					echo $sql;
+				    $stmt->execute();
+				}
 
-				
-				$real_sickLeaves =  $sick_leavesDays <=10 ? $sick_leavesDays : ( $sick_leavesDays/4);
-				// $getBasicSalary = "select currentSalary from employee where ID =$empID ";
-				// $stmt = $con->prepare($getBasicSalary);
-				// $stmt->execute();
-				// $basicSalary = $stmt->fetchColumn();
-				// $totalAmountDeducted = ($basicSalary/30) * $real_sickLeaves;
-
-				// $sql = "insert into empTimesheet(TS_id,emp_id,overnight_days,notes) 
-				// 		values ('$lastID','$empID','$overnight','$notes')";
-
-				// $sql ="UPDATE empTimesheet
-				// 		set shift_days = '$shift'
-				// 		WHERE TS_id = '$lastID'
-				// 		and	  emp_id = '$empID'"; 
-				//echo $sql;
-				$sql = "insert into emp_sickLeaves(TS_id,emp_id,sick_leavesDays,continious,startDate,endDate,real_sickLeaves,totalAmountDeducted)
-						 values($lastID,$empID,$sick_leavesDays,'$startDate','$endDate',$continious,$real_sickLeaves)";
-				$stmt = $con->prepare($sql);
-				$stmt->execute();
 			}
 
 		}
@@ -1286,8 +1305,9 @@
 							// 		set shift_days = ".$row['C']."
 							// 		WHERE TS_id = '$lastID'
 							// 		and	  emp_id = '$result'"; 
-
-							$sql = "insert into emp_shift values($lastID,$result,$shift,$notes)";
+							$sql = "insert into emp_sickLeaves(TS_id,emp_id,sick_leavesDays,startDate,endDate,continious,real_sickLeaves)
+							values($lastID,$empID,$sick_leavesDays,'$startDate','$endDate',$continious,$real_sickLeaves)";
+							// $sql = "insert into emp_shift values($lastID,$result,$shift,$notes)";
 							//echo $sql;
 							
 							$stmt = $con->prepare($sql);
@@ -2633,8 +2653,8 @@
 			$additionalincentive = $incentive *0.5;
 			$total_incentive = $incentive + $additionalincentive; 
 			$shift = $row['shiftcash']; // وردية
-			//check sick leaves and abscence and deduction
-			if($row['sickLeave_days'] >= 10 || $row['absense_days'] >=10 || $row['deduction_days']>=10){
+			//check sick leaves and abscence and deduction		
+			if($row['sickLeave_days'] >= 10 || $row['abscence_days'] >=10 || $row['deduction_days']>=10){
 
 				$specializationAllowance = 0;
 			}else{
@@ -2643,17 +2663,17 @@
 			}
 		    $specialBonus = 0; // علاوات خاصة
 			$otherDues = 0; // استحقاق
-			$totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
-			$manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
-			$total_incentive+$shift+$specializationAllowance+$specialBonus+$otherDues+$additionalincentive ; // اجمالى الاستحقاق
+			// $totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
+			// $manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
+			// $total_incentive+$shift+$specializationAllowance+$specialBonus+$otherDues+$additionalincentive ; // اجمالى الاستحقاق
 			
 			
-			$getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
-			sanctions+mobil+loan+empServiceFund+socialInsurances+etisalatNet
-			from salary where emp_id =".$row['ID']." and TS_id = ".$row['timesheetID']." ";
-			$getdeductions_stmt = $con->prepare($getdeductions_sql);
-			$getdeductions_stmt->execute();
-			$totalDeductionsresult = $getdeductions_stmt->fetchColumn();
+			// $getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
+			// sanctions+mobil+loan+empServiceFund+socialInsurances+etisalatNet
+			// from salary where emp_id =".$row['ID']." and TS_id = ".$row['timesheetID']." ";
+			// $getdeductions_stmt = $con->prepare($getdeductions_sql);
+			// $getdeductions_stmt->execute();
+			// $totalDeductionsresult = $getdeductions_stmt->fetchColumn();
 			//echo $totalDeductionsresult ;
 			//------------deductions calculations---------------------
 			//$sanction_days = 0;
@@ -2664,7 +2684,7 @@
 			$petroleumSyndicate= 10; // ن.بترول
 			//$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
 			//$mobil = 0; // نوباتجية
-			$loan = 0; //قرض
+			// $loan = 0; //قرض
 			$empServiceFund = 20; // صندوق خدمات عاملين
 			$socialInsurances = 0;//تأمينات
 			//$etisalatNet =  0; 
@@ -2693,17 +2713,15 @@
 					 labordayGrant =$labordayGrant,
 					 tiffinAllowance =$tiffinAllowance,
 					 incentive =$incentive,
-					 additionalIncentive =$additionalincentive, 
+					 additionalIncentive =$additionalincentive,
+					 totalincentive =  $incentive + $additionalincentive,
 					 specializationAllowance =$specializationAllowance,
-					 
+					 manufacturingAllowance =$manufacturingAllowance,
 					 familyHealthInsurance =$familyHealthInsurance,
-					
 					 petroleumSyndicate =$petroleumSyndicate,
-					
 					 empServiceFund = $empServiceFund,
 					 socialInsurances =$socialInsurances,
-					 totalBenefits = $totalbenefits,
-					 totalDeductions  =2
+
 					 WHERE TS_id = ".$row['timesheetID']."
 					 and emp_id =".$row['ID']." " ;
 
@@ -2857,9 +2875,9 @@
 	function insertSanctions(){
 		//$sanctionDate =$_POST['searchDateFrom'];
 		$con = connect();
-		echo "<pre>";
-		print_r($_POST);
-		echo "</pre>";
+		// echo "<pre>";
+		// print_r($_POST);
+		// echo "</pre>";
 		
 		//---------------SANCTIONS INSERTION---------------------
       	if (isset($_POST['sanctionsDaysText'])) {
