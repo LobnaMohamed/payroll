@@ -459,7 +459,7 @@
 
 		echo $output;
 	}
-	//---------------get timesheet function------------------------
+	//---------------get insert timesheet function------------------------
 	function getinsertTimesheet(){
 		$output="";	
 		$con = connect();
@@ -527,24 +527,6 @@
 			تم ادخال حصر لهذا الشهر  من قبل..للتعديل اضغط هنا</strong>
 			<a href='timesheet.php'>here</a>
 			</td></tr>";
-			// foreach($result as $row){
-			// 	//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
-			// 	$output .=
-			// 	"<tr>
-			// 		<td>".  $row['currentCode']. "</td>
-			// 		<td>".  $row['empName']. "</td>
-			// 		<td>".  $row['presence_days']. "</td>
-			// 		<td>".  $row['absence_days']. "</td>
-			// 		<td>".  $row['casual_days']. "</td>
-			// 		<td>".  $row['sickLeave_days']. "</td>
-			// 		<td>".  $row['deduction_days']. "</td>
-			// 		<td>".  $row['annual_days']. "</td>
-			// 		<td>".  $row['manufacturing_days']. "</td>
-			// 		<td>".  $row['shift_days']. "</td>
-			// 		<td>".  $row['overnight_days']. "</td>
-			// 		<td>".  $row['notes']. "</td>
-			// 	</tr>";
-			// }
 		}
 
 		echo $output;
@@ -745,7 +727,7 @@
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
-			echo $lastID;
+			//echo "last id :" . $lastID;
 		}else{
 			// if timesheet already exist get its ID and insert for remaining emp the timesheet
 			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
@@ -753,7 +735,8 @@
 			$stmt = $con->prepare($getlastTSID_sql);
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
-			echo $lastID;
+			//echo "last id :" . $lastID;
+
 
 		}
 
@@ -806,80 +789,63 @@
 		}
 		//--------second option through upload--------------------
 		elseif(isset($_POST['upload_excel'])){
-			// echo"<pre>";
-			// print_r($_POST);
-			// print_r($_FILES);
-			// echo"</pre>";
-
-			//check if date was choosen
+			//check if file is choosen and date is specified============================================= 
 			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
-				// echo "set";
-				//checkif file is choosen
-				$con=connect();
-				$file_info = $_FILES["result_file"]["name"];
-				$file_directory = "uploads/";
-				//$new_file_name = date("dmY").".". $file_info["extension"];
-				// $new_file_name = date("dmY").".". pathinfo($file_info, PATHINFO_EXTENSION);
-				$new_file_name = date("d-m-Y")."_".$file_info;
+				if($_FILES["result_file"]["name"] != ''){
+					$allowed_extension = array('xls', 'csv', 'xlsx');
+					$file_array = explode(".", $_FILES["result_file"]["name"]);
+					$file_extension = end($file_array);
 
-				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
-				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
-				$objReader	= PHPExcel_IOFactory::createReader($file_type);
-				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
-				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
+					if(in_array($file_extension, $allowed_extension)){
+						$file_name = time() . '.' . $file_extension;
+						move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+						$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+						$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
 
-				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
-				$headers = array_shift($sheetData);
-				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
-				// 	'A2:' . $highestColumn . $highestRow,
-				// 	TRUE,TRUE,TRUE
-				// );
-				// echo "<pre>";
+						$spreadsheet = $reader->load($file_name);
 
-				// print_r($headers);
-				// echo "</pre>";
-				// echo "---------------------------------- <br>";
-	
-				foreach ($sheetData as $row){
-					// echo "row :<br>";
-					// echo "<pre>";
+						unlink($file_name);
 
-					// print_r($row);
-					// echo "</pre>";
-					// // echo $value;
-					// echo "---------------------------------- <br>";
-					
-					if(!empty($row['A'])){
-	
-						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
-						//echo $sql;
-						$stmt = $con->prepare($sql);
-						$stmt->execute();
-						$result = $stmt->fetchColumn();
-						//echo $result;
-						if( $result){
-							$sql = "insert into empTimesheet(emp_id,TS_id,presence_days,sickLeave_days,deduction_days,absence_days,annual_days,
-							casual_days,manufacturing_days,evaluationPercent,notes) 
-							values ($result,$lastID,".$row['C'].",".$row['F'].",".$row['G'].",".$row['D'].",".$row['H'].",
-							".$row['E'].",".$row['I'].",".$row['J'].",'".$row['K']."')";
+						$data = $spreadsheet->getActiveSheet()->toArray();
+						$count = count($data);
+						
+						for($row =1; $row < $count ; $row ++){
 							
-							 //echo $sql;
-							
-							$stmt = $con->prepare($sql);
+							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
+							$stmt = $con->prepare($getEmpID_sql);
 							$stmt->execute();
+							//$stmt->bindParam(':Agree', $answer, PDO::PARAM_INT);
+							$empID = $stmt->fetchColumn();
+							//echo $empID;
+							if($empID){
+								$insert_sql = "INSERT INTO emptimesheet(TS_id,emp_id,presence_days,absence_days,casual_days,deduction_days,annual_days,
+								manufacturing_days,evaluationPercent,notes) 
+								values( $lastID,$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4]."," .$data[$row][6]."," .$data[$row][7].",
+								" .$data[$row][8]."," .$data[$row][9].",'" .$data[$row][10]."')";
+								//echo $insert_sql;
+								$statement = $con->prepare($insert_sql);
+								$statement->execute();
+							}else{
+
+								//echo "emp not found";
+							}
+							
+
 						}
 						
-					}
-		
-				}
-				$updatemsg = "File Successfully Imported!";
-				$updatemsgtype = 1;
-			
-			}else{
-				echo "you have to select date and choose file";
-			}
+						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
+					}else{
+						$message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+					}
+				}else{
+					$message = '<div class="alert alert-danger">Please Select File</div>';
+				}
+
+				echo $message;
+			}			
+		}else{
+			echo "you have to select date and choose file";
 		}
 		//echo "done insertion";
 	}
@@ -961,70 +927,62 @@
 		//--------second option through upload--------------------
 		elseif(isset($_POST['upload_overnightexcel'])){
 			//check if date was choosen
+			//check if file is choosen and date is specified============================================= 
 			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
-				// echo "set";
-				//checkif file is choosen
-				$con=connect();
-				$file_info = $_FILES["result_file"]["name"];
-				$file_directory = "uploads/";
-				//$new_file_name = date("dmY").".". $file_info["extension"];
-				$new_file_name = date("d-m-Y")."_".$file_info;
-				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
-				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
-				$objReader	= PHPExcel_IOFactory::createReader($file_type);
-				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
-				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
+				if($_FILES["result_file"]["name"] != ''){
+					$allowed_extension = array('xls', 'csv', 'xlsx');
+					$file_array = explode(".", $_FILES["result_file"]["name"]);
+					$file_extension = end($file_array);
 
-				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
-				$headers = array_shift($sheetData);
-				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
-				// 	'A2:' . $highestColumn . $highestRow,
-				// 	TRUE,TRUE,TRUE
-				// );
-				// echo "<pre>";
+					if(in_array($file_extension, $allowed_extension)){
+						$file_name = time() . '.' . $file_extension;
+						move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+						$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+						$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
 
-				// print_r($headers);
-				// echo "</pre>";
-				// echo "---------------------------------- <br>";
-	
-				foreach ($sheetData as $row){
-					// echo "row :<br>";
-					// echo "<pre>";
+						$spreadsheet = $reader->load($file_name);
 
-					// print_r($row);
-					// echo "</pre>";
-					// // echo $value;
-					// echo "---------------------------------- <br>";
-					
-					if(!empty($row['A'])){
-	
-						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
-						echo $sql;
-						$stmt = $con->prepare($sql);
-						$stmt->execute();
-						$result = $stmt->fetchColumn();
-						echo $result;
-						if( $result){
-							// $sql = "insert into empTimesheet(emp_id,TS_id,overnight_days,notes) 
-							// values ($result,$lastID,".$row['C'].",".$row['F'].")";
-							$sql ="UPDATE empTimesheet
-									set overnight_days = ".$row['C']."
-									WHERE TS_id = '$lastID'
-									and	  emp_id = '$result'"; 
-							$sql = "insert into emp_overnight values($lastID,$result,".$row['C'].")";
-							//echo $sql;
-							
-							$stmt = $con->prepare($sql);
+						unlink($file_name);
+						
+						  $data = $spreadsheet->getActiveSheet()->toArray();
+						  
+						//  $cellValue = $spreadsheet->getActiveSheet()->getCell('D2')->getOldCalculatedValue() ;
+						//  echo $cellValue;
+						// $nullValue = null, $calculateFormulas = true, $formatData = true, $returnCellRef = false
+						$count = count($data);
+						// echo $count;
+						for($row =1; $row < $count ; $row ++){
+							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
+							$stmt = $con->prepare($getEmpID_sql);
 							$stmt->execute();
+							$empID = $stmt->fetchColumn();
+							
+							if($empID){
+								//echo $empID;
+								$insertovernight_sql = "INSERT INTO emp_overnight(TS_id,emp_id,overnight_days,overnight_deserveddays,notes) 
+												values( $lastID,$empID," .$data[$row][2]."," .$data[$row][3].",'" .$data[$row][4]."')";
+								// echo $insertovernight_sql . "<br>";
+
+								$statement = $con->prepare($insertovernight_sql);
+								$statement->execute();
+							}else{
+
+								//echo "emp not found";
+							}
+							
+
 						}
 						
+						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
+
+					}else{
+						$message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
 					}
-		
+				}else{
+					$message = '<div class="alert alert-danger">Please Select File</div>';
 				}
-				$updatemsg = "File Successfully Imported!";
-				$updatemsgtype = 1;
-			
+
+				echo $message;
 			}else{
 				echo "you have to select date and choose file";
 			}
@@ -1100,70 +1058,57 @@
 		elseif(isset($_POST['upload_shiftexcel'])){
 			//check if date was choosen
 			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
-				// echo "set";
-				//checkif file is choosen
-				$con=connect();
-				$file_info = $_FILES["result_file"]["name"];
-				$file_directory = "uploads/";
-				//$new_file_name = date("dmY").".". $file_info["extension"];
-				$new_file_name = date("d-m-Y")."_".$file_info;
-				move_uploaded_file($_FILES["result_file"]["tmp_name"], $file_directory . $new_file_name);
-				$file_type	= PHPExcel_IOFactory::identify($file_directory . $new_file_name);
-				$objReader	= PHPExcel_IOFactory::createReader($file_type);
-				$objPHPExcel = $objReader->load($file_directory . $new_file_name);
-				$sheetData	= $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
-				$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow(); 
+				if($_FILES["result_file"]["name"] != ''){
+					$allowed_extension = array('xls', 'csv', 'xlsx');
+					$file_array = explode(".", $_FILES["result_file"]["name"]);
+					$file_extension = end($file_array);
 
-				$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
-				$headers = array_shift($sheetData);
-				// $sheetData =  $objPHPExcel->getActiveSheet()->rangeToArray(
-				// 	'A2:' . $highestColumn . $highestRow,
-				// 	TRUE,TRUE,TRUE
-				// );
-				// echo "<pre>";
+					if(in_array($file_extension, $allowed_extension)){
+						$file_name = time() . '.' . $file_extension;
+						move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+						$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+						$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
 
-				// print_r($headers);
-				// echo "</pre>";
-				// echo "---------------------------------- <br>";
-	
-				foreach ($sheetData as $row){
-					// echo "row :<br>";
-					// echo "<pre>";
+						$spreadsheet = $reader->load($file_name);
 
-					// print_r($row);
-					// echo "</pre>";
-					// // echo $value;
-					// echo "---------------------------------- <br>";
-					
-					if(!empty($row['A'])){
-	
-						$sql = 'SELECT ID FROM employee WHERE currentCode = '.$row['A'].'';
-						echo $sql;
-						$stmt = $con->prepare($sql);
-						$stmt->execute();
-						$result = $stmt->fetchColumn();
-						echo $result;
-						if( $result){
-							// $sql = "insert into empTimesheet(emp_id,TS_id,shift_days,notes) 
-							// values ($result,$lastID,".$row['C'].",".$row['F'].")";
-							// $sql ="UPDATE empTimesheet
-							// 		set shift_days = ".$row['C']."
-							// 		WHERE TS_id = '$lastID'
-							// 		and	  emp_id = '$result'"; 
-
-							$sql = "insert into emp_shift values($lastID,$result,$shift,$notes)";
-							//echo $sql;
-							
-							$stmt = $con->prepare($sql);
+						unlink($file_name);
+						
+						  $data = $spreadsheet->getActiveSheet()->toArray();
+						  
+						$count = count($data);
+						// echo $count;
+						for($row =1; $row < $count ; $row ++){
+							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
+							$stmt = $con->prepare($getEmpID_sql);
 							$stmt->execute();
+							$empID = $stmt->fetchColumn();
+							
+							if($empID){
+								//echo $empID;
+								$insertshift_sql = "INSERT INTO emp_shift(TS_id,emp_id,shift_days,cashperday,total,notes) 
+										values( $lastID,$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4].",'" .$data[$row][5]."')";
+								// echo $insertovernight_sql . "<br>";
+
+								$statement = $con->prepare($insertshift_sql);
+								$statement->execute();
+							}else{
+
+								//echo "emp not found";
+							}
+							
+
 						}
 						
+						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
+
+					}else{
+						$message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
 					}
-		
+				}else{
+					$message = '<div class="alert alert-danger">Please Select File</div>';
 				}
-				$updatemsg = "File Successfully Imported!";
-				$updatemsgtype = 1;
-			
+
+				echo $message;
 			}else{
 				echo "you have to select date and choose file";
 			}
@@ -1406,6 +1351,7 @@
 				// print_r($formErrors) ;
 			} else {
 				$con = connect();
+				
 				$employee_sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
 													currentSalary,syndicate_id,hireDate,education,DOB) 
 								VALUES ($addempCode,'$addempName',$addcontractType,$addjob,$addlevel,'$addshift',

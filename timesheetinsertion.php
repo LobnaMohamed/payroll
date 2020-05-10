@@ -1,7 +1,7 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
-    require_once 'phpexcel/PHPExcel/IOFactory.php';
+   
 ?>
 <div class="container">	
     <div class='page-header pagetitle col-sm-10 col-sm-offset-1'> ادخال الحـــصر</div>
@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-sm-2">
                         <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
-                        <input type="submit" name="upload_excel" value="upload" class="btn btn-primary btn-rounded">
+                        <input type="submit" name="upload_excel" value="upload" id="upload_excel" class="btn btn-primary btn-rounded">
                    
                     </div>
                 </div>

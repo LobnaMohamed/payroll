@@ -21,6 +21,9 @@
 	elseif($currentURL == 'empdata.php'){
 
 		getAllEmp();
+
+
+
 	}
 	elseif($currentURL == 'wages.php'){
 		$con = connect();
@@ -59,6 +62,7 @@
 
 		getBenefits();
 	}
+	
 	//elseif($currentURL == 'insertDedfromcredit.php'){
 
 	// 	$sql = "select empName from employee where ID = ".$_POST['search']."";

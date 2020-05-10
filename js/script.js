@@ -79,6 +79,30 @@ $(document).ready(function(){
 
 	//     return false;
 	// });	
+
+	$('#addempCode , #empCodeEdit').bind('change',function(){
+		
+		var empcodeForCheck = $(this).val();
+		//var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		//console.log(empcodeForCheck);
+	   $.ajax({
+		   url:'fetch.php',
+		   method:"POST",
+		   data: {empcodeForCheck:empcodeForCheck},
+		   // dataType:"json",
+		   success:function(data){
+			  //console.log(data);
+				   if(data =="notvalid"){
+					   alert("تم إدخال هذا القيد من قبل..");
+					  // empcodeForCheck="";
+					   $('#addempCode').val('');
+				   }
+		   },
+		   error: function(error) {
+			   console.log(error);
+		   }
+	   });	
+    });
 	$('#addjob').bind('change keyup',function(){
 		//get dates between 2 dates
 		var jobID = $('this').val();
@@ -119,7 +143,7 @@ $(document).ready(function(){
 			data:{empID:employee_id},
 			dataType:"json",
 			success:function(data){
-				console.log(data);
+				//console.log(data);
 				$('#employee_idEdit').val(data.ID);
 
 				$('#empNameEdit').val(data.empName);
@@ -548,39 +572,74 @@ $(document).ready(function(){
 	$('#timesheetinsertion').on('submit',function(){
 		//   e.preventDefault();
 		var timesheet_date = $('#searchDateFrom').val();
-		//var emp = $('#search').val();
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log(currentURL);
-		console.log(timesheet_date);
-		$.ajax({
-			url:'fetch.php',
-			method:"POST",
-			data: //{//timesheetDate:timesheet_date,
-				   //search:emp,
-				   //pageurl:currentURL
-				   $('form#timesheetinsertion').serialize()
-			//	}
-			,
-			// dataType:"json",
-			success:function(data){
-			    if(currentURL == 'timesheetinsertion.php'){
-					$('#timesheetbody').html(data);	 
-				}else if(currentURL == 'shiftinsertion.php'){
-					//console.log(data);
-					$('#shiftbody').html(data);	 
-				}else if(currentURL == 'overnightinsertion.php'){
-					//console.log(data);
-					$('#overnightbody').html(data);	 
-				}else if(currentURL == 'sickleavesinsertion.php'){
-					//console.log(data);
-					$('#sickleavesbody').html(data);	 
+		if(!timesheet_date){
+			alert ("لم يتم ادخال تاريخ!");
+		}else{
+			//var emp = $('#search').val();
+			var currentURL = document.location.href.match(/[^\/]+$/)[0];
+			console.log(currentURL);
+			console.log(timesheet_date);
+			$.ajax({
+				url:'fetch.php',
+				method:"POST",
+				data: //{//timesheetDate:timesheet_date,
+					//search:emp,
+					//pageurl:currentURL
+					$('form#timesheetinsertion').serialize()
+				//	}
+				,
+				// dataType:"json",
+				success:function(data){
+					if(currentURL == 'timesheetinsertion.php'){
+						$('#timesheetbody').html(data);	 
+					}else if(currentURL == 'shiftinsertion.php'){
+						//console.log(data);
+						$('#shiftbody').html(data);	 
+					}else if(currentURL == 'overnightinsertion.php'){
+						//console.log(data);
+						$('#overnightbody').html(data);	 
+					}else if(currentURL == 'sickleavesinsertion.php'){
+						//console.log(data);
+						$('#sickleavesbody').html(data);	 
+					}
+				},
+				error: function(error) {
+					console.log(error);
 				}
-			},
-			error: function(error) {
-				console.log(error);
-			}
-		});	
+			});	
+		}
+
 	});
+	// on upload file======================================
+
+	// $('#import_excel_form').on('submit', function(event){
+	// 	event.preventDefault();
+	// 	$.ajax({
+	// 	  url:"import.php",
+	// 	  method:"POST",
+	// 	  data:new FormData(this),
+	// 	  contentType:false,
+	// 	  cache:false,
+	// 	  processData:false,
+	// 	  beforeSend:function(){
+	// 		$('#upload_excel').attr('disabled', 'disabled');
+	// 		$('#upload_excel').val('Importing...');
+	// 	  },
+	// 	  success:function(data)
+	// 	  {
+	// 		$('#message').html(data);
+	// 		$('#import_excel_form')[0].reset();
+	// 		$('#upload_excel').attr('disabled', false);
+	// 		$('#upload_excel').val('upload');
+	// 	  }
+	// 	})
+	// });
+
+
+
+
+
+
 
 	$('#EmpSalary').on('submit',function(e){
 		 e.preventDefault();

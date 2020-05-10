@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-sm-2">
                         <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
-                        <input type="submit" name="upload_excel" value="upload" class="btn btn-primary btn-rounded">
+                        <input type="submit" name="upload_overnightexcel"  id="upload_overnightexcel" value="upload" class="btn btn-primary btn-rounded">
                    
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	include 'functions.php';
-    require_once 'phpexcel/PHPExcel/IOFactory.php';
+	include 'phpoffice_phpspreadsheet/vendor/autoload.php';
 
 		if(isset($_POST["empID"]))  
 		{  
@@ -125,7 +125,7 @@
 			insertTimesheet();
 			// calculateSalary24();
 
-		     header("location:timesheetinsertion.php");
+		    header("location:timesheetinsertion.php");
 
 		}elseif(isset($_POST["insertovernight"]) || isset($_POST["upload_overnightexcel"])){
 
@@ -182,6 +182,19 @@
 		}
 		elseif(isset($_POST["endedDed_EmpID"]) ){
 			getEndedCreditDeductionsForEmp();
+		}		
+		elseif(isset($_POST["empcodeForCheck"]) ){
+			$con = connect();
+			$checkempCodeForInsertion ="select currentCode from employee where currentCode = '".$_POST["empcodeForCheck"]."'"; 
+			$stmt = $con->prepare($checkempCodeForInsertion);
+			$stmt->execute();
+			$result = $stmt->fetch(); //PDO::FETCH_ASSOC
+			
+			if($result){
+				echo "notvalid";
+			}else{
+				echo "valid";
+			}
 		}
 
 	?>
