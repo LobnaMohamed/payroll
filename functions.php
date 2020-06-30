@@ -411,11 +411,22 @@
 		$sql= '';		
 		if(!empty($_POST['dateFrom'])){
 			//payroll_new database
-			$sql= "select t.*,e.currentCode,e.empName,empt.*
-					from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
-						inner join employee e on empt.emp_id = e.ID
-					and month(t.sheetDate)= month('".$_POST['dateFrom']."')
-					and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
+			// $sql= "select t.*,e.currentCode,e.empName,empt.*
+			// 		from timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+			// 			inner join employee e on empt.emp_id = e.ID
+			// 		and month(t.sheetDate)= month('".$_POST['dateFrom']."')
+			// 		and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
+
+			$sql=	"select e.currentCode,e.empName, t.*,empt.presence_days,empt.deduction_days,empt.absence_days,empt.annual_days,empt.casual_days,
+						empt.emp_id,empt.TS_id,	empt.manufacturing_days,empt.evaluationPercent,	empsk.sick_leavesDays ,empsh.shift_days,
+						empov.overnight_days,empt.notes as timesheetNotes,empsk.notes as sicknotes,empsh.notes as shiftnotes,empov.notes as ovnotes
+					from  timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
+							left join employee e on empt.emp_id = e.ID 
+							left join emp_sickleaves empsk on t.ID = empsk.TS_id and empt.emp_id = empsk.emp_id
+ 							left join emp_shift empsh on t.ID = empsh.TS_id and empt.emp_id = empsh.emp_id
+ 							left join emp_overnight empov on t.ID = empov.TS_id and empt.emp_id = empov.emp_id
+  					where  month(t.sheetDate)= month('".$_POST['dateFrom']."')
+				  			and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
 		}
 		if(!empty($_POST['search'])){
 			$sql .= " and (e.currentCode like '%". $_POST['search'] ."%' OR e.empName like '%". $_POST['search'] ."%')";	
@@ -430,7 +441,10 @@
 			<td colspan='13' class='alert alert-warning'> 
 			<strong>لا يوجد حصر أيام الحضور بهذا التاريخ.. لادخال الحصر اضغط هنا</strong><a href='timesheetinsertion.php'>here</a>
 			</td></tr>";
-			
+			// empty($row['timesheetNotes']) ? '': $row['timesheetNotes'] ."<br>" .
+			// 		empty($row['shiftnotes']) ? '' : $row['shiftnotes'] ."<br>" .
+			// 		empty($row['ovnotes']) ? '': $row['ovnotes'] ."<br>" .
+			// 		empty($row['sicknotes']) ? '' : $row['sicknotes'] ."<br>".
 		}else{
 			foreach($result as $row){
 				//$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
@@ -441,14 +455,14 @@
 					<td>".  $row['presence_days']. "</td>
 					<td>".  $row['absence_days']. "</td>
 					<td>".  $row['casual_days']. "</td>
-					<td>".  $row['sickLeave_days']. "</td>
+					<td>".  $row['sick_leavesDays']. "</td>
 					<td>".  $row['deduction_days']. "</td>
 					<td>".  $row['annual_days']. "</td>
 					<td>".  $row['manufacturing_days']. "</td>
 					<td>".  $row['evaluationPercent']. "</td>
 					<td>".  $row['shift_days']. "</td>
 					<td>".  $row['overnight_days']. "</td>
-					<td>".  $row['notes']. "</td>
+					<td>".  $row['timesheetNotes'] ."<br>". $row['shiftnotes']."<br>".$row['ovnotes']."<br>". $row['sicknotes']. "</td>
 					<td style='display:none;'  class='timesheet_ID'>" .  $row['TS_id']."</td>
 					<td><a class='btn btn-sm edittimsesheetData'  id=".$row['emp_id'].">
 					<i class='fa fa-edit fa-lg' data-toggle='modal' data-target='#edittimsesheetModal'></i>
@@ -1073,7 +1087,7 @@
 
 						unlink($file_name);
 						
-						  $data = $spreadsheet->getActiveSheet()->toArray();
+						$data = $spreadsheet->getActiveSheet()->toArray();
 						  
 						$count = count($data);
 						// echo $count;

@@ -519,7 +519,7 @@ $(document).ready(function(){
 
 				}
 				else if(currentURL == 'timesheet.php'){
-					//console.log(data);
+					// console.log(data);
 					$('#timesheetbody').html(data);
 				}
 				else if(currentURL == 'timesheetinsertion.php'){
@@ -533,7 +533,7 @@ $(document).ready(function(){
 					$('#overnightbody').html(data);	 
 				}else if(currentURL == 'sickleavesinsertion.php'){
 					//console.log(data);
-					$('#sickleavesbody').html(data);	 
+					$('#sickleavesbody').html(data);
 				}
 				else if(currentURL == 'wages.php'){
 					

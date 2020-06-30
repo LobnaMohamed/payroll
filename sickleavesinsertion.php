@@ -1,7 +1,6 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
-    require_once 'phpexcel/PHPExcel/IOFactory.php';
 ?>
 <div class="container">	
     <div class='page-header pagetitle col-sm-10 col-sm-offset-1'> ادخال أيام المــرضى</div>
