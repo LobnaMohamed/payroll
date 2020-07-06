@@ -21,7 +21,7 @@
 	// }	
 
 	function connect(){
-		$dsn = 'mysql:host=localhost;dbname=payroll_new';//data source name
+		$dsn = 'mysql:host=localhost;dbname=payroll';//data source name
 		$user= 'root';
 		$pass='';
 		$options = array (PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',	);

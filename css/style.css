@@ -3,6 +3,8 @@ body{
     background-color: #e0d9d9;
     font-size: 17px;
     font-family: 'Droid Arabic Naskh', serif;
+    padding:0;
+    margin:0;
 }
 h1{
     text-align: center;  

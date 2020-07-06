@@ -36,10 +36,10 @@
 
 		</form> -->
         <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">
                    
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input name="result_file" type="file">
                     </div>
                     <div class="col-sm-2">
@@ -48,7 +48,7 @@
                    
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-7">
                    
                         <label for="searchDateFrom">تاريخ الحصر:</label>
                         <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date">

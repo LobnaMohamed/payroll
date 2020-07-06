@@ -9,24 +9,25 @@
     <!-- <div class="timesheet-container"> -->
        
         <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">
                    
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <input name="result_file" type="file">
                     </div>
                     <div class="col-sm-2">
                         <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
                         <input type="submit" name="upload_excel" value="upload" id="upload_excel" class="btn btn-primary btn-rounded">
-                   
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-7 ">
                    
                         <label for="searchDateFrom">تاريخ الحصر:</label>
                         <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date">
+
                         <label for = "search">رقم القيد / الاسم :</label>
-                        <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">  
+                        <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text"> 
+ 
                      <!-- </div> -->
                 </div>
 
@@ -67,4 +68,5 @@
         
     <!-- </div> -->
 </div>
-	<?php include 'footer.php'; ?>
+
+<?php include 'footer.php'; ?>
