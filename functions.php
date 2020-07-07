@@ -721,8 +721,11 @@
 
 	//===================insert  timesheet================
 	//======================================================
-	function insertTimesheet(){
-		$con = connect();
+	/*
+	This function is to check for the timesheet id and if it doesnt exist it will 
+	insert timesheet date and return the inserted id in a variable called lastID
+	*/
+	function getTimesheetID($con){
 		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
 																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
 		$timesheetDate =$_POST['searchDateFrom'];
@@ -731,7 +734,6 @@
 		$stmt->execute();
 		$result = $stmt->fetchColumn();
 		if(! $result){
-			
 			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
 			$stmt = $con->prepare($timesheetsql);
 			$stmt->execute();
@@ -753,13 +755,14 @@
 
 
 		}
-
-
+		return $lastID;			
+	}
+	function insertTimesheet(){
+		$con = connect();
+		$lastID = getTimesheetID($con);
 		//---------------timesheet INSERTION---------------------
 		//----------------either through file upload---------------
 		//----------------or insertion one by one------------------
-
-
 		//--------first option through insertion one by one-------
 		if(isset($_POST["insertTimesheet"])){
 			foreach ($_POST['presence_days'] as $empID => $value) {
@@ -779,8 +782,6 @@
 								casual_days,manufacturing_days,evaluationPercent,notes) 
 						values ('$lastID','$empID','$value','$sickLeave','$deduction','$absence','$annual',
 								'$casual','$manufacturing',$evaluation,'$notes')";
-				// echo $sql;
-				
 				$stmt = $con->prepare($sql);
 				$stmt->execute();
 				//check if ts_id already exists in salary:
@@ -797,9 +798,7 @@
 					$stmt = $con->prepare($sql);
 					 $stmt->execute();
 				}
-
 			}
-
 		}
 		//--------second option through upload--------------------
 		elseif(isset($_POST['upload_excel'])){
@@ -866,37 +865,7 @@
 	//====================insert overnight days======================
 	function insertovernightDays(){
 		$con = connect();
-		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
-																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
-		$timesheetDate =$_POST['searchDateFrom'];
-		//echo $timesheetDate;
-		$stmt = $con->prepare($checkDate_sql);
-		$stmt->execute();
-		$result = $stmt->fetchColumn();
-		if(! $result){
-			
-			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
-			$stmt = $con->prepare($timesheetsql);
-			$stmt->execute();
-	
-			$getlastTSID_sql = "select max(ID) from timesheets";
-			
-			$stmt = $con->prepare($getlastTSID_sql);
-			$stmt->execute();
-			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
-		}else{
-			// if timesheet already exist get its ID and insert for remaining emp the timesheet
-			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
-														and year(sheetDate)= year('".$_POST['searchDateFrom']."') ";
-			$stmt = $con->prepare($getlastTSID_sql);
-			$stmt->execute();
-			$lastID = $stmt->fetchColumn();
-			echo $lastID;
-
-		}
-
-
+		$lastID = getTimesheetID($con);
 		//---------------timesheet INSERTION---------------------
 		//----------------either through file upload---------------
 		//----------------or insertion one by one------------------
@@ -1007,37 +976,7 @@
 	//====================insert shift days===========================
 	function insertshiftDays(){
 		$con = connect();
-		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
-																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
-		$timesheetDate =$_POST['searchDateFrom'];
-		//echo $timesheetDate;
-		$stmt = $con->prepare($checkDate_sql);
-		$stmt->execute();
-		$result = $stmt->fetchColumn();
-		if(! $result){
-			
-			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
-			$stmt = $con->prepare($timesheetsql);
-			$stmt->execute();
-	
-			$getlastTSID_sql = "select max(ID) from timesheets";
-			
-			$stmt = $con->prepare($getlastTSID_sql);
-			$stmt->execute();
-			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
-		}else{
-			// if timesheet already exist get its ID and insert for remaining emp the timesheet
-			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
-														and year(sheetDate)= year('".$_POST['searchDateFrom']."') ";
-			$stmt = $con->prepare($getlastTSID_sql);
-			$stmt->execute();
-			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
-
-		}
-
-
+		$lastID = getTimesheetID($con);
 		//---------------timesheet INSERTION---------------------
 		//----------------either through file upload---------------
 		//----------------or insertion one by one------------------
@@ -1133,37 +1072,7 @@
 	//====================insert shift days===========================
 	function insertsickleavesDays(){
 		$con = connect();
-		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
-																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
-		$timesheetDate =$_POST['searchDateFrom'];
-		//echo $timesheetDate;
-		$stmt = $con->prepare($checkDate_sql);
-		$stmt->execute();
-		$result = $stmt->fetchColumn();
-		if(! $result){
-			
-			$timesheetsql = "insert into timesheets(sheetDate) values('$timesheetDate')";
-			$stmt = $con->prepare($timesheetsql);
-			$stmt->execute();
-	
-			$getlastTSID_sql = "select max(ID) from timesheets";
-			
-			$stmt = $con->prepare($getlastTSID_sql);
-			$stmt->execute();
-			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
-		}else{
-			// if timesheet already exist get its ID and insert for remaining emp the timesheet
-			$getlastTSID_sql = "select ID  from timesheets where month(sheetDate) = month( '$timesheetDate')
-														and year(sheetDate)= year('".$_POST['searchDateFrom']."') ";
-			$stmt = $con->prepare($getlastTSID_sql);
-			$stmt->execute();
-			$lastID = $stmt->fetchColumn();
-			//echo $lastID;
-
-		}
-
-
+		$lastID = getTimesheetID($con);
 		//---------------timesheet INSERTION---------------------
 		//----------------either through file upload---------------
 		//----------------or insertion one by one------------------
@@ -1651,7 +1560,7 @@
 			}
 
 		}
-		//if($timesheetID){
+			//if($timesheetID){
 			//there is timesheet with this date
 			//check salary table
 
@@ -2610,7 +2519,7 @@
 			$incentive_days =( $currentDays - $row['casual_days'] - $row['sickLeave_days']) * $row['evaluationPercent'] ;
 		    $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * ($incentive_days);//الحافز
 		    //$additionalincentive = $row['currentSalary'] * $row['incentivePercent'] * 0.5;//حافز اضافى
-			$additionalincentive = $incentive *0.5;
+			$additionalincentive = $incentive *0.5;// wrong needs to be edited !
 			$total_incentive = $incentive + $additionalincentive; 
 			$shift = $row['shiftcash']; // وردية
 			//check sick leaves and abscence and deduction		
