@@ -375,6 +375,18 @@
 		$result = $stmt->fetchColumn();
 		echo $result;
 	}
+	//--------getdeductions category------------------
+	function getDeductionTypesCategory(){
+		$con = connect();
+		$sql= "SELECT deductionTypeID,deductionCategory FROM deductiontypes" ;
+    	$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+	    	foreach($result as $row){
+			    echo "<option value=" .$row['deductionTypeID'].">" . $row['deductionCategory'] . "</option>";
+			}
+
+	}
 	//---------------get deduction types---------------------------
 	function getDeductionTypes(){
 		$page =  basename($_SERVER['REQUEST_URI']);
@@ -387,11 +399,11 @@
 		$result = $stmt->fetchAll();
 		if($page == 'deductiontype.php'){
 			foreach($result as $row){
-				echo '<button  class="btn  btn-lg managements editsyndicateData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" 
-				data-target="#editsyndicateModal" id="'.$row['deductionTypeID'].'">'. $row['deductionType'] .'</button>';
+				echo '<button  class="btn btn-lg managements editdeductionTypesData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" 
+				data-target="#editdeductionTypeModal" id="'.$row['deductionTypeID'].'">'. $row['deductionType'] .'</button>';
 			}
 			echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' 
-				data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
+				data-target='#adddeductionTypeModal'><i class='fa fa-plus-circle'></i></div>";
 		}elseif($page == 'deductionfromcredit.php' || $page == 'uploadDedfromcredit.php'){
 			echo "<option value=0 >all</option>";
 
@@ -503,31 +515,31 @@
 					
 					<input name='emp_id' type='hidden' value=".$row['ID'].">
 					<td>
-						<input class='form-control' name='presence_days[".$row['ID']."]' value=30  style='width: 100%'>
+						<input class='form-control transparent-input' name='presence_days[".$row['ID']."]' value=30  style='width: 100%'>
 					</td> 
 					<td>
-						<input class='form-control' name='sickLeave_days[".$row['ID']."]' value=0 style='width: 100%'>
+						<input class='form-control transparent-input' name='sickLeave_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>  
 					<td>
-						<input class='form-control' name='deduction_days[".$row['ID']."]' value=0 style='width: 100%'>
+						<input class='form-control transparent-input' name='deduction_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='absence_days[".$row['ID']."]' value=0 style='width: 100%'>
+						<input class='form-control transparent-input' name='absence_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td> 
 					<td>
-						<input class='form-control' name='annual_days[".$row['ID']."]' value=0 style='width: 100%'>
+						<input class='form-control transparent-input' name='annual_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='casual_days[".$row['ID']."]' value=0 style='width: 100%'>
+						<input class='form-control transparent-input' name='casual_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='manufacturing_days[".$row['ID']."]' value=0 style='width: 100%'>
+						<input class='form-control transparent-input' name='manufacturing_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='evaluationPercent[".$row['ID']."]' value=1 style='width: 100%'>
+						<input class='form-control transparent-input' name='evaluationPercent[".$row['ID']."]' value=1 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control' name='notes[".$row['ID']."]' style='width: 100%'>
+						<input class='form-control transparent-input' name='notes[".$row['ID']."]' style='width: 100%'>
 					</td>
 					     
 				</tr>";
@@ -2597,6 +2609,16 @@
 			$stmt = $con->prepare($sql2);
 			$stmt->execute();
 		}
+	}
+
+	//---------------insert deductions--------------------------------------------------------------------
+	function insertDeductions(){
+		$con = connect();
+		//get deduction type ID to complete insertion in case of upload 
+		$getDeductionID = "select d.deductionTypeID from deductiontypes d where d.deductionType = 'string'";
+		$stmt = $con->prepare($getDeductionID);
+		$stmt->execute();
+		$result=$stmt->fetchColumn();
 	}
 	//-------------update deductions----------------------
 	function updateDeductions(){

@@ -145,7 +145,7 @@ label{
     color: #940308;
 }
 .managements-container,.MaritalStatus-container,.levels-container,
-.timesheet-container,.job-container,.empdata-container{
+.timesheet-container,.job-container,.empdata-container,.syndicate-container,.deductionType-container{
     margin: 0 auto;
 }   
 .managements{
@@ -161,7 +161,8 @@ label{
 #addjobModal  input[type="submit"]:hover , #editManagementModal  input[type="submit"]:hover,
 #editLevelModal  input[type="submit"]:hover,#editsyndicateModal input[type="submit"]:hover,
 #editcontractModal input[type="submit"]:hover,#edittimesheetModal input[type="submit"]:hover,
-#editMaritalStatusModal input[type="submit"]:hover,#editjobModal input[type="submit"]:hover{
+#editMaritalStatusModal input[type="submit"]:hover,#editjobModal input[type="submit"]:hover,
+#editdeductionTypeModal input[type="submit"]:hover{
     background-color: #940308;
     color: #fff;
 }
@@ -324,3 +325,7 @@ input[type="number"] {
     -webkit-box-sizing:border-box;
     -moz-box-sizing: border-box;
 }
+.transparent-input{
+    background-color:rgba(0,0,0,0) !important;
+    text-align: center;
+ }

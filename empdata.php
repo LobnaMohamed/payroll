@@ -68,7 +68,7 @@
 								<select class="form-control" id="addgender" name="addgender">
 									<option selected disabled hidden style='display: none' ></option>
 										<?php  
-										 	echo"<option selected value='ذكر'> ذكر</option>"; 
+										 echo"<option selected value='ذكر'> ذكر</option>"; 
 										  echo"<option value='أنثى'>أنثى</option>"; 	
 										?>
 								</select>
