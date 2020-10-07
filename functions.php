@@ -2618,7 +2618,9 @@
 		$getDeductionID = "select d.deductionTypeID from deductiontypes d where d.deductionType = 'string'";
 		$stmt = $con->prepare($getDeductionID);
 		$stmt->execute();
-		$result=$stmt->fetchColumn();
+		$DeductionID=$stmt->fetchColumn();
+
+		//upload from excel sheet
 	}
 	//-------------update deductions----------------------
 	function updateDeductions(){
