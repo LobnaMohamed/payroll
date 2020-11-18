@@ -20,10 +20,15 @@
                 </div>
                 <div class="modal-body row">
                     <form method="POST" id="addsyndicateForm" action="insert.php">	
-                        <div class="form-group col-md-12 ">
-                            <label for= "syndicate">الوظيفة:</label>
+                        <div class="form-group col-sm-6 ">
+                            <label for= "syndicate">القيمة:</label>
+                            <input type="text" class="form-control" id="syndicate_amount" name="syndicate_amount">
+                        </div>
+                        <div class="form-group col-sm-6 ">
+                            <label for= "syndicate">النقابة:</label>
                             <input type="text" class="form-control" id="syndicate" name="syndicate">
                         </div>
+
                         <div class="form-group col-md-12">
                             <input type="submit" name="insertsyndicate" class="btn btn-block btn-lg" value="حفظ">
                         </div>	
