@@ -46,7 +46,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editLevelForm" action="fetch.php">	
+                    <form method="POST" id="editLevelForm" action="insert.php">	
                         <div class="form-group col-md-6">
                             <label for= "hafezpercentEdit">الحافز :</label>
                             <input  class="form-control" id="hafezpercentEdit" name="hafezpercentEdit">

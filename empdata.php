@@ -62,7 +62,7 @@
 						<h4 class="modal-title"> إضافة عامل جديد </h4>
 					</div>
 					<div class="modal-body row">
-						<form method="POST" id="addEmpForm" action="fetch.php">
+						<form method="POST" id="addEmpForm" action="insert.php">
 							<div class="form-group col-md-4">
 								<label for= "addgender">النوع</label>
 								<select class="form-control" id="addgender" name="addgender">

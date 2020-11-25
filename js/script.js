@@ -385,7 +385,7 @@ $(document).ready(function(){
 	});
 	//-----------------------------------------------------------
 	// $('form#editEmpForm').each(function(){
-//   $(this).data('serialized', $(this).serialize())
+	//  $(this).data('serialized', $(this).serialize())
   //   }).on('change input', function(){
   //       $(this) .find('input:submit, button:submit').prop('disabled', $(this).serialize() == $(this).data('serialized'));
 	// 	 }).find('input:submit, button:submit').prop('disabled', true);
@@ -636,11 +636,6 @@ $(document).ready(function(){
 	// });
 
 
-
-
-
-
-
 	$('#EmpSalary').on('submit',function(e){
 		 e.preventDefault();
 		var $form = $('#EmpSalary');
@@ -733,8 +728,6 @@ $(document).ready(function(){
         	}
 		});		
 	});
-
-
 	//-------------------submit deductions form--------------
 	$(document).on('submit','#deductioninsertion', function(){
 		$.ajax({

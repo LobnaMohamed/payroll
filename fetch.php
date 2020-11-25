@@ -69,10 +69,7 @@
 		elseif(isset($_POST["job_id"])){
 			getJobDetails();
 		}
-		elseif(isset($_POST["insertEmp"])){
-			addEmp();
-			header("Location:empdata.php");
-		}
+
 		elseif(isset($_POST["UpdateEmp"])){
 			editEmp();
 			header("Location:empdata.php");
