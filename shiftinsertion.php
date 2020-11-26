@@ -1,6 +1,9 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
+    require 'timesheetFunctions.php';
+    require 'mainDataFunctions.php';
+    require 'salaryFunctions.php';
     
 ?>
 <div class="container">	

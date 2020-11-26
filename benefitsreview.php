@@ -1,6 +1,10 @@
 <?php 
 require 'functions.php';
-include 'header.php';
+require 'empFunctions.php';
+require 'timesheetFunctions.php';
+require 'mainDataFunctions.php';
+require 'salaryFunctions.php';
+require 'header.php';
  //calculatebenefits();
 ?>
 	<div class="container">

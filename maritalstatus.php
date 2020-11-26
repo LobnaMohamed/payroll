@@ -7,7 +7,11 @@
     //     exit();
     // }
     include 'header.php';
-    require 'functions.php';
+	require 'functions.php';
+	require 'timesheetFunctions.php';
+    require 'mainDataFunctions.php';
+    require 'salaryFunctions.php';
+	
 ?>
 	<div class="container">
 		<div class='page-header pagetitle col-sm-10 col-sm-offset-1'>الحـــالة الاجتماعية</div>
@@ -26,15 +30,15 @@
 						<form method="POST" id="addMaritalStatusForm" action="insert.php">
                             <div class="form-group col-md-4">
                                 <label for= "medInsurance">علاج أسر :</label>
-                                <input type="text" class="form-control" id="medInsurance" name="medInsurance">
+                                <input type="text" class="form-control" id="medInsurance" name="medInsurance" required>
                             </div>	
                             <div class="form-group col-md-4 ">
                                 <label for= "amount">م.إجتماعية :</label>
-                                <input type="text" class="form-control" id="amount" name="amount">
+                                <input type="text" class="form-control" id="amount" name="amount" required>
                             </div>
 							<div class="form-group col-md-4">
 								<label for= "MaritalStatus"> الحالة الاجتماعية:</label>
-								<input type="text" class="form-control" id="MaritalStatus" name="MaritalStatus">
+								<input type="text" class="form-control" id="MaritalStatus" name="MaritalStatus" requied>
 							</div>
 							<div class="form-group col-md-12">
 								<input type="submit" name="insertMaritalStatus" class="btn btn-block btn-lg" value="حفظ">
@@ -53,7 +57,7 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body row">
-						<form method="POST" id="editMaritalStatusForm" action="fetch.php">	
+						<form method="POST" id="editMaritalStatusForm" action="editMainData.php">	
 							<div class="form-group col-md-4">
 								<label for= "medInsuranceEdit">علاج أسر :</label>
 								<input type="text" class="form-control" id="medInsuranceEdit" name="medInsuranceEdit">

@@ -1,5 +1,9 @@
 <?php 
 require 'functions.php';
+require 'empFunctions.php';
+require 'timesheetFunctions.php';
+require 'mainDataFunctions.php';
+require 'salaryFunctions.php';
 include 'header.php';
  //calculatedeductions();
 ?>

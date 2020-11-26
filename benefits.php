@@ -1,6 +1,13 @@
 <?php 
 	include 'header.php';
 	include 'functions.php';
+	include 'empFunctions.php';
+	include 'timesheetFunctions.php';
+	include 'mainDataFunctions.php';
+	include 'salaryFunctions.php';
+
+
+
 ?>
 	<div class="container">
 		

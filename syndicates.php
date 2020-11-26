@@ -1,6 +1,9 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
+    require 'timesheetFunctions.php';
+    require 'mainDataFunctions.php';
+    require 'salaryFunctions.php';
 ?>
 
 <div class="container">	
@@ -22,11 +25,11 @@
                     <form method="POST" id="addsyndicateForm" action="insert.php">	
                         <div class="form-group col-sm-6 ">
                             <label for= "syndicate">القيمة:</label>
-                            <input type="text" class="form-control" id="syndicate_amount" name="syndicate_amount">
+                            <input type="text" class="form-control" id="syndicate_amount" name="syndicate_amount" value =0>
                         </div>
                         <div class="form-group col-sm-6 ">
                             <label for= "syndicate">النقابة:</label>
-                            <input type="text" class="form-control" id="syndicate" name="syndicate">
+                            <input type="text" class="form-control" id="syndicate" name="syndicate" required>
                         </div>
 
                         <div class="form-group col-md-12">
@@ -47,7 +50,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editsyndicateForm" action="fetch.php">	
+                    <form method="POST" id="editsyndicateForm" action="editMainData.php">	
                         <div class="form-group col-md-6">
                             
                             <label for= "syndicateAmountEdit">البدل:</label>

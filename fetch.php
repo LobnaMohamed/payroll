@@ -1,6 +1,11 @@
 <?php
+	ob_start();
 	session_start();
 	include 'functions.php';
+	include 'empFunctions.php';
+	include 'timesheetFunctions.php';
+	include 'mainDataFunctions.php';
+	include 'salaryFunctions.php';
 	include 'phpoffice_phpspreadsheet/vendor/autoload.php';
 
 		if(isset($_POST["empID"]))  
@@ -193,5 +198,5 @@
 				echo "valid";
 			}
 		}
-
+		ob_end_flush();
 	?>

@@ -206,140 +206,6 @@ $(document).ready(function(){
 			}
 		});
 	});
-
-	//---------------get level data in edit modal-----------------
-		
-	$(document).on('click','.editLevelData', function(){
-		console.log("edit level");
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log("currentURL :" +currentURL );
-		var level_id=$(this).attr("id");
-		
-		console.log(level_id);
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data:{level_id:level_id},
-			dataType:"json",
-			success:function(data){
-				console.log(data);
-			
-				$('#levelEdit').val(data.empLevel);
-				$('#hafezpercentEdit').val(data.incentivePercent);
-				
-			},error:function(error){
-				console.log(error);
-			}
-		});
-	});
-	//---------------get contract data in edit modal-----------------
-	
-	$(document).on('click','.editcontractData', function(){
-		console.log("edit contract");
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log("currentURL :" +currentURL );
-		var contract_id=$(this).attr("id");
-		
-		console.log(contract_id);
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data:{contract_id:contract_id},
-			dataType:"json",
-			success:function(data){
-				console.log(data);
-			
-				$('#contractEdit').val(data.contractType);
-				
-				
-			},error:function(error){
-				console.log(error);
-			}
-		});
-	});
-	//---------------get MS data in edit modal-----------------
-
-	$(document).on('click','.editmaritalstatusData', function(){
-		console.log("edit ms");
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log("currentURL :" +currentURL );
-		var MS_id=$(this).attr("id");
-		
-		console.log(MS_id);
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data:{MS_id:MS_id},
-			dataType:"json",
-			success:function(data){
-				console.log(data);
-			
-				$('#MaritalStatusEdit').val(data.maritalStatus);
-				$('#amountEdit').val(data.social_insurance);
-				$('#medInsuranceEdit').val(data.med_insurance);
-				
-				
-			},error:function(error){
-				console.log(error);
-			}
-		});
-	});
-	//---------------get MS data in edit modal-----------------
-
-	$(document).on('click','.editsyndicateData', function(){
-		console.log("edit syndicates");
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log("currentURL :" +currentURL );
-		var syndicate_id=$(this).attr("id");
-		
-		console.log(syndicate_id);
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data:{syndicate_id:syndicate_id},
-			dataType:"json",
-			success:function(data){
-				console.log(data);
-			
-				$('#syndicateEdit').val(data.syndicate);
-				$('#syndicateAmountEdit').val(data.amount);
-				
-				
-				
-			},error:function(error){
-				console.log(error);
-			}
-		});
-	});
-
-	//---------------get job data in edit modal-----------------
-
-	$(document).on('click','.editjobData', function(){
-		console.log("edit jobs");
-		var currentURL = document.location.href.match(/[^\/]+$/)[0];
-		console.log("currentURL :" +currentURL );
-		var job_id=$(this).attr("id");
-		
-		console.log(job_id);
-		$.ajax({
-			url:"fetch.php",
-			method:"POST",
-			data:{job_id:job_id},
-			dataType:"json",
-			success:function(data){
-				console.log(data);
-			
-				$('#jobEdit').val(data.job);
-				$('#experienceEdit').val(data.experience_amount);
-				$('#specializationEdit').val(data.specialization_amount);
-				$('#representationEdit').val(data.representation_amount);
-				
-				
-			},error:function(error){
-				console.log(error);
-			}
-		});
-	});
 	//--------------onsubmit edit form-----------------------------
 	$(document).on('submit','#editEmpForm', function(){
 		confirm("سيتم حفظ التعديل..هل أنت متأكد؟");
@@ -362,6 +228,240 @@ $(document).ready(function(){
 		});		
 	});
 
+	//---------------get level data in edit modal-----------------	
+	$(document).on('click','.editLevelData', function(){
+		console.log("edit level");
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log("currentURL :" +currentURL );
+		var level_id=$(this).attr("id");
+		console.log(level_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{level_id:level_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#level_id').val(data.ID);
+				$('#levelEdit').val(data.empLevel);
+				$('#hafezpercentEdit').val(data.incentivePercent);
+				
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	//--------------onsubmit level edit form-----------------------------
+	$(document).on('submit','#editLevelForm', function(){
+		confirm("سيتم حفظ التعديل..هل أنت متأكد؟");
+		//e.preventDefault();
+		console.log( $( this ).serialize() );
+		$.ajax({
+			url:"editMainData.php",
+			method:"POST",
+			data: $('form#editLevelForm').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);
+				$("#editLevelModal").modal('hide');	
+			},
+			error: function(error) {
+            	alert(error);
+        	}
+		});		
+	});
+
+	//---------------get contract data in edit modal-----------------
+	$(document).on('click','.editcontractData', function(){
+		console.log("edit contract");
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log("currentURL :" +currentURL );
+		var contract_id=$(this).attr("id");
+		
+		console.log(contract_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{contract_id:contract_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#contract_id').val(data.ID);
+				$('#contractEdit').val(data.contractType);
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	//--------------onsubmit contract edit form-----------------------------
+	$(document).on('submit','#editcontractForm', function(){
+		confirm("سيتم حفظ التعديل..هل أنت متأكد؟");
+		//e.preventDefault();
+		console.log( $( this ).serialize() );
+		$.ajax({
+			url:"editMainData.php",
+			method:"POST",
+			data: $('form#editcontractForm').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);
+				$("#editcontractModal").modal('hide');	
+			},
+			error: function(error) {
+				alert(error);
+			}
+		});		
+	});
+
+	//---------------get MS data in edit modal-----------------
+	$(document).on('click','.editmaritalstatusData', function(){
+		console.log("edit ms");
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log("currentURL :" +currentURL );
+		var MS_id=$(this).attr("id");
+		
+		console.log(MS_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{MS_id:MS_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#MaritalStatus_id').val(data.ID);
+				$('#MaritalStatusEdit').val(data.maritalStatus);
+				$('#amountEdit').val(data.social_insurance);
+				$('#medInsuranceEdit').val(data.med_insurance);
+				
+				
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	//--------------onsubmit marital status edit form-----------------------------
+	$(document).on('submit','#editMaritalStatusForm', function(){
+		confirm("سيتم حفظ التعديل..هل أنت متأكد؟");
+		//e.preventDefault();
+		console.log( $( this ).serialize() );
+		$.ajax({
+			url:"editMainData.php",
+			method:"POST",
+			data: $('form#editMaritalStatusForm').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);
+				$("#editMaritalStatusModal").modal('hide');	
+			},
+			error: function(error) {
+				alert(error);
+			}
+		});		
+	});
+	
+	//---------------get syndicate data in edit modal-----------------
+	$(document).on('click','.editsyndicateData', function(){
+		console.log("edit syndicates");
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log("currentURL :" +currentURL );
+		var syndicate_id=$(this).attr("id");
+		
+		console.log(syndicate_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{syndicate_id:syndicate_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#syndicate_id').val(data.ID);
+				$('#syndicateEdit').val(data.syndicate);
+				$('#syndicateAmountEdit').val(data.amount);
+				
+				
+				
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	//--------------onsubmit  syndicate edit form-----------------------------
+	$(document).on('submit','#editsyndicateForm', function(){
+		confirm("سيتم حفظ التعديل..هل أنت متأكد؟");
+		//e.preventDefault();
+		console.log( $( this ).serialize() );
+		$.ajax({
+			url:"editMainData.php",
+			method:"POST",
+			data: $('form#editsyndicateForm').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);
+				$("#editsyndicateModal").modal('hide');	
+			},
+			error: function(error) {
+				alert(error);
+			}
+		});		
+	});
+	
+	//---------------get job data in edit modal-----------------
+	$(document).on('click','.editjobData', function(){
+		console.log("edit jobs");
+		var currentURL = document.location.href.match(/[^\/]+$/)[0];
+		console.log("currentURL :" +currentURL );
+		var job_id=$(this).attr("id");
+		
+		console.log(job_id);
+		$.ajax({
+			url:"fetch.php",
+			method:"POST",
+			data:{job_id:job_id},
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				$('#job_id').val(data.ID);
+				$('#level_id').val(data.level_id);
+				$('#jobEdit').val(data.job);
+				$('#experienceEdit').val(data.experience_amount);
+				$('#specializationEdit').val(data.specialization_amount);
+				$('#representationEdit').val(data.representation_amount);
+				
+				
+			},error:function(error){
+				console.log(error);
+			}
+		});
+	});
+	//--------------onsubmit job edit form-----------------------------
+	$(document).on('submit','#editjobForm', function(){
+		confirm("سيتم حفظ التعديل..هل أنت متأكد؟");
+		//e.preventDefault();
+		console.log( $( this ).serialize() );
+		$.ajax({
+			url:"editMainData.php",
+			method:"POST",
+			data: $('form#editjobForm').serialize(),
+			//dataType:"json",
+
+			success:function(data){
+				console.log(data);
+				$("#editjobModal").modal('hide');	
+			},
+			error: function(error) {
+				alert(error);
+			}
+		});		
+	});
+
+	
+	
+	
+
 	//--------------onsubmit calculate salary form-----------------------------
 	$(document).on('submit','#SalaryCalculation', function(){
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
@@ -383,14 +483,6 @@ $(document).ready(function(){
 			}
 		});	
 	});
-	//-----------------------------------------------------------
-	// $('form#editEmpForm').each(function(){
-	//  $(this).data('serialized', $(this).serialize())
-  //   }).on('change input', function(){
-  //       $(this) .find('input:submit, button:submit').prop('disabled', $(this).serialize() == $(this).data('serialized'));
-	// 	 }).find('input:submit, button:submit').prop('disabled', true);
-		 
-
 	//--------------view emp current profile------------------
 	$(document).on('click','.viewcurrentEmp', function(){
 		var employee_id=$(this).attr("id");

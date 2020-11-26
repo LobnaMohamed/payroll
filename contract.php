@@ -1,6 +1,10 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
+    require 'empFunctions.php';
+    require 'timesheetFunctions.php';
+    require 'mainDataFunctions.php';
+    require 'salaryFunctions.php';
 ?>
 
 <div class="container">	
@@ -22,7 +26,7 @@
                     <form method="POST" id="addcontractForm" action="insert.php">	
                         <div class="form-group col-md-12 ">
                             <label for= "contract">نوع العقد:</label>
-                            <input type="text" class="form-control" id="contract" name="contract">
+                            <input type="text" class="form-control" id="contract" name="contract" required>
                         </div>
                         <div class="form-group col-md-12">
                             <input type="submit" name="insertcontract" class="btn btn-block btn-lg" value="حفظ">
@@ -42,7 +46,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editcontractForm" action="fetch.php">	
+                    <form method="POST" id="editcontractForm" action="editMainData.php">	
                         <div class="form-group col-md-12">
                             <input type="hidden" name="contract_id" id="contract_id"> 
                             <label for= "contractEdit">نوع العقد:</label>

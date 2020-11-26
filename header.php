@@ -20,27 +20,11 @@
 	<nav class="navbar navbar-inverse fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
-		  		<!-- <a class="navbar-brand" href="#">Computer Name: <?php  
-						if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
-					    {
-					      $ip=$_SERVER['HTTP_CLIENT_IP'];
-					    }
-					    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
-					    {
-					      $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
-					    }
-					    else
-					    {
-					      $ip=$_SERVER['REMOTE_ADDR'];
-					    }
-					    echo $ip;   
-					 ?></a> -->
 				<div class="navbar-brand">
 					<img class= "logo col-sm-1" src="images/amoc2.png">
 					<span>شركة الأسكندرية للزيوت المعدنية ( أموك )</span> 
 					<br>
-					<span><?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']);?></span>
-				</div>
+					<span class="navbar-brand">Computer Name:<?php  echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?></div>
 			</div>
 			<ul class="nav navbar-nav pull-right">
 			

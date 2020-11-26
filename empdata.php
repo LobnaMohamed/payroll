@@ -1,7 +1,11 @@
 <?php 
 
 	include 'header.php';
-	require 'functions.php';      
+	require 'functions.php';
+	require 'timesheetFunctions.php';
+    require 'mainDataFunctions.php';
+    require 'salaryFunctions.php';
+    require 'empFunctions.php'; 
 ?>
 	<div class="container">
 	    <header class="row text-center">

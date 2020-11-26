@@ -1,6 +1,10 @@
 <?php
 	session_start();
 	include 'functions.php';
+	include 'empFunctions.php';
+	include 'timesheetFunctions.php';
+	include 'mainDataFunctions.php';
+	include 'salaryFunctions.php';
 	$currentURL = $_POST['pageurl'];
 	//according to current url the page loads
 	if($currentURL == 'timesheet.php'){

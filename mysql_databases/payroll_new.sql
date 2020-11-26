@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2020 at 09:01 AM
+-- Generation Time: May 11, 2020 at 02:50 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -145,6 +145,27 @@ CREATE TABLE `employee` (
   `currentShift` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `employee`
+--
+
+INSERT INTO `employee` (`ID`, `empName`, `gender`, `DOB`, `education`, `hireDate`, `currentSalary`, `syndicate_id`, `currentJob`, `currentLevel`, `currentContract`, `currentMS`, `currentCode`, `currentRepresentation`, `currentWorkAllowanceNature`, `currentShift`) VALUES
+(1, 'لبنى محمد محمود', 'أنثى', '1992-02-05', 'بكالريوس هندسة اسكندرية', '2015-01-01', '1685.970', 3, 1, 3, 4, 2, 1455, 0, 0, 'نهارى'),
+(2, 'مروة سنجر', 'أنثى', '1990-04-01', 'فنون', '2015-01-01', '13.040', 0, 1, 4, 1, 1, 1535, 0, 0, 'نهارى'),
+(3, 'احمد', '', '1993-04-25', '', '2020-03-02', '500.000', 1, 1, 4, 3, 1, 1500, 0, 0, 'نهارى'),
+(4, 'mohamed', 'ذكر', '0000-00-00', '', '0000-00-00', '1000.000', 0, 0, 0, 2, 2, 1454, 0, 0, 'نهارى'),
+(10, 'ingy', 'أنثى', '0000-00-00', 'null', '2020-03-06', '1000.000', 0, 1, 4, 3, 0, 1300, 0, 0, ''),
+(12, 'ingy', 'أنثى', '0000-00-00', 'null', '2020-03-06', '1000.000', 0, 1, 4, 3, 0, 1200, 0, 0, ''),
+(13, 'karlie', 'أنثى', '0000-00-00', 'null', '2020-04-01', '1200.000', 0, 1, 4, 3, 1, 1230, 0, 0, 'نهارى'),
+(14, 'mahitab', 'أنثى', '0000-00-00', 'null', '2020-04-29', '500.000', 0, 1, 4, 3, 1, 3636, 0, 0, 'نهارى'),
+(15, 'lop', 'ذكر', '0000-00-00', 'null', '2020-04-04', '1000.000', 0, 2, 2, 2, 3, 666, 0, 0, 'ورادى'),
+(16, 'null', 'ذكر', '0000-00-00', '', '2020-04-10', '33.000', 0, 2, 3, 1, 2, 1010, 0, 0, 'نهارى'),
+(17, 'lop', '', '0000-00-00', '', '2020-04-04', '10003.000', NULL, 1, 2, 2, 1, 4546, 0, 0, 'نهارى'),
+(18, 'trial', 'ذكر', '0000-00-00', '', '2020-04-04', '2036.000', 2, 1, 1, 2, 2, 1593, 0, 0, 'ورادى'),
+(19, 'lobna', '', '0000-00-00', '', '2020-04-04', '133.000', 1, 1, 4, 1, 2, 199, 0, 0, 'نهارى'),
+(20, 'loly', 'أنثى', '0000-00-00', '', '2020-04-30', '126.960', 1, 1, 1, 2, 1, 1235, 0, 0, 'نهارى'),
+(21, 'mona', 'ذكر', '0000-00-00', 'بكالريوس هندسة', '2020-04-30', '10.100', 1, 1, 2, 1, 2, 3333, 0, 0, 'ورادى');
+
 -- --------------------------------------------------------
 
 --
@@ -188,7 +209,7 @@ CREATE TABLE `emptimesheet` (
   `overnight_days` double NOT NULL DEFAULT 0 COMMENT 'ايام نوباتجية',
   `shift_days` double NOT NULL DEFAULT 0 COMMENT 'ايام الوردية',
   `notes` varchar(250) DEFAULT NULL,
-  `evaluationPercent` double DEFAULT 1
+  `evaluationPercent` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -220,6 +241,26 @@ CREATE TABLE `emp_basicsalary` (
   `salaryDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `emp_basicsalary`
+--
+
+INSERT INTO `emp_basicsalary` (`emp_id`, `basicSalary`, `salaryDate`) VALUES
+(1, '1685.970', '2015-01-01'),
+(1, '168597.000', '2015-01-01'),
+(2, '0.000', '2018-04-26'),
+(2, '13.040', '2018-04-26'),
+(2, '16.300', '2018-04-26'),
+(2, '1500.650', '2018-04-26'),
+(3, '500.000', '2020-03-02'),
+(13, '1200.000', '2020-04-01'),
+(14, '500.000', '2020-04-29'),
+(15, '1000.000', '2020-04-04'),
+(16, '33.000', '2020-04-10'),
+(20, '126.960', '2020-04-30'),
+(20, '12696.000', '2020-04-30'),
+(21, '10.100', '2020-04-30');
+
 -- --------------------------------------------------------
 
 --
@@ -232,6 +273,24 @@ CREATE TABLE `emp_contract` (
   `contract_date` date NOT NULL,
   `empCode` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `emp_contract`
+--
+
+INSERT INTO `emp_contract` (`emp_id`, `contract_id`, `contract_date`, `empCode`) VALUES
+(1, 1, '2015-01-01', 1455),
+(1, 2, '2020-05-04', 1455),
+(1, 4, '2015-01-01', 1455),
+(2, 1, '2018-04-26', 1535),
+(3, 3, '2020-03-02', 1500),
+(12, 3, '2020-03-06', 1200),
+(13, 3, '2020-04-01', 1230),
+(14, 3, '2020-04-29', 3636),
+(15, 2, '2020-04-04', 666),
+(16, 1, '2020-04-10', 1010),
+(20, 2, '2020-04-30', 1235),
+(21, 1, '2020-04-30', 3333);
 
 -- --------------------------------------------------------
 
@@ -247,6 +306,25 @@ CREATE TABLE `emp_job` (
   `shift` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `emp_job`
+--
+
+INSERT INTO `emp_job` (`emp_id`, `job_id`, `job_date`, `job_description`, `shift`) VALUES
+(1, 1, '2018-04-26', 'اخصائى اعلام', 'نهارى'),
+(1, 1, '2020-03-06', 'اخصائى اعلام', 'ورادى'),
+(1, 1, '2020-05-04', '', 'نهارى'),
+(1, 2, '2020-04-30', 'اخصائى اعلام', 'نهارى'),
+(3, 1, '2020-03-02', '', 'نهارى'),
+(10, 1, '2020-03-06', '', ''),
+(12, 1, '2020-03-06', '', ''),
+(13, 1, '2020-04-01', '', 'نهارى'),
+(14, 1, '2020-04-29', '', 'نهارى'),
+(15, 2, '2020-04-04', 'مهندس ERP', 'ورادى'),
+(16, 2, '2020-04-10', '', 'نهارى'),
+(20, 1, '2020-04-30', '', 'نهارى'),
+(21, 1, '2020-04-30', 'اخصائى اعلام', 'ورادى');
+
 -- --------------------------------------------------------
 
 --
@@ -259,6 +337,25 @@ CREATE TABLE `emp_level` (
   `level_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `emp_level`
+--
+
+INSERT INTO `emp_level` (`emp_id`, `level_id`, `level_date`) VALUES
+(1, 1, '2020-05-04'),
+(1, 3, '2020-04-30'),
+(1, 4, '2015-01-01'),
+(2, 4, '2018-04-26'),
+(3, 4, '2020-03-02'),
+(10, 4, '2020-03-06'),
+(12, 4, '2020-03-06'),
+(13, 4, '2020-04-01'),
+(14, 4, '2020-04-29'),
+(15, 2, '2020-04-04'),
+(16, 3, '2020-04-10'),
+(20, 1, '2020-04-30'),
+(21, 2, '2020-04-30');
+
 -- --------------------------------------------------------
 
 --
@@ -270,6 +367,22 @@ CREATE TABLE `emp_maritalstatus` (
   `marital_status_id` int(11) NOT NULL,
   `marital_status_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `emp_maritalstatus`
+--
+
+INSERT INTO `emp_maritalstatus` (`emp_id`, `marital_status_id`, `marital_status_date`) VALUES
+(1, 1, '2015-01-01'),
+(1, 2, '2020-04-30'),
+(2, 1, '2018-04-26'),
+(3, 1, '2020-03-02'),
+(13, 1, '2020-04-01'),
+(14, 1, '2020-04-29'),
+(15, 3, '2020-04-04'),
+(16, 2, '2020-04-10'),
+(20, 1, '2020-04-30'),
+(21, 2, '2020-04-30');
 
 -- --------------------------------------------------------
 
@@ -284,6 +397,23 @@ CREATE TABLE `emp_overnight` (
   `overnight_deserveddays` double DEFAULT NULL,
   `notes` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `emp_overnight`
+--
+
+INSERT INTO `emp_overnight` (`TS_id`, `emp_id`, `overnight_days`, `overnight_deserveddays`, `notes`) VALUES
+(1, 1, 1, 2, ''),
+(1, 2, 1, 2, ''),
+(1, 3, 1, 2, ''),
+(1, 4, 1, 2, ''),
+(1, 10, 1, 2, ''),
+(1, 12, 1, 2, ''),
+(1, 13, 1, 2, ''),
+(1, 15, 1, 2, ''),
+(1, 16, 1, 2, ''),
+(1, 19, 1, 2, ''),
+(1, 20, 1, 2, '');
 
 -- --------------------------------------------------------
 
@@ -300,6 +430,23 @@ CREATE TABLE `emp_shift` (
   `notes` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `emp_shift`
+--
+
+INSERT INTO `emp_shift` (`TS_id`, `emp_id`, `shift_days`, `cashperday`, `total`, `notes`) VALUES
+(1, 1, 3, 75, 225, ''),
+(1, 2, 3, 75, 225, ''),
+(1, 3, 3, 75, 225, ''),
+(1, 4, 3, 75, 225, ''),
+(1, 10, 3, 75, 225, ''),
+(1, 12, 3, 75, 225, ''),
+(1, 13, 3, 75, 225, ''),
+(1, 15, 3, 75, 225, ''),
+(1, 16, 3, 75, 225, ''),
+(1, 19, 3, 75, 225, ''),
+(1, 20, 3, 75, 225, '');
+
 -- --------------------------------------------------------
 
 --
@@ -314,8 +461,7 @@ CREATE TABLE `emp_sickleaves` (
   `startDate` date DEFAULT NULL,
   `endDate` date DEFAULT NULL,
   `real_sickLeaves` double DEFAULT NULL,
-  `totalAmountDeducted` double DEFAULT NULL,
-  `notes` varchar(300) NOT NULL
+  `totalAmountDeducted` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -2154,7 +2300,7 @@ ALTER TABLE `deductiontypes`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `job`

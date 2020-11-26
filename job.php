@@ -1,6 +1,9 @@
 <?php 
     include 'header.php'; 
     require 'functions.php';
+    require 'timesheetFunctions.php';
+    require 'mainDataFunctions.php';
+    require 'salaryFunctions.php';
 ?>
 
 <div class="container">	
@@ -44,22 +47,22 @@
                         </div>	
                         <div class="form-group col-md-6 ">
                             <label for= "job">الوظيفة:</label>
-                            <input type="text" class="form-control" id="job" name="job">
+                            <input type="text" class="form-control" id="job" name="job" required>
                         </div>
 
                         <div class="form-group col-md-4">
                             <label for= "representationAdd">بدل التمثيل:</label>
-                            <input  class="form-control" id="representationAdd" name="representationAdd">
+                            <input  class="form-control" id="representationAdd" name="representationAdd" value=0>
                             
                         </div>
                         <div class="form-group col-md-4">
                             <label for= "experienceAdd">بدل الخبرة:</label>
-                            <input  class="form-control" id="experienceAdd" name="experienceAdd">
+                            <input  class="form-control" id="experienceAdd" name="experienceAdd" required>
                         </div>
                         <div class="form-group col-md-4">
                         
                             <label for= "specializationAdd">بدل التخصص:</label>
-                            <input  class="form-control" id="specializationAdd" name="specializationAdd"> 
+                            <input  class="form-control" id="specializationAdd" name="specializationAdd" required> 
                         </div>  
  
                         <div class="form-group col-md-12">
@@ -80,9 +83,11 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="editjobForm" action="insert.php">	
+                    <form method="POST" id="editjobForm" action = "editMainData.php">	
                         <div class="form-group col-md-12">
-                            <input type="hidden" name="job_id" id="job_id"> 
+                            <input type="hidden" name="job_id" id="job_id">
+                            <input type="hidden" name="level_id" id="level_id"> 
+
                             <label for= "jobEdit">الوظيفة:</label>
                             <input type="text" class="form-control" id="jobEdit" name="jobEdit">
                         </div>
@@ -100,8 +105,6 @@
                             <label for= "specializationEdit">بدل التخصص:</label>
                             <input  class="form-control" id="specializationEdit" name="specializationEdit"> 
                         </div>    
-
-
                         <div class="form-group col-md-12">
                             <input type="submit" name="updatejob" class="btn btn-block btn-lg" value="حفظ">
                         </div>	
