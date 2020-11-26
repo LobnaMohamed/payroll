@@ -797,6 +797,56 @@
 			}
 		}
 	}
+	/**
+	 * function to insert new level
+	 * 	
+	*/
+	function insertNewLevel()	{
+		if(isset($_POST['insertLevel'])){
+			//assign variables
+
+			$level= isset($_POST['level'])? filter_var($_POST['level'],FILTER_SANITIZE_STRING) : '';
+			$incentivepercent = isset($_POST['hafezpercent'])? filter_var($_POST['hafezpercent'],FILTER_SANITIZE_NUMBER_FLOAT) :0;
+		
+			if(empty($level) ){
+				//$formErrors[] = 'username must be larger than  chars';
+				echo "job cant be empty";
+				// print_r($formErrors) ;
+			} else {
+				
+				$con = connect();
+				$sql= "INSERT INTO level VALUES ('".$level."','".$incentivepercent."')" ;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				echo "done";
+			}
+		}
+	}
+		/**
+	 * function to insert new level
+	 * 	
+	*/
+	function insertNewSyndicate()	{
+		if(isset($_POST['insertsyndicate'])){
+			//assign variables
+
+			$syndicate= isset($_POST['syndicate'])? filter_var($_POST['syndicate'],FILTER_SANITIZE_STRING) : '';
+			$amount = isset($_POST['syndicate_amount'])? filter_var($_POST['syndicate_amount'],FILTER_SANITIZE_NUMBER_FLOAT) :0;
+		
+			if(empty($syndicate) ){
+				//$formErrors[] = 'username must be larger than  chars';
+				echo "job cant be empty";
+				// print_r($formErrors) ;
+			} else {
+				
+				$con = connect();
+				$sql= "INSERT INTO level VALUES ('".$syndicate."','".$amount."')" ;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				echo "done";
+			}
+		}
+	}
 	function insertTimesheet(){
 		$con = connect();
 		$lastID = getTimesheetID($con);
