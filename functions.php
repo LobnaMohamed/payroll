@@ -126,7 +126,7 @@
 					// echo "<div class='managements well well-sm col-sm-4'><span>". $row['Management'] ."</span></div>";
 				}
 				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addLevelModal'><i class='fa fa-plus-circle'></i></div>";
-		}elseif($page == 'empdata.php'){
+		}elseif($page == 'empdata.php' || $page == 'job.php'){
 			foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['empLevel'] . "</option>";
 			}
@@ -768,6 +768,34 @@
 
 		}
 		return $lastID;			
+	}
+	/**
+	 * function to insert new job
+	 * 	
+	*/
+	function insertNewJob()	{
+		if(isset($_POST['insertJob'])){
+			//assign variables
+
+			$jobName= isset($_POST['job'])? filter_var($_POST['job'],FILTER_SANITIZE_STRING) : '';
+			$representationAdd = isset($_POST['representationAdd'])? filter_var($_POST['representationAdd'],FILTER_SANITIZE_NUMBER_FLOAT) :0;
+			$experienceAdd = isset($_POST['experienceAdd'])? filter_var($_POST['experienceAdd'],FILTER_SANITIZE_NUMBER_FLOAT) : 0;
+			$specializationAdd= isset($_POST['specializationAdd'])? filter_var($_POST['specializationAdd'],FILTER_SANITIZE_NUMBER_FLOAT) : 0;
+			$addlevel = isset($_POST['addlevel'])? filter_var($_POST['addlevel'],FILTER_SANITIZE_NUMBER_INT):'';
+
+			if(empty($jobName) ){
+				//$formErrors[] = 'username must be larger than  chars';
+				echo "job cant be empty";
+				// print_r($formErrors) ;
+			} else {
+				
+				$con = connect();
+				$sql= "INSERT INTO job VALUES ('".$jobName."','".$addlevel."','".$experienceAdd."','".$specializationAdd."','".$representationAdd."')" ;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+				echo "done";
+			}
+		}
 	}
 	function insertTimesheet(){
 		$con = connect();

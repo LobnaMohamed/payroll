@@ -8,8 +8,8 @@
 			//show data in emp modal
 			$con = connect();			 
 			$sql = "select ID,empName,currentCode,gender,currentLevel,syndicate_id,currentMS,currentContract,currentSalary,currentJob,education,currentShift,hireDate
-					,shift,job_description,ej.JobMaxDate,empMS.MSMaxDate,empl.levelMaxDate,empc.contractMaxDate,empbasic.salaryMaxDate
-								from employee inner join emp_job on employee.ID = emp_job.emp_id
+							,shift,job_description,ej.JobMaxDate,empMS.MSMaxDate,empl.levelMaxDate,empc.contractMaxDate,empbasic.salaryMaxDate
+					from employee inner join emp_job on employee.ID = emp_job.emp_id
 								inner join (select emp_id, max(job_date) as JobMaxDate
 											from emp_job
 											group by emp_id) ej
@@ -34,7 +34,7 @@
 											from emp_basicsalary
 											group by emp_id) empbasic
 										on  emp_basicsalary.salaryDate = empbasic.salaryMaxDate
-								where ID ='".$_POST["empID"]."'";
+					where ID ='".$_POST["empID"]."'";
 					
 			$stmt = $con->prepare($sql);
 			$stmt->execute(array($_POST["empID"]));

@@ -15,7 +15,12 @@
 		addJob();
 		header("Location:jobs.php");
 
-    }elseif(isset($_POST['updatejob'])){ // edit management
+	}elseif(isset($_POST['insertjob'])){ // insert new management
+		addSyndicate();
+		header("Location:jobs.php");
+
+    }
+	elseif(isset($_POST['updatejob'])){ // edit management
 		editJob();
 		header("Location:jobs.php");
 

@@ -34,11 +34,19 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body row">
-                    <form method="POST" id="addjobForm" action="insert.php">	
-                        <div class="form-group col-md-12 ">
+                    <form method="POST" id="addjobForm" action="insert.php">
+                        <div class="form-group col-md-6 ">
+                            <label for= "addlevel">المستوى</label>
+								<select class="form-control" id="addlevel" name="addlevel" required >
+									<option selected disabled hidden style='display: none' value=''></option>
+										<?php  	getLevel();   ?>
+								</select>
+                        </div>	
+                        <div class="form-group col-md-6 ">
                             <label for= "job">الوظيفة:</label>
                             <input type="text" class="form-control" id="job" name="job">
                         </div>
+
                         <div class="form-group col-md-4">
                             <label for= "representationAdd">بدل التمثيل:</label>
                             <input  class="form-control" id="representationAdd" name="representationAdd">
@@ -53,6 +61,7 @@
                             <label for= "specializationAdd">بدل التخصص:</label>
                             <input  class="form-control" id="specializationAdd" name="specializationAdd"> 
                         </div>  
+ 
                         <div class="form-group col-md-12">
                             <input type="submit" name="insertjob" class="btn btn-block btn-lg" value="حفظ">
                         </div>	
