@@ -9,7 +9,7 @@
 	include 'salaryFunctions.php';
 
 	if(isset($_POST['ResetPassword'])){ //reset password
-		resetPassword();
+		//resetPassword();
 		header("Location:empData.php");
 
 	}elseif(isset($_POST["insertEmp"])){

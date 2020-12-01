@@ -21,11 +21,12 @@
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					<img class= "logo col-sm-1" src="images/amoc2.png">
-					<span>شركة الأسكندرية للزيوت المعدنية ( أموك )</span> 
-					<br>
-					<span class="navbar-brand">Computer Name:<?php  echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?></div>
+					<span><?php echo gethostbyaddr($_SERVER['REMOTE_ADDR']); ?>
+						<img class= "logo col-sm-1" src="images/amoc2.png"><br>
+					</span>
+				</div>
 			</div>
+
 			<ul class="nav navbar-nav pull-right">
 			
 					<div class="dropdown">
