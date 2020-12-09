@@ -283,4 +283,34 @@
 			</tr>";
 			}
 		echo $output;
+    }
+    
+	// --------------get all employees basic salaries function-----------------------
+	function getAllBasicSalary(){
+		$output="";
+		$con = connect();
+		$sql= '';		
+		if(!empty($_POST['search'])){
+			$sql = "select ID,empName,currentCode,currentSalary
+					from employee 
+					where  (currentCode like '%". $_POST['search'] ."%' 
+								OR empName like '%". $_POST['search'] ."%') 
+					ORDER BY currentCode";
+		}else{
+			$sql=" select ID,empName,currentCode,currentSalary
+					from employee 
+					ORDER BY currentCode";
+		}
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$output .= 
+			"<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<td>".  $row['currentSalary']. "</td>
+			</tr>";
+			}
+		echo $output;
 	}

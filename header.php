@@ -34,6 +34,7 @@
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
 							<li><a href="empdata.php">بيانات العاملين</a></li>
+							<li><a href="basicSalaryData.php">الأجر الاساسى</a></li>
 							<li><a href="level.php">المستويــات</a></li>
 							<li><a href="contract.php">أنواع العقود</a></li>
 							<li><a href="maritalstatus.php">الحالة الاجتماعية</a></li>
