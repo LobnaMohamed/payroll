@@ -53,11 +53,12 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if($page == 'level.php'){
+			echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addLevelModal'><i class='fa fa-plus-circle'></i></div>";
+
 			foreach($result as $row){
 				echo '<button  class="btn  btn-lg col-sm-10 col-sm-offset-1 managements editLevelData well well-sm " data-toggle="modal" data-target="#editLevelModal" id="'.$row['ID'].'">'. $row['empLevel'] .'</button>';
 					// echo "<div class='managements well well-sm col-sm-4'><span>". $row['Management'] ."</span></div>";
 				}
-				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addLevelModal'><i class='fa fa-plus-circle'></i></div>";
 		}elseif($page == 'empdata.php' || $page == 'job.php'){
 			foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['empLevel'] . "</option>";
@@ -73,11 +74,10 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if($page == 'contract.php'){
-			foreach($result as $row){
+			echo "<div class='btn btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addcontractModal'><i class='fa fa-plus-circle'></i></div>";			foreach($result as $row){
 				echo '<button  class="btn btn-lg managements editcontractData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editcontractModal" id="'.$row['ID'].'">'. $row['contractType'] .'</button>';
 				}
-				echo "<div class='btn btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addcontractModal'><i class='fa fa-plus-circle'></i></div>";
-	
+				
 		}elseif($page == 'empdata.php'){
 			foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['contractType'] . "</option>";
@@ -94,11 +94,10 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if($page == 'maritalstatus.php'){
+			echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addMaritalStatusModal'><i class='fa fa-plus-circle'></i></div>";
 			foreach($result as $row){
 				echo '<button  class="btn  btn-lg managements editmaritalstatusData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editMaritalStatusModal" id="'.$row['ID'].'">'. $row['maritalStatus'] .'</button>';
 				}
-				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addMaritalStatusModal'><i class='fa fa-plus-circle'></i></div>";
-	
 		}elseif($page == 'empdata.php'){
 	    	foreach($result as $row){
 			    echo "<option value=" .$row['ID'].">" . $row['maritalStatus'] . "</option>";
@@ -159,10 +158,11 @@
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if($page == 'syndicates.php'){
+			echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
 			foreach($result as $row){
 				echo '<button  class="btn  btn-lg managements editsyndicateData well well-sm col-sm-10 col-sm-offset-1" data-toggle="modal" data-target="#editsyndicateModal" id="'.$row['ID'].'">'. $row['syndicate'] .'</button>';
 				}
-				echo "<div class='btn  btn-lg managements well well-sm col-sm-10 col-sm-offset-1' data-toggle='modal' data-target='#addsyndicateModal'><i class='fa fa-plus-circle'></i></div>";
+				
 	
 		}elseif($page == 'empdata.php'){
 			// echo "<option selected disabled hidden style='display: none' value= '0'></option>";
