@@ -17,27 +17,27 @@
 					from employee inner join emp_job on employee.ID = emp_job.emp_id
 								inner join (select emp_id, max(job_date) as JobMaxDate
 											from emp_job
-											group by emp_id) ej
+											where emp_id='".$_POST["empID"]."') ej
 										on  emp_job.job_date = ej.JobMaxDate
 								inner join emp_maritalstatus on employee.ID = emp_maritalstatus.emp_id
 								inner join (select emp_id, max(marital_status_date) as MSMaxDate
 											from emp_maritalstatus
-											group by emp_id) empMS
+											where emp_id='".$_POST["empID"]."') empMS
 										on  emp_maritalstatus.marital_status_date = empMS.MSMaxDate
 								inner join emp_level on employee.ID = emp_level.emp_id
 								inner join (select emp_id, max(level_date) as levelMaxDate
 											from emp_level
-											group by emp_id) empl
+											where emp_id='".$_POST["empID"]."') empl
 										on  emp_level.level_date = empl.levelMaxDate
 								inner join emp_contract on employee.ID = emp_contract.emp_id
 								inner join (select emp_id, max(contract_date) as contractMaxDate
 											from emp_contract
-											group by emp_id) empc
+											where emp_id='".$_POST["empID"]."') empc
 										on  emp_contract.contract_date = empc.contractMaxDate
 								inner join emp_basicsalary on employee.ID = emp_basicsalary.emp_id
 								inner join (select emp_id, max(salaryDate) as salaryMaxDate
 											from emp_basicsalary
-											group by emp_id) empbasic
+											where emp_id='".$_POST["empID"]."') empbasic
 										on  emp_basicsalary.salaryDate = empbasic.salaryMaxDate
 					where ID ='".$_POST["empID"]."'";
 					

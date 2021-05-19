@@ -1077,122 +1077,122 @@ function calculateSalary24(){
     // 				and ts.sheetDate = '" . $_POST['searchDateFrom'] ."'
     // 				and e.ID = empt.emp_id
     // 				and ts.ID = empt.TS_id";	
-    $sql ="select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
-                    ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
-                    j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absense_days,empt.deduction_days,
-                    empt.presence_days,IsNull(es.total, 0) as shiftcash,IsNull(eov.overnight_deserveddays, 0) as overnight_days,
-                    IsNull(esk.real_sickLeaves, 0) as sickLeave_days,empt.evaluationPercent
-            from   employee e left join maritalStatus ms on e.currentMS = ms.ID
-            left join syndicates s on e.syndicate_id = s.ID
-            left join level l on e.currentLevel = l.ID
-            left join job j on  e.currentJob = j.ID
-            left join empTimesheet empt on e.ID = empt.emp_id and empt.TS_id = $timesheetID
-            left join emp_shift es on e.Id = es.emp_id and es.TS_id = $timesheetID
-            left join emp_overnight eov on e.Id = eov.emp_id and eov.TS_id = $timesheetID
-            left join emp_sickLeaves esk on e.Id = esk.emp_id and esk.TS_id = $timesheetID"; 		   
-    $stmt = $con->prepare($sql);
-    $stmt->execute();
-    //$stmt->execute(array($_POST["searchDateFrom"]));
-    $result = $stmt->fetchAll();
-    foreach($result as $row){
-        //get days from timesheet;
-        $currentDays = ($row['presence_days'])/30; // عدد أيام الحضور/30
-        $attendancePay = $row['currentSalary'] * $currentDays;//اجر الحضور
-        $natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
-        $socialAid = $row['social_insurance'] ; //م.اجتماعية
-        $representation = $row['representation_amount']; // تمثيل
-        $occupationalAllowance = $row['amount']; // بدل مهنى
-        $manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
-        $experience = ($currentDays) * $row['experience_amount']; // خبرة
-        $overnightShift = $row['overnight_days'] * ($row['currentSalary']/30) ; // نوباتجية
-        $labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
-        $tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
-
-        // for incentive check casual days and sick leaves 
-        /*sickleaves :
-        if sickleaves<=10 ,therefore deduction will be all days value
-        if>10 deduct 0.25 *days values
-        */
-        $incentive_days =( $currentDays - $row['casual_days'] - $row['sickLeave_days']) * $row['evaluationPercent'] ;
-        $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * ($incentive_days);//الحافز
-        //$additionalincentive = $row['currentSalary'] * $row['incentivePercent'] * 0.5;//حافز اضافى
-        $additionalincentive = $incentive *0.5;// wrong needs to be edited !
-        $total_incentive = $incentive + $additionalincentive; 
-        $shift = $row['shiftcash']; // وردية
-        //check sick leaves and abscence and deduction		
-        if($row['sickLeave_days'] >= 10 || $row['abscence_days'] >=10 || $row['deduction_days']>=10){
-
-            $specializationAllowance = 0;
-        }else{
-            $specializationAllowance = $currentDays * ($row['specialization_amount']+ ($row['currentSalary']/4)) ; // بدل تخصص
-
-        }
-        $specialBonus = 0; // علاوات خاصة
-        $otherDues = 0; // استحقاق
-        // $totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
-        // $manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
-        // $total_incentive+$shift+$specializationAllowance+$specialBonus+$otherDues+$additionalincentive ; // اجمالى الاستحقاق
-        
-        
-        // $getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
-        // sanctions+mobil+loan+empServiceFund+socialInsurances+etisalatNet
-        // from salary where emp_id =".$row['ID']." and TS_id = ".$row['timesheetID']." ";
-        // $getdeductions_stmt = $con->prepare($getdeductions_sql);
-        // $getdeductions_stmt->execute();
-        // $totalDeductionsresult = $getdeductions_stmt->fetchColumn();
-        //echo $totalDeductionsresult ;
-        //------------deductions calculations---------------------
-        //$sanction_days = 0;
-        //$pastPeriod = 0;//مدة سابقة
-        //$perimiumCard = 0 ; 
-        $familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
-        //$otherDeduction = 0; // استقطاع اخر
-        $petroleumSyndicate= 10; // ن.بترول
-        //$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
-        //$mobil = 0; // نوباتجية
-        // $loan = 0; //قرض
-        $empServiceFund = 20; // صندوق خدمات عاملين
-        $socialInsurances = 0;//تأمينات
-        //$etisalatNet =  0; 
-        // $totalDeductions = $pastPeriod+$perimiumCard+$familyHealthInsurance+$otherDeduction+$petroleumSyndicate+
-        // $sanctions+$mobil+$loan+$empServiceFund+$socialInsurances+$etisalatNet; // اجمالى الاستقطاع
-
-        //$netsalary=$totalbenefits-$totalDeductions;
-        //-----------insert into salary table---------------- 
-        // $sql2 ="insert into salary(emp_id,TS_id,attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
-        // 		experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance,
-        // 		pastPeriod,perimiumCard,familyHealthInsurance,otherDeduction,petroleumSyndicate,sanctions,
-        // 		mobil,loan,empServiceFund,socialInsurances,etisalatNet,totalBenefits,totalDeductions)
-        // 		values(".$row['ID'].",".$row['timesheetID'].",".$attendancePay.",".$natureOfworkAllowance.",".$natureOfworkAllowance.",".$representation.",".$occupationalAllowance.",
-        // 		".$experience.",".$overnightShift.",".$labordayGrant.",".$tiffinAllowance.",".$incentive.",".$specializationAllowance.",
-        // 		".$pastPeriod.",".$perimiumCard.",".$familyHealthInsurance.",".$otherDeduction.",".$petroleumSyndicate.",
-        // 		".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.",".$totalbenefits.",
-        // 		".$totalDeductions.")";
-        $sql2 = "UPDATE salary 
-                 SET attendancePay = $attendancePay,
-                 natureOfworkAllowance = $natureOfworkAllowance,
-                 socialAid = $socialAid,
-                 representation = $representation,
-                 occupationalAllowance = $occupationalAllowance,
-                 experience = $experience,
-                 overnightShift =$overnightShift,
-                 labordayGrant =$labordayGrant,
-                 tiffinAllowance =$tiffinAllowance,
-                 incentive =$incentive,
-                 additionalIncentive =$additionalincentive,
-                 totalincentive =  $incentive + $additionalincentive,
-                 specializationAllowance =$specializationAllowance,
-                 manufacturingAllowance =$manufacturingAllowance,
-                 familyHealthInsurance =$familyHealthInsurance,
-                 petroleumSyndicate =$petroleumSyndicate,
-                 empServiceFund = $empServiceFund,
-                 socialInsurances =$socialInsurances,
-
-                 WHERE TS_id = ".$row['timesheetID']."
-                 and emp_id =".$row['ID']." " ;
-
-        $stmt = $con->prepare($sql2);
+    if ($timesheetID) {
+        $sql ="select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
+                        ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
+                        j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absense_days,empt.deduction_days,
+                        empt.presence_days,IfNull(es.total, 0) as shiftcash,IfNull(eov.overnight_deserveddays, 0) as overnight_days,
+                        IfNull(esk.real_sickLeaves, 0) as sickLeave_days,empt.evaluationPercent
+                from   employee e left join maritalStatus ms on e.currentMS = ms.ID
+                left join syndicates s on e.syndicate_id = s.ID
+                left join level l on e.currentLevel = l.ID
+                left join job j on  e.currentJob = j.ID
+                left join empTimesheet empt on e.ID = empt.emp_id and empt.TS_id = $timesheetID
+                left join emp_shift es on e.Id = es.emp_id and es.TS_id = $timesheetID
+                left join emp_overnight eov on e.Id = eov.emp_id and eov.TS_id = $timesheetID
+                left join emp_sickLeaves esk on e.Id = esk.emp_id and esk.TS_id = $timesheetID";
+        $stmt = $con->prepare($sql);
         $stmt->execute();
+        //$stmt->execute(array($_POST["searchDateFrom"]));
+        $result = $stmt->fetchAll();
+        foreach ($result as $row) {
+            //get days from timesheet;
+            $currentDays = ($row['presence_days'])/30; // عدد أيام الحضور/30
+            $attendancePay = $row['currentSalary'] * $currentDays;//اجر الحضور
+            $natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
+            $socialAid = $row['social_insurance'] ; //م.اجتماعية
+            $representation = $row['representation_amount']; // تمثيل
+            $occupationalAllowance = $row['amount']; // بدل مهنى
+            $manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
+            $experience = ($currentDays) * $row['experience_amount']; // خبرة
+            $overnightShift = $row['overnight_days'] * ($row['currentSalary']/30) ; // نوباتجية
+            $labordayGrant = (10) *  $currentDays ; // منحة عيد العمال
+            $tiffinAllowance = (15) *  $row['presence_days'] ; // وجبات نقدية
+
+            // for incentive check casual days and sick leaves
+            /*sickleaves :
+            if sickleaves<=10 ,therefore deduction will be all days value
+            if>10 deduct 0.25 *days values
+            */
+            $incentive_days =($currentDays - $row['casual_days'] - $row['sickLeave_days']) * $row['evaluationPercent'] ;
+            $incentive = $row['currentSalary'] * $row['incentivePercent'] * 0.75 * ($incentive_days);//الحافز
+            //$additionalincentive = $row['currentSalary'] * $row['incentivePercent'] * 0.5;//حافز اضافى
+            $additionalincentive = $incentive *0.5;// wrong needs to be edited !
+            $total_incentive = $incentive + $additionalincentive;
+            $shift = $row['shiftcash']; // وردية
+            //check sick leaves and abscence and deduction
+            if ($row['sickLeave_days'] >= 10 || $row['abscence_days'] >=10 || $row['deduction_days']>=10) {
+                $specializationAllowance = 0;
+            } else {
+                $specializationAllowance = $currentDays * ($row['specialization_amount']+ ($row['currentSalary']/4)) ; // بدل تخصص
+            }
+            $specialBonus = 0; // علاوات خاصة
+            $otherDues = 0; // استحقاق
+            // $totalbenefits =$attendancePay+$natureOfworkAllowance+$socialAid+$representation+$occupationalAllowance+
+            // $manufacturingAllowance+$experience+$overnightShift+$labordayGrant+$labordayGrant+$tiffinAllowance+
+            // $total_incentive+$shift+$specializationAllowance+$specialBonus+$otherDues+$additionalincentive ; // اجمالى الاستحقاق
+            
+            
+            // $getdeductions_sql = "select pastPeriod+perimiumCard+familyHealthInsurance+otherDeduction+petroleumSyndicate+
+            // sanctions+mobil+loan+empServiceFund+socialInsurances+etisalatNet
+            // from salary where emp_id =".$row['ID']." and TS_id = ".$row['timesheetID']." ";
+            // $getdeductions_stmt = $con->prepare($getdeductions_sql);
+            // $getdeductions_stmt->execute();
+            // $totalDeductionsresult = $getdeductions_stmt->fetchColumn();
+            //echo $totalDeductionsresult ;
+            //------------deductions calculations---------------------
+            //$sanction_days = 0;
+            //$pastPeriod = 0;//مدة سابقة
+            //$perimiumCard = 0 ;
+            $familyHealthInsurance = $row['med_insurance']  ; //علاج اسر
+            //$otherDeduction = 0; // استقطاع اخر
+            $petroleumSyndicate= 10; // ن.بترول
+            //$sanctions = ($row['currentSalary']/30) * $sanction_days; // جزاءات
+            //$mobil = 0; // نوباتجية
+            // $loan = 0; //قرض
+            $empServiceFund = 20; // صندوق خدمات عاملين
+            $socialInsurances = 0;//تأمينات
+            //$etisalatNet =  0;
+            // $totalDeductions = $pastPeriod+$perimiumCard+$familyHealthInsurance+$otherDeduction+$petroleumSyndicate+
+            // $sanctions+$mobil+$loan+$empServiceFund+$socialInsurances+$etisalatNet; // اجمالى الاستقطاع
+
+            //$netsalary=$totalbenefits-$totalDeductions;
+            //-----------insert into salary table----------------
+            // $sql2 ="insert into salary(emp_id,TS_id,attendancePay,natureOfworkAllowance,socialAid,representation,occupationalAllowance,
+            // 		experience,overnightShift,labordayGrant,tiffinAllowance,incentive,specializationAllowance,
+            // 		pastPeriod,perimiumCard,familyHealthInsurance,otherDeduction,petroleumSyndicate,sanctions,
+            // 		mobil,loan,empServiceFund,socialInsurances,etisalatNet,totalBenefits,totalDeductions)
+            // 		values(".$row['ID'].",".$row['timesheetID'].",".$attendancePay.",".$natureOfworkAllowance.",".$natureOfworkAllowance.",".$representation.",".$occupationalAllowance.",
+            // 		".$experience.",".$overnightShift.",".$labordayGrant.",".$tiffinAllowance.",".$incentive.",".$specializationAllowance.",
+            // 		".$pastPeriod.",".$perimiumCard.",".$familyHealthInsurance.",".$otherDeduction.",".$petroleumSyndicate.",
+            // 		".$sanctions.",".$mobil.",".$loan.",".$empServiceFund.",".$socialInsurances.",".$etisalatNet.",".$totalbenefits.",
+            // 		".$totalDeductions.")";
+            $sql2 = "UPDATE salary 
+                    SET attendancePay = $attendancePay,
+                    natureOfworkAllowance = $natureOfworkAllowance,
+                    socialAid = $socialAid,
+                    representation = $representation,
+                    occupationalAllowance = $occupationalAllowance,
+                    experience = $experience,
+                    overnightShift =$overnightShift,
+                    labordayGrant =$labordayGrant,
+                    tiffinAllowance =$tiffinAllowance,
+                    incentive =$incentive,
+                    additionalIncentive =$additionalincentive,
+                    totalincentive =  $incentive + $additionalincentive,
+                    specializationAllowance =$specializationAllowance,
+                    manufacturingAllowance =$manufacturingAllowance,
+                    familyHealthInsurance =$familyHealthInsurance,
+                    petroleumSyndicate =$petroleumSyndicate,
+                    empServiceFund = $empServiceFund,
+                    socialInsurances =$socialInsurances,
+
+                    WHERE TS_id = ".$row['timesheetID']."
+                    and emp_id =".$row['ID']." " ;
+
+            $stmt = $con->prepare($sql2);
+            $stmt->execute();
+        }
     }
 }
 
