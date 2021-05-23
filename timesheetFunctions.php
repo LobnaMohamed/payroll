@@ -417,7 +417,7 @@
 
 						$data = $spreadsheet->getActiveSheet()->toArray();
 						$count = count($data);
-						
+						$sql="";
 						for($row =1; $row < $count ; $row ++){
 							
 							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
@@ -426,22 +426,23 @@
 							//$stmt->bindParam(':Agree', $answer, PDO::PARAM_INT);
 							$empID = $stmt->fetchColumn();
 							//echo $empID;
-							if($empID){
-								$insert_sql = "INSERT INTO emptimesheet(TS_id,emp_id,presence_days,absence_days,casual_days,deduction_days,annual_days,
-								manufacturing_days,evaluationPercent,notes) 
-								values( $lastID,$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4]."," .$data[$row][6]."," .$data[$row][7].",
-								" .$data[$row][8]."," .$data[$row][9].",'" .$data[$row][10]."')";
-								//echo $insert_sql;
-								$statement = $con->prepare($insert_sql);
-								$statement->execute();
-							}else{
-
+							
+							if($empID){															
+								$employeetimesheet= "( $lastID,	$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4].",
+										" .$data[$row][6]."," .$data[$row][7]."," .$data[$row][8]."," .$data[$row][9].",'" .$data[$row][10]."'),";
+								$sql.= $employeetimesheet;
+							}					
+							else{
 								//echo "emp not found";
 							}
-							
-
 						}
-						
+					
+						$insert_sql = 'INSERT INTO emptimesheet(TS_id,emp_id,presence_days,absence_days,casual_days,deduction_days,
+						annual_days, manufacturing_days,evaluationPercent,notes)
+						VALUES '. trim($sql,",");
+							//echo $insert_sql ;
+						$statement = $con->prepare($insert_sql);
+						$statement->execute();
 						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
 					}else{

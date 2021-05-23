@@ -127,7 +127,7 @@
 			insertTimesheet();
 			// calculateSalary24();
 
-		    header("location:timesheetinsertion.php");
+		   // header("location:timesheetinsertion.php");
 
 		}elseif(isset($_POST["insertovernight"]) || isset($_POST["upload_overnightexcel"])){
 
