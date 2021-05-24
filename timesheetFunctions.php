@@ -13,7 +13,7 @@
 			// 		and year(t.sheetDate)= year('".$_POST['dateFrom']."')";
 
 			$sql=	"select e.currentCode,e.empName, t.*,empt.presence_days,empt.deduction_days,empt.absence_days,empt.annual_days,empt.casual_days,
-						empt.emp_id,empt.TS_id,	empt.manufacturing_days,empt.evaluationPercent,	empsk.sick_leavesDays ,empsh.shift_days,
+						empt.emp_id,empt.TS_id,	empt.manufacturing_days,empt.evaluationPercent,	empt.sickLeave_Days ,empsh.shift_days,
 						empov.overnight_days,empt.notes as timesheetNotes,empsk.notes as sicknotes,empsh.notes as shiftnotes,empov.notes as ovnotes
 					from  timesheets t inner join empTimesheet empt on t.ID = empt.TS_id 
 							left join employee e on empt.emp_id = e.ID 
@@ -50,7 +50,7 @@
 					<td>".  $row['presence_days']. "</td>
 					<td>".  $row['absence_days']. "</td>
 					<td>".  $row['casual_days']. "</td>
-					<td>".  $row['sick_leavesDays']. "</td>
+					<td>".  $row['sickLeave_Days']. "</td>
 					<td>".  $row['deduction_days']. "</td>
 					<td>".  $row['annual_days']. "</td>
 					<td>".  $row['manufacturing_days']. "</td>
@@ -428,7 +428,7 @@
 							//echo $empID;
 							
 							if($empID){															
-								$employeetimesheet= "( $lastID,	$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4].",
+								$employeetimesheet= "( $lastID,	$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4]."," .$data[$row][5].",
 										" .$data[$row][6]."," .$data[$row][7]."," .$data[$row][8]."," .$data[$row][9].",'" .$data[$row][10]."'),";
 								$sql.= $employeetimesheet;
 							}					
@@ -437,12 +437,12 @@
 							}
 						}
 					
-						$insert_sql = 'INSERT INTO emptimesheet(TS_id,emp_id,presence_days,absence_days,casual_days,deduction_days,
-						annual_days, manufacturing_days,evaluationPercent,notes)
-						VALUES '. trim($sql,",");
-							//echo $insert_sql ;
+						$insert_sql = 'INSERT INTO emptimesheet(TS_id,emp_id,presence_days,absence_days,casual_days,sickLeave_days,
+										deduction_days,annual_days, manufacturing_days,evaluationPercent,notes)
+										VALUES '. trim($sql,",");
+						echo $insert_sql ;
 						$statement = $con->prepare($insert_sql);
-						$statement->execute();
+						 $statement->execute();
 						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
 					}else{
@@ -624,9 +624,9 @@
 						unlink($file_name);
 						
 						$data = $spreadsheet->getActiveSheet()->toArray();
-						  
+		
 						$count = count($data);
-						// echo $count;
+						$sql="";
 						for($row =1; $row < $count ; $row ++){
 							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
 							$stmt = $con->prepare($getEmpID_sql);
@@ -634,13 +634,13 @@
 							$empID = $stmt->fetchColumn();
 							
 							if($empID){
-								//echo $empID;
-								$insertshift_sql = "INSERT INTO emp_shift(TS_id,emp_id,shift_days,cashperday,total,notes) 
-										values( $lastID,$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4].",'" .$data[$row][5]."')";
+								$employee_shifttimesheet= "($lastID,$empID," .$data[$row][2]."," .$data[$row][3]."," .$data[$row][4].",'" .$data[$row][5]."'),";
+								$sql.= $employee_shifttimesheet;
+								
+								
 								// echo $insertovernight_sql . "<br>";
 
-								$statement = $con->prepare($insertshift_sql);
-								$statement->execute();
+
 							}else{
 
 								//echo "emp not found";
@@ -648,7 +648,16 @@
 							
 
 						}
-						
+						$insertshift_sql = 'INSERT INTO emp_shift(TS_id,emp_id,shift_days,cashperday,total,notes) 
+											VALUES '. trim($sql,",");
+						$statement = $con->prepare($insertshift_sql);
+
+						$statement->execute();
+
+
+
+
+
 						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
 					}else{
