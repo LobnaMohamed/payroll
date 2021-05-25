@@ -531,6 +531,7 @@
 						// $nullValue = null, $calculateFormulas = true, $formatData = true, $returnCellRef = false
 						$count = count($data);
 						// echo $count;
+						$sql ="";
 						for($row =1; $row < $count ; $row ++){
 							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
 							$stmt = $con->prepare($getEmpID_sql);
@@ -538,21 +539,17 @@
 							$empID = $stmt->fetchColumn();
 							
 							if($empID){
-								//echo $empID;
-								$insertovernight_sql = "INSERT INTO emp_overnight(TS_id,emp_id,overnight_days,overnight_deserveddays,notes) 
-												values( $lastID,$empID," .$data[$row][2]."," .$data[$row][3].",'" .$data[$row][4]."')";
-								// echo $insertovernight_sql . "<br>";
-
-								$statement = $con->prepare($insertovernight_sql);
-								$statement->execute();
+								$employeeovernight= "( $lastID,	$empID," .$data[$row][2]."," .$data[$row][3].",'" .$data[$row][4]."'),";
+								$sql.= $employeeovernight;
+								
 							}else{
-
 								//echo "emp not found";
 							}
-							
-
 						}
-						
+						$insertovernight_sql = 'INSERT INTO emp_overnight(TS_id,emp_id,overnight_days,overnight_deserveddays,notes) 
+												VALUES '. trim($sql,",");
+						$statement = $con->prepare($insertovernight_sql);
+						$statement->execute();						
 						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
 					}else{
