@@ -1078,9 +1078,9 @@ function calculateSalary24(){
     // 				and e.ID = empt.emp_id
     // 				and ts.ID = empt.TS_id";	
     if ($timesheetID) {
-        $sql ="select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
+        $sql ="select e.ID,e.currentSalary,e.currentWorkAllowanceNature,ms.social_insurance,
                         ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
-                        j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absense_days,empt.deduction_days,
+                        j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absence_days,empt.deduction_days,
                         empt.presence_days,IfNull(es.total, 0) as shiftcash,IfNull(eov.overnight_deserveddays, 0) as overnight_days,
                         IfNull(esk.real_sickLeaves, 0) as sickLeave_days,empt.evaluationPercent
                 from   employee e left join maritalStatus ms on e.currentMS = ms.ID
@@ -1121,7 +1121,7 @@ function calculateSalary24(){
             $total_incentive = $incentive + $additionalincentive;
             $shift = $row['shiftcash']; // وردية
             //check sick leaves and abscence and deduction
-            if ($row['sickLeave_days'] >= 10 || $row['abscence_days'] >=10 || $row['deduction_days']>=10) {
+            if ($row['sickLeave_days'] >= 10 || $row['absence_days'] >=10 || $row['deduction_days']>=10) {
                 $specializationAllowance = 0;
             } else {
                 $specializationAllowance = $currentDays * ($row['specialization_amount']+ ($row['currentSalary']/4)) ; // بدل تخصص
@@ -1185,10 +1185,10 @@ function calculateSalary24(){
                     familyHealthInsurance =$familyHealthInsurance,
                     petroleumSyndicate =$petroleumSyndicate,
                     empServiceFund = $empServiceFund,
-                    socialInsurances =$socialInsurances,
+                    socialInsurances =$socialInsurances
 
                     WHERE TS_id = ".$row['timesheetID']."
-                    and emp_id =".$row['ID']." " ;
+                    and emp_id =".$row['ID']. "" ;
 
             $stmt = $con->prepare($sql2);
             $stmt->execute();
