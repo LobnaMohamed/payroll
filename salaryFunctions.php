@@ -48,7 +48,8 @@ function showbenefits(){
     //check if there are any values in salary for that date:
     $sql = "select ID
             from timesheets
-            where sheetDate = '".$_POST['dateFrom']."'";
+            where month(sheetDate) = month('".$_POST['dateFrom']."')
+                and year(sheetDate)=year('".$_POST['dateFrom']."')";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $timesheetID = $stmt->fetchColumn();

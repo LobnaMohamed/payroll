@@ -440,7 +440,7 @@
 						$insert_sql = 'INSERT INTO emptimesheet(TS_id,emp_id,presence_days,absence_days,casual_days,sickLeave_days,
 										deduction_days,annual_days, manufacturing_days,evaluationPercent,notes)
 										VALUES '. trim($sql,",");
-						echo $insert_sql ;
+						//echo $insert_sql ;
 						$statement = $con->prepare($insert_sql);
 						 $statement->execute();
 						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
