@@ -311,6 +311,71 @@
 				<td>".  $row['empName']. "</td>
 				<td>".  $row['currentSalary']. "</td>
 			</tr>";
-			}
+		}
 		echo $output;
-	}
+    }
+    //-------------update Benefits----------------------
+function updateBasicSalary(){
+    $con = connect();
+    if(isset($_POST['upload_basicSalaryexcel'])){
+        //check if date was choosen
+        if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+            if($_FILES["result_file"]["name"] != ''){
+                $allowed_extension = array('xls', 'csv', 'xlsx');
+                $file_array = explode(".", $_FILES["result_file"]["name"]);
+                $file_extension = end($file_array);
+
+                if(in_array($file_extension, $allowed_extension)){
+                    $file_name = time() . '.' . $file_extension;
+                    move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+                    $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+                    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+                    $spreadsheet = $reader->load($file_name);
+                    unlink($file_name);
+                    $data = $spreadsheet->getActiveSheet()->toArray();
+                    $count = count($data);
+                    $sql="";
+                    for($row =1; $row < $count ; $row ++){
+                        $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
+                        $stmt = $con->prepare($getEmpID_sql);
+                        $stmt->execute();
+                        $empID = $stmt->fetchColumn();
+                        
+                        if($empID){
+                            $employee_basicSalary= "($empID," .$data[$row][2].",'" .$data[$row][3]."'),";
+                            $sql.= $employee_basicSalary;
+
+                        }else{
+
+                            //echo "emp not found";
+                        }
+                        $updateCurrentSalary_sql = "UPDATE employee
+                        set currentSalary =" .$data[$row][2]."
+                        where ID = $empID";
+                        // ECHO  $updateCurrentSalary_sql;
+                        $statement2 = $con->prepare($updateCurrentSalary_sql);
+                        $statement2->execute();
+
+                    }
+                    $insertBasicSalary_sql = 'INSERT INTO emp_basicsalary(emp_id,basicSalary,salaryDate) 
+                                            VALUES '. trim($sql,",");
+                    
+                    $statement = $con->prepare($insertBasicSalary_sql);
+                    $statement->execute();
+                
+                    $message = '<div class="alert alert-success">Data Imported Successfully</div>';
+
+                }else{
+                    $message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+                }
+            }else{
+                $message = '<div class="alert alert-danger">Please Select File</div>';
+            }
+
+            echo $message;
+        }else{
+            echo "you have to select date and choose file";
+        }
+
+    }
+}

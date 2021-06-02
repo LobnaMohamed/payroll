@@ -25,9 +25,6 @@
 	elseif($currentURL == 'empdata.php'){
 
 		getAllEmp();
-
-
-
 	}
 	elseif($currentURL == 'wages.php'){
 		$con = connect();
@@ -65,7 +62,11 @@
 	}elseif($currentURL == 'benefits.php'){
 
 		getBenefits();
+	}elseif($currentURL == 'basicSalaryData.php'){
+
+		getAllBasicSalary();
 	}
+	
 	
 	//elseif($currentURL == 'insertDedfromcredit.php'){
 

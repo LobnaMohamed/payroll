@@ -457,11 +457,6 @@ $(document).ready(function(){
 			}
 		});		
 	});
-
-	
-	
-	
-
 	//--------------onsubmit calculate salary form-----------------------------
 	$(document).on('submit','#SalaryCalculation', function(){
 		var currentURL = document.location.href.match(/[^\/]+$/)[0];
@@ -652,6 +647,10 @@ $(document).ready(function(){
 				 }else if(currentURL == 'benefits.php'){
 					
 					$('#benefitsbody').html(data);
+ 
+				 }else if(currentURL == 'basicSalaryData.php'){
+					
+					$('#empDatabody').html(data);
  
 				 }
 		   },

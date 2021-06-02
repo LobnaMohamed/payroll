@@ -13,7 +13,8 @@
 	    </header>
 			<div class="empdata-container row">
 				<div class="table-responsive row">
-					<form class="navbar-form row" role="search" id="searchEmp" method="POST" action="fetch.php" enctype="multipart/form-data">
+					<form class="navbar-form row" role="search" id="searchEmp" method="POST" action="fetch.php" 
+								enctype="multipart/form-data">
 						<!-- <div class="row form-group"> -->
 						<div class=" col-md-2">
 							<label>
@@ -26,7 +27,8 @@
 								<input name="result_file" type="file">
 							</div>
 							<div class="col-sm-3">
-								<input type="submit" name="upload_excel" value="upload" id="upload_excel" class="btn btn-primary btn-rounded">
+								<input type="submit" name="upload_basicSalaryexcel" value="upload" 
+										id="upload_excel" class="btn btn-primary btn-rounded">
 							</div>
 						</div>
 						<div class="col-sm-6 form-group">

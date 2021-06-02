@@ -198,5 +198,9 @@
 				echo "valid";
 			}
 		}
+		elseif(isset($_POST["upload_basicSalaryexcel"])){
+			updateBasicSalary();
+			header("Location:basicSalaryData.php");
+		}
 		ob_end_flush();
 	?>
