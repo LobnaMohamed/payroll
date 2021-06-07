@@ -11,7 +11,8 @@
     
     <!-- <div class="timesheet-container"> -->
        
-        <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" enctype="multipart/form-data">
+        <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" 
+                enctype="multipart/form-data" onsubmit="return confirm('سيتم اضافة الحصر..هل انت متأكد؟');">
             <div class="row form-group">
                 <div class="col-sm-5">
                    

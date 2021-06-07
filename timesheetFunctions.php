@@ -119,7 +119,7 @@
 						<input class='form-control transparent-input' name='manufacturing_days[".$row['ID']."]' value=0 style='width: 100%'>
 					</td>
 					<td>
-						<input class='form-control transparent-input' name='evaluationPercent[".$row['ID']."]' value=1 style='width: 100%'>
+						<input class='form-control transparent-input' name='evaluationPercent[".$row['ID']."]' value=100 style='width: 100%'>
 					</td>
 					<td>
 						<input class='form-control transparent-input' name='notes[".$row['ID']."]' style='width: 100%'>

@@ -14,7 +14,7 @@
 			<div class="empdata-container row">
 				<div class="table-responsive row">
 					<form class="navbar-form row" role="search" id="searchEmp" method="POST" action="fetch.php" 
-								enctype="multipart/form-data">
+							enctype="multipart/form-data" onsubmit="return confirm('سيتم تحديث الاجر الاساسى ..هل انت متأكد؟');">
 						<!-- <div class="row form-group"> -->
 						<div class=" col-md-2">
 							<label>
@@ -35,7 +35,7 @@
 								
 							<!-- <div class="form-group"> -->
 								<label for="searchDateFrom">تاريخ الاجر:</label>
-								<input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date">
+								<input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date" required>
 								<label for = "search">رقم القيد / الاسم :</label>
 								<input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">
 								<!-- <div class="input-group-btn">

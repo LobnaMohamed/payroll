@@ -103,10 +103,10 @@
         $basicsalaryEdit = $_POST['basicsalaryEdit'];
         $syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
         $genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
-        echo "<br>";
-        echo "<pre>";
-        print_r($_POST);
-        echo "</pre>";
+        // echo "<br>";
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "</pre>";
         
         //sql statements to be executed
         if($jobEdit != $_POST['jobcurrentValue']){
@@ -339,8 +339,7 @@ function updateBasicSalary(){
                         $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
                         $stmt = $con->prepare($getEmpID_sql);
                         $stmt->execute();
-                        $empID = $stmt->fetchColumn();
-                        
+                        $empID = $stmt->fetchColumn();                        
                         if($empID){
                             $employee_basicSalary= "($empID," .$data[$row][2].",'" .$data[$row][3]."'),";
                             $sql.= $employee_basicSalary;
@@ -351,18 +350,16 @@ function updateBasicSalary(){
                         }
                         $updateCurrentSalary_sql = "UPDATE employee
                         set currentSalary =" .$data[$row][2]."
-                        where ID = $empID";
-                        // ECHO  $updateCurrentSalary_sql;
+                        where ID = $empID";                        
                         $statement2 = $con->prepare($updateCurrentSalary_sql);
-                        $statement2->execute();
-
+                        $statement2->execute();                        
                     }
                     $insertBasicSalary_sql = 'INSERT INTO emp_basicsalary(emp_id,basicSalary,salaryDate) 
                                             VALUES '. trim($sql,",");
                     
                     $statement = $con->prepare($insertBasicSalary_sql);
                     $statement->execute();
-                
+                    // echo $insertBasicSalary_sql;
                     $message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
                 }else{
