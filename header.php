@@ -54,15 +54,6 @@
 	
 						</ul>
 					</div>
-					<div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">المـــرتب
-						<span class="caret"></span></button>
-						<ul class="dropdown-menu dropdown-menu-right">
-							<li><a href="wages.php">مـرتب 24 </a></li>
-							<li><a href="#">منحـــة 10</a></li>
-							<li><a href="#">مـجمع</a></li>
-						</ul>
-					</div>
 
 					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستقطاعات
@@ -88,6 +79,15 @@
 						<ul class="dropdown-menu dropdown-menu-right">
 							<li><a href="benefitsreview.php">إستحقاقات</a></li>
 							<li><a href="benefits.php">ادخال الإستحقاق</a></li>
+						</ul>
+					</div>
+					<div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">المـــرتب
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li><a href="wages.php">مـرتب 24 </a></li>
+							<li><a href="#">منحـــة 10</a></li>
+							<li><a href="#">مـجمع</a></li>
 						</ul>
 					</div>
 					<!-- <a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a> -->

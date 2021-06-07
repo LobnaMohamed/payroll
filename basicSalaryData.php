@@ -27,7 +27,7 @@
 								<input name="result_file" type="file">
 							</div>
 							<div class="col-sm-3">
-								<input type="submit" name="upload_basicSalaryexcel" value="upload" 
+								<input type="submit" name="upload_basicSalaryexcel" value="تحديث الاجر" 
 										id="upload_excel" class="btn btn-primary btn-rounded">
 							</div>
 						</div>
@@ -48,14 +48,14 @@
 
 						<button id="scroll_down" class="btn btn-lg btn-default form-control" type="button"><i class='fa fa-2x fa-angle-double-down '></i></button>
 						<button id="scroll_up" class="btn btn-lg btn-default form-control hide" type="button"><i class='fa fa-2x fa-angle-double-up '></i></button>
-						
+
 					</form>
 					<table id="empData" class="table table-striped table-bordered">
 							<thead >
 								<tr>
 									<th>رقم القيد</th>
 									<th>الاسم</th>
-									<th>المرتب الأساسى</th>							
+									<th> المرتب الأساسى الحالى</th>							
 								</tr>
 							</thead>
 						<tbody id="empDatabody">

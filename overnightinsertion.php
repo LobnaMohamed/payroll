@@ -14,12 +14,12 @@
             <div class="row form-group">
                 <div class="col-sm-5">
                    
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <input name="result_file" type="file">
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
-                        <input type="submit" name="upload_overnightexcel"  id="upload_overnightexcel" value="upload" class="btn btn-primary btn-rounded">
+                        <input type="submit" name="upload_overnightexcel"  id="upload_overnightexcel" value="اضافة نوباتجية" class="btn btn-primary btn-rounded">
                    
                     </div>
                 </div>

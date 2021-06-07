@@ -692,6 +692,9 @@ $(document).ready(function(){
 					}else if(currentURL == 'sickleavesinsertion.php'){
 						//console.log(data);
 						$('#sickleavesbody').html(data);	 
+					}else if(currentURL == 'timesheetinsertion.php'){
+						//console.log(data);
+						$('#timesheetbody').html(data);	 
 					}
 				},
 				error: function(error) {

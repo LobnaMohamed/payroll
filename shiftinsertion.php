@@ -11,16 +11,17 @@
     
     <!-- <div class="timesheet-container"> -->
        
-        <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" enctype="multipart/form-data">
+        <form class="navbar-form " role="search" id="timesheetinsertion" method="POST" action="fetch.php" 
+            enctype="multipart/form-data" onsubmit="return confirm('سيتم ادخال الورادى ..هل انت متأكد؟');">
             <div class="row form-group">
                 <div class="col-sm-5">
                    
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <input name="result_file" type="file">
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
-                        <input type="submit" name="upload_shiftexcel"  id="upload_shiftexcel" value="upload" class="btn btn-primary btn-rounded">
+                        <input type="submit" name="upload_shiftexcel"  id="upload_shiftexcel" value="اضافة الوردية" class="btn btn-primary btn-rounded">
                    
                     </div>
                 </div>
