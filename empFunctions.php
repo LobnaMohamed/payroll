@@ -36,10 +36,10 @@
                 $con = connect();
                 
                 $employee_sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
-                                                    currentSalary,syndicate_id,hireDate,education,DOB) 
+                                                    currentSalary,syndicate_id,hireDate,education,DOB,currentRepresentation,currentWorkAllowanceNature) 
                                 VALUES ($addempCode,'$addempName',$addcontractType,$addjob,$addlevel,'$addshift',
                                 $addmaritalstatus,'$addgender',$addbasicsalary,$addsyndicate,'$addhireDate'
-                                ,'$addeducation','$addDOB')" ;
+                                ,'$addeducation','$addDOB',$addrepresentation, $addWorkAllowanceNature)" ;
                 // echo "<pre>";
                 // echo $_POST['addsyndicate'];
                 // echo $addsyndicate;
