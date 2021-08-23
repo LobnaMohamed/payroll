@@ -724,6 +724,63 @@
 		}
 		//--------second option through upload--------------------
 		elseif(isset($_POST['upload_sickleavesexcel'])){
+			require 'phpoffice_phpspreadsheet';
+			//------------------------------------------------------------------------------------------//
+			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+				if($_FILES["result_file"]["name"] != ''){
+					$allowed_extension = array('xls', 'csv', 'xlsx');
+					$file_array = explode(".", $_FILES["result_file"]["name"]);
+					$file_extension = end($file_array);
+
+					if(in_array($file_extension, $allowed_extension)){
+						$file_name = time() . '.' . $file_extension;
+						move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+						$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+						$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+
+						$spreadsheet = $reader->load($file_name);
+
+						unlink($file_name);
+						
+						  $data = $spreadsheet->getActiveSheet()->toArray();
+						  
+						//  $cellValue = $spreadsheet->getActiveSheet()->getCell('D2')->getOldCalculatedValue() ;
+						//  echo $cellValue;
+						// $nullValue = null, $calculateFormulas = true, $formatData = true, $returnCellRef = false
+						$count = count($data);
+						// echo $count;
+						$sql ="";
+						for($row =1; $row < $count ; $row ++){
+							$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
+							$stmt = $con->prepare($getEmpID_sql);
+							$stmt->execute();
+							$empID = $stmt->fetchColumn();
+							
+							if($empID){
+								$employeesickleaves= "( $lastID,$empID," .$data[$row][2]."," .$data[$row][3].",'" .$data[$row][4]."',
+								'" .$data[$row][5]."'," .$data[$row][6]."," .$data[$row][7]."," .$data[$row][8]."),";
+								$sql.= $employeesickleaves;
+								
+							}else{
+								//echo "emp not found";
+							}
+						}
+						$insertsickleaves_sql = 'INSERT INTO emp_sickleaves(TS_id,emp_id,sick_leavesDays,continious,startDate,
+												endDate,real_sickLeaves,totalAmountDeducted,notes)VALUES '. trim($sql,",");
+						$statement = $con->prepare($insertsickleaves_sql);
+						$statement->execute();						
+						$message = '<div class="alert alert-success">Data Imported Successfully</div>';
+
+					}else{
+						$message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+					}
+				}else{
+					$message = '<div class="alert alert-danger">Please Select File</div>';
+				}
+
+				echo $message;
+			}
+			//------------------------------------------------------------------------------------//
 			//check if date was choosen
 			if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
 				// echo "set";
