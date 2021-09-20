@@ -40,13 +40,6 @@
                                 VALUES ($addempCode,'$addempName',$addcontractType,$addjob,$addlevel,'$addshift',
                                 $addmaritalstatus,'$addgender',$addbasicsalary,$addsyndicate,'$addhireDate'
                                 ,'$addeducation','$addDOB',$addrepresentation, $addWorkAllowanceNature)" ;
-                // echo "<pre>";
-                // echo $_POST['addsyndicate'];
-                // echo $addsyndicate;
-                // echo "<br>";
-                // echo $employee_sql;
-                // echo "</pre>";
-
                 $stmt = $con->prepare($employee_sql);
                 $stmt->execute();
                 $empID_sql = "select ID FROM employee where currentCode =$addempCode "	;	
@@ -225,9 +218,14 @@
 	function getEmpHistoryMainData(){
 		//$output="";
 		$con = connect();		
-		$sql="select ID,empName,currentCode,DOB,hireDate,gender,education,currentSalary,currentShift,currentMS,syndicate_id,currentContract
-				from employee
-				where ID = ".$_POST['historyEmpID']."" ;
+		$sql="select e.ID,empName,currentCode,DOB,hireDate,gender,education,currentSalary,
+                currentShift,syndicate_id,c.contractType,ms.maritalStatus,l.empLevel,j.job
+                from employee e inner join contract  c on e.currentContract = c.ID
+                inner join maritalstatus ms on e.currentMS = ms.Id
+                inner join level l on e.currentLevel = l.ID
+                inner join job j on e.currentJob = j.ID
+                        
+				where e.ID = ".$_POST['historyEmpID']."" ;
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch();

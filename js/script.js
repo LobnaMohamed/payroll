@@ -528,8 +528,8 @@ $(document).ready(function(){
 				$('#historyEmp_DOB').text(data.DOB);
 				$('#historyEmp_level').text(data.empLevel);
 				$('#historyEmp_job').text(data.job);
-				$('#historyEmp_syndicate').text(data.syndicate);
-				$('#historyEmp_MS').text(data.currentMS);
+				$('#historyEmp_syndicate').text(data.currentSyndicate);
+				$('#historyEmp_MS').text(data.maritalStatus);
 				$('#historyEmp_contract').text(data.contractType);
 				$('#historyEmp_shift').text(data.currentShift);
 				$('#historyEmp_salary').text(data.currentSalary);
