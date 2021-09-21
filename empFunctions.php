@@ -17,7 +17,7 @@
             // $addbasicsalary = isset($_POST['addbasicsalary'])? filter_var($_POST['addbasicsalary'],FILTER_SANITIZE_NUMBER_FLOAT) :null;
             $addbasicsalary = $_POST['addbasicsalary'];
 
-            $addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_INT):null;
+            $addsyndicate = isset($_POST['addsyndicate'])? filter_var($_POST['addsyndicate'],FILTER_SANITIZE_NUMBER_FLOAT):null;
             
             $addgender = isset($_POST['addgender'])? filter_var($_POST['addgender'],FILTER_SANITIZE_STRING) : '';
             $adddesc_job = isset($_POST['adddesc_job'])? filter_var($_POST['adddesc_job'],FILTER_SANITIZE_STRING) : null;
@@ -36,7 +36,7 @@
                 $con = connect();
                 
                 $employee_sql= "INSERT INTO employee(currentCode,empName,currentContract,currentJob,currentLevel,currentShift,currentMS,gender,
-                                                    currentSalary,syndicate_id,hireDate,education,DOB,currentRepresentation,currentWorkAllowanceNature) 
+                                                    currentSalary,currentSyndicate,hireDate,education,DOB,currentRepresentation,currentWorkAllowanceNature) 
                                 VALUES ($addempCode,'$addempName',$addcontractType,$addjob,$addlevel,'$addshift',
                                 $addmaritalstatus,'$addgender',$addbasicsalary,$addsyndicate,'$addhireDate'
                                 ,'$addeducation','$addDOB',$addrepresentation, $addWorkAllowanceNature)" ;
@@ -94,7 +94,7 @@
         $desc_jobEdit= isset($_POST['desc_jobEdit'])? filter_var($_POST['desc_jobEdit'],FILTER_SANITIZE_STRING) : '';
         $educationEdit = isset($_POST['educationEdit'])? filter_var($_POST['educationEdit'],FILTER_SANITIZE_STRING) : '';
         $basicsalaryEdit = $_POST['basicsalaryEdit'];
-        $syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_INT):'';
+        $syndicateEdit = isset($_POST['syndicateEdit'])? filter_var($_POST['syndicateEdit'],FILTER_SANITIZE_NUMBER_FLOAT):'';
         $genderEdit = isset($_POST['genderEdit'])? filter_var($_POST['genderEdit'],FILTER_SANITIZE_STRING) : '';
         // echo "<br>";
         // echo "<pre>";
@@ -167,7 +167,7 @@
         }
         if($syndicateEdit != $_POST['syndicatecurrentValue']){
             // $syndicate_sql = "insert into emp_syndicate(emp_id,level_id,level_date)values($employee_ID,$levelEdit,$levelDate)";
-            $emp_sql = "UPDATE employee SET syndicate_id = $syndicateEdit WHERE ID= $employee_ID";
+            $emp_sql = "UPDATE employee SET currentSyndicate = $syndicateEdit WHERE ID= $employee_ID";
             $stmt = $con->prepare($emp_sql);
             $stmt->execute();
 
@@ -219,7 +219,7 @@
 		//$output="";
 		$con = connect();		
 		$sql="select e.ID,empName,currentCode,DOB,hireDate,gender,education,currentSalary,
-                currentShift,syndicate_id,c.contractType,ms.maritalStatus,l.empLevel,j.job
+                currentShift,currentSyndicate,c.contractType,ms.maritalStatus,l.empLevel,j.job
                 from employee e inner join contract  c on e.currentContract = c.ID
                 inner join maritalstatus ms on e.currentMS = ms.Id
                 inner join level l on e.currentLevel = l.ID

@@ -1066,26 +1066,14 @@ function calculateSalary24(){
     $stmt = $con->prepare($getTimesheet_Id_sql);
     $stmt->execute();
     $timesheetID = $stmt->fetchcolumn();
-    // $sql = "select e.ID,e.currentSalary,e.currentSpecialization,e.currentWorkAllowanceNature,ms.social_insurance,
-    // 		ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
-    // 		j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.overnight_days,
-    // 		empt.shift_days,empt.presence_days,empt.casual_days,empt.sickLeave_days 
-    // 		from   employee e,timesheets ts,maritalStatus ms,syndicates s,level l,job j,empTimesheet empt
-    // 		where  e.currentMS = ms.ID
-    // 				and e.syndicate_id = s.ID
-    // 				and e.currentLevel = l.ID
-    // 				and e.currentJob = j.ID
-    // 				and ts.sheetDate = '" . $_POST['searchDateFrom'] ."'
-    // 				and e.ID = empt.emp_id
-    // 				and ts.ID = empt.TS_id";	
+	
     if ($timesheetID) {
-        $sql ="select e.ID,e.currentSalary,e.currentWorkAllowanceNature,ms.social_insurance,
-                        ms.med_insurance,s.amount,l.incentivePercent,j.specialization_amount,j.experience_amount,
+        $sql ="select e.ID,e.currentSalary,e.currentWorkAllowanceNature,ms.social_insurance,e.currentSyndicate,
+                        ms.med_insurance,l.incentivePercent,j.specialization_amount,j.experience_amount,
                         j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absence_days,empt.deduction_days,
                         empt.presence_days,IfNull(es.total, 0) as shiftcash,IfNull(eov.overnight_deserveddays, 0) as overnight_days,
                         IfNull(esk.real_sickLeaves, 0) as sickLeave_days,empt.evaluationPercent
                 from   employee e left join maritalStatus ms on e.currentMS = ms.ID
-                left join syndicates s on e.syndicate_id = s.ID
                 left join level l on e.currentLevel = l.ID
                 left join job j on  e.currentJob = j.ID
                 left join empTimesheet empt on e.ID = empt.emp_id and empt.TS_id = $timesheetID
@@ -1103,7 +1091,7 @@ function calculateSalary24(){
             $natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
             $socialAid = $row['social_insurance'] ; //م.اجتماعية
             $representation = $row['representation_amount']; // تمثيل
-            $occupationalAllowance = $row['amount']; // بدل مهنى
+            $occupationalAllowance = $row['currentSyndicate']; // بدل مهنى
             $manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
             $experience = ($currentDays) * $row['experience_amount']; // خبرة
             $overnightShift = $row['overnight_days'] * ($row['currentSalary']/30) ; // نوباتجية

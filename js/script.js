@@ -165,9 +165,10 @@ $(document).ready(function(){
 				$('#shiftcurrentValue').val(data.currentShift);
 
 
-				$('#syndicateEdit').val(data.syndicate_id);
-				$('#syndicatecurrentValue').val(data.syndicate_id);
-				
+				// $('#syndicateEdit').val(data.syndicate_id);
+				// $('#syndicatecurrentValue').val(data.syndicate_id);
+
+				$('#syndicateEdit').val(data.currentSyndicate);
 
 				$('#basicSalaryDate').val(data.salaryMaxDate);
 				$('#basicSalaryDatecurrentValue').val(data.salaryMaxDate);

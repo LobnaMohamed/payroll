@@ -12,7 +12,7 @@
 		{  
 			//show data in emp modal
 			$con = connect();			 
-			$sql = "select ID,empName,currentCode,gender,currentLevel,syndicate_id,currentMS,currentContract,currentSalary,currentJob,education,currentShift,hireDate
+			$sql = "select ID,empName,currentCode,gender,currentLevel,currentSyndicate,currentMS,currentContract,currentSalary,currentJob,education,currentShift,hireDate
 							,shift,job_description,ej.JobMaxDate,empMS.MSMaxDate,empl.levelMaxDate,empc.contractMaxDate,empbasic.salaryMaxDate
 					from employee inner join emp_job on employee.ID = emp_job.emp_id
 								inner join (select emp_id, max(job_date) as JobMaxDate
