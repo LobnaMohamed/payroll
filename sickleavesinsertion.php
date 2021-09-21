@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-sm-3">
                         <!-- <button type="submit" name="upload_excel" class="btn btn-primary btn-rounded">Upload Excel</button> -->
-                        <input type="submit" name="upload_excel" value="اضافة المرضى" class="btn btn-primary btn-rounded">
+                        <input type="submit" name="uploadsickLeave_excel" value="اضافة المرضى" class="btn btn-primary btn-rounded">
                    
                     </div>
                 </div>

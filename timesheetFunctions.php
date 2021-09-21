@@ -848,9 +848,69 @@
 				$updatemsg = "File Successfully Imported!";
 				$updatemsgtype = 1;
 			
+			}
+			////////////////////////////////////////////////////////////////////////////////////////////
+			elseif(isset($_POST['uploadsickLeave_excel'])){
+				//check if date was choosen
+				if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+					if($_FILES["result_file"]["name"] != ''){
+						$allowed_extension = array('xls', 'csv', 'xlsx');
+						$file_array = explode(".", $_FILES["result_file"]["name"]);
+						$file_extension = end($file_array);
+	
+						if(in_array($file_extension, $allowed_extension)){
+							$file_name = time() . '.' . $file_extension;
+							move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+							$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+							$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+	
+							$spreadsheet = $reader->load($file_name);
+	
+							unlink($file_name);
+							
+							$data = $spreadsheet->getActiveSheet()->toArray();
+			
+							$count = count($data);
+							$sql="";
+							for($row =1; $row < $count ; $row ++){
+								$getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
+								$stmt = $con->prepare($getEmpID_sql);
+								$stmt->execute();
+								$empID = $stmt->fetchColumn();
+								
+								if($empID){
+									$employee_sickleavetimesheet= "($lastID,$empID," .$data[$row][2]."," .$data[$row][3].",
+									" .$data[$row][4]."," .$data[$row][5].",'" .$data[$row][6]."'),";
+									$sql.= $employee_shifttimesheet;
+
+								}else{
+									//echo "emp not found";
+								}
+							}
+
+							$insertsickLeave_sql = 'INSERT INTO emp_sickLeaves
+										(TS_id,emp_id,sick_leavesDays,startDate,endDate,continious,real_sickLeaves)
+										VALUES '. trim($sql,",");
+							$statement = $con->prepare($insertsickLeave_sql);
+							$statement->execute();
+							$message = '<div class="alert alert-success">Data Imported Successfully</div>';
+	
+						}else{
+							$message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+						}
+					}else{
+						$message = '<div class="alert alert-danger">Please Select File</div>';
+					}
+	
+					echo $message;
+				}else{
+					echo "you have to select date and choose file";
+				}
+	
 			}else{
 				echo "you have to select date and choose file";
 			}
+			/////////////////////////////////////////////////////////////////////////////////////////////
 
 		}
 		//echo "done insertion";

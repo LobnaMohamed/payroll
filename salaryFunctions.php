@@ -1070,7 +1070,7 @@ function calculateSalary24(){
     if ($timesheetID) {
         $sql ="select e.ID,e.currentSalary,e.currentWorkAllowanceNature,ms.social_insurance,e.currentSyndicate,
                         ms.med_insurance,l.incentivePercent,j.specialization_amount,j.experience_amount,
-                        j.representation_amount,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absence_days,empt.deduction_days,
+                        e.currentRepresentation,empt.TS_id as timesheetID, empt.manufacturing_days,empt.casual_days,empt.absence_days,empt.deduction_days,
                         empt.presence_days,IfNull(es.total, 0) as shiftcash,IfNull(eov.overnight_deserveddays, 0) as overnight_days,
                         IfNull(esk.real_sickLeaves, 0) as sickLeave_days,empt.evaluationPercent
                 from   employee e left join maritalStatus ms on e.currentMS = ms.ID
@@ -1090,7 +1090,7 @@ function calculateSalary24(){
             $attendancePay = $row['currentSalary'] * $currentDays;//اجر الحضور
             $natureOfworkAllowance =$row['currentWorkAllowanceNature'] * $currentDays; // بدل طبيعة
             $socialAid = $row['social_insurance'] ; //م.اجتماعية
-            $representation = $row['representation_amount']; // تمثيل
+            $representation = $row['currentRepresentation']; // تمثيل
             $occupationalAllowance = $row['currentSyndicate']; // بدل مهنى
             $manufacturingAllowance = 8 * (22- $row['manufacturing_days']); // بدل تصنيع
             $experience = ($currentDays) * $row['experience_amount']; // خبرة

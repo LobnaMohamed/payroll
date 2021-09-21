@@ -133,7 +133,7 @@
 										<?php  	getsyndicate();   ?>
 								</select>
 								<label for= "addrepresentation"> بدل التمثيل</label>
-					    		<input type="text" class="form-control" id="addrepresentation" name="addrepresentation">
+					    		<input type="text" class="form-control" id="addrepresentation" name="addrepresentation" value=0>
 								<label for= "addWorkAllowanceNature">بدل الطبيعة</label>
 					    		<input type="text" class="form-control" id="addWorkAllowanceNature" name="addWorkAllowanceNature">
 							</div>
