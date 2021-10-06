@@ -206,8 +206,16 @@
 	// --------------get Employee current profile function-----------------------
 	function getEmpCurrentProfile(){
 		//$output="";
-		$con = connect();		
-		$sql="select * from empCurrentProfile where ID = ".$_POST['currentProfileEmpID']."";
+		$con = connect();
+	
+		//$sql="select * from empCurrentProfile where ID = ".$_POST['currentProfileEmpID']."";
+        $sql= "select e.ID AS ID,e.empName AS empName,e.currentCode AS currentCode,
+        e.gender AS gender,e.hireDate AS hireDate,e.currentShift AS currentShift,
+        c.contractType AS contractType,l.empLevel AS empLevel,ms.maritalStatus AS maritalStatus,
+        s.syndicate AS syndicate,j.job AS job,e.currentSalary AS currentSalary,e.DOB AS DOB 
+        from (((((employee e join syndicates s) join contract c) join level l) join maritalstatus ms) join job j)
+         where e.syndicate_id = s.ID and e.currentJob = j.ID and e.currentLevel = l.ID and e.currentContract = c.ID and e.currentMS = ms.ID
+        having ID = ".$_POST['currentProfileEmpID']."";
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
 		$result = $stmt->fetch();
