@@ -58,7 +58,7 @@
 					<td>".  $row['evaluationPercent']. "</td>
 					<td>".  $row['shift_days']. "</td>
 					<td>".  $row['overnight_days']. "</td>
-					<td>".  $row['timesheetNotes'] ."<br>". $row['shiftnotes']."<br>".$row['ovnotes']."<br>". $row['sicknotes']. "</td>
+					<td>".  $row['timesheetNotes'] ."&nbsp". $row['shiftnotes']."&nbsp".$row['ovnotes']."&nbsp". $row['sicknotes']. "</td>
 					<td style='display:none;'  class='timesheet_ID'>" .  $row['TS_id']."</td>
 					<td><a class='btn btn-sm edittimsesheetData'  id=".$row['emp_id'].">
 					<i class='fa fa-edit fa-lg' data-toggle='modal' data-target='#edittimsesheetModal'></i>

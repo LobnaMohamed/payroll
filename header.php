@@ -55,7 +55,7 @@
 	
 						</ul>
 					</div>
-					<?php /*
+					
 					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">  الاستقطاعات
 						<span class="caret"></span></button>
@@ -91,7 +91,7 @@
 							<li><a href="#">مـجمع</a></li>
 						</ul>
 					</div>
-					*/ ?>
+					
 					
 					
 					<!-- <a href="timesheet.php"  class="btn btn-primary dropdown-toggle">الحـــصر</a> -->
