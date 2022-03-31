@@ -70,6 +70,10 @@
 
 		getAllBasicSalary();
 	}
+	elseif($currentURL == 'appraisals.php'){
+
+		getAllAppraisals();
+	}
 	
 	
 	//elseif($currentURL == 'insertDedfromcredit.php'){

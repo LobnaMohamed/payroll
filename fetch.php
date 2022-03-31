@@ -215,5 +215,9 @@
 			deleteEmployee();
 			// header("Location:empData.php");
 		}
+		elseif(isset($_POST["upload_appraisalsexcel"])){
+			uploadAppraisals();
+			header("Location:appraisals.php");
+		}
 		ob_end_flush();
 	?>

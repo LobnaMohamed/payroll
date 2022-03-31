@@ -390,6 +390,131 @@
 		}
 		echo $output;
     }
+
+    //============upload new appraisals=================
+    function uploadAppraisals(){
+        $con = connect();
+        if(isset($_POST['upload_appraisalsexcel'])){
+            //check if date was choosen
+            if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+                $editDate =$_POST['searchDateFrom'];
+                if($_FILES["result_file"]["name"] != ''){
+                    $allowed_extension = array('xls', 'csv', 'xlsx');
+                    $file_array = explode(".", $_FILES["result_file"]["name"]);
+                    $file_extension = end($file_array);
+
+                    if(in_array($file_extension, $allowed_extension)){
+                        $file_name = time() . '.' . $file_extension;
+                        move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+                        $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+                        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+                        $spreadsheet = $reader->load($file_name);
+                        unlink($file_name);
+                        // $worksheet = $spreadsheet->setActiveSheetIndex(0);
+                        // $highestRow = $worksheet->getHighestRow();
+                        $data = $spreadsheet->getActiveSheet()->toArray();
+                        $count = count($data);
+                        echo $count;
+                        $sql="";
+                        for($row =1; $row < $count ; $row ++){
+                            if ($data[$row][1]) {
+                                $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][1] ."";
+                                $stmt = $con->prepare($getEmpID_sql);
+                                // echo $getEmpID_sql;
+                                $stmt->execute();
+                                $empID = $stmt->fetchColumn();
+                            }                    
+                            if($empID){
+                                $appraisal= "($empID,'$editDate','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."'
+                                ," .$data[$row][7].",'" .$data[$row][8]."'," .$data[$row][9]."," .$data[$row][10]."
+                                ," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."," .$data[$row][14]."),";
+                                $sql.=  $appraisal;
+                                //update employee
+                                $updateEmployeeData_sql = "UPDATE employee
+                                set currentSalary =" .$data[$row][11].",
+                                currentSpecialization = " .$data[$row][14].",
+                                jobDescription =  '" .$data[$row][4]."'
+                                where ID = $empID";
+                                // echo  $updateEmployeeData_sql ;               
+                                $statement2 = $con->prepare($updateEmployeeData_sql);
+                                $statement2->execute(); 
+                                //update basic salary
+                                $updatebasicSalary_sql = "UPDATE emp_basicsalary
+                                set basicSalary =" .$data[$row][11].",
+                                salaryDate =  '$editDate'
+                                where emp_id = $empID";
+                                // echo  $updateEmployeeData_sql ;               
+                                $statement2 = $con->prepare($updatebasicSalary_sql);
+                                $statement2->execute(); 
+                            }else{
+
+                                //echo "emp not found";
+                            }
+                       
+                        }
+                        $insertAppraisal_sql = 'INSERT INTO jobAppraisal(emp_id,appraisalDate,currentJob,newJob,newLevel,oldBasicSalary,lastEvaluation,
+                        	                    bonusPercent,bonusValue,newBasicSalary,oldPointOfPay,newPointOfPay,newSpecializationAllowance) 
+                                                VALUES '. trim($sql,",");
+                        
+                        $statement = $con->prepare($insertAppraisal_sql);
+                        $statement->execute();
+                         //echo $insertAppraisal_sql;
+                        $message = '<div class="alert alert-success">Data Imported Successfully</div>';
+
+                    }else{
+                        $message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+                    }
+                }else{
+                    $message = '<div class="alert alert-danger">Please Select File</div>';
+                }
+
+                echo $message;
+            }else{
+                echo "you have to select date and choose file";
+            }
+
+        }
+    }
+    function getAllAppraisals(){
+        $output="";
+		$con = connect();
+		$sql= '';		
+		$sql=" SELECT employee.currentCode,emp_id,employee.empName,appraisalDate,jobappraisal.currentJob as oldjob, newJob, newLevel, 
+                oldBasicSalary, lastEvaluation, bonusPercent, bonusValue, newBasicSalary, oldPointOfPay, newPointOfPay, newSpecializationAllowance 
+                    from employee inner join jobappraisal  on employee.id = jobappraisal.emp_id
+                    where  employee.is_deleted=0 ";
+
+            if (!empty($_POST['search'])) {
+                $sql .= " and (currentCode like '%". $_POST['search'] ."%' 
+                                OR empName like '%". $_POST['search'] ."%') ";
+            } 
+  
+            $sql .="ORDER BY employee.currentCode";                
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$output .= 
+			"<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<td>".  $row['appraisalDate']. "</td>
+
+				<td >".  $row['oldjob']. "</td>
+				<td>".  $row['newJob']. "</td>
+                <td>".  $row['newLevel']. "</td>
+				<td>".  $row['oldBasicSalary']. "</td>
+				<td>".  $row['lastEvaluation']. "</td>
+				<td>".  $row['bonusPercent']. "</td>
+				<td>".  $row['bonusValue']. "</td>
+				<td>".  $row['newBasicSalary']. "</td>
+				<td>".  $row['oldPointOfPay']. "</td>
+				<td>".  $row['newPointOfPay']. "</td>
+				<td>".  $row['newSpecializationAllowance']. "</td>
+			</tr>";
+		}
+		echo $output;
+    }
     //-------------update basic salary----------------------
     function updateBasicSalary(){
         $con = connect();
