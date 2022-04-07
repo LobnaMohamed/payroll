@@ -219,5 +219,9 @@
 			uploadAppraisals();
 			header("Location:appraisals.php");
 		}
+		elseif(isset($_POST["upload_deligationsexcel"])){
+			uploadDeligations();
+			//header("Location:deligations.php");
+		}
 		ob_end_flush();
 	?>

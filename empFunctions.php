@@ -475,6 +475,7 @@
 
         }
     }
+    //============get all appraisals =================
     function getAllAppraisals(){
         $output="";
 		$con = connect();
@@ -515,6 +516,96 @@
 		}
 		echo $output;
     }
+
+    //============upload new deligations=================
+    function uploaddeligations(){
+        $con = connect();
+        if(isset($_POST['upload_deligationsexcel'])){
+            //check if date was choosen
+            if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+                $editDate =$_POST['searchDateFrom'];
+                if($_FILES["result_file"]["name"] != ''){
+                    $allowed_extension = array('xls', 'csv', 'xlsx');
+                    $file_array = explode(".", $_FILES["result_file"]["name"]);
+                    $file_extension = end($file_array);
+
+                    if(in_array($file_extension, $allowed_extension)){
+                        $file_name = time() . '.' . $file_extension;
+                        move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+                        $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+                        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+                        $spreadsheet = $reader->load($file_name);
+                        unlink($file_name);
+                        // $worksheet = $spreadsheet->setActiveSheetIndex(0);
+                        // $highestRow = $worksheet->getHighestRow();
+                        $data = $spreadsheet->getActiveSheet()->toArray();
+                        $count = count($data);
+                        echo $count;
+                        $sql="";
+                        for($row =1; $row < $count ; $row ++){
+                            if ($data[$row][1]) {
+                                $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][1] ."";
+                                $stmt = $con->prepare($getEmpID_sql);
+                                // echo $getEmpID_sql;
+                                $stmt->execute();
+                                $empID = $stmt->fetchColumn();
+                            }                    
+                            if($empID){
+                                $deligation= "($empID,'$editDate','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."'," .$data[$row][7]."," .$data[$row][8]."," .$data[$row][9]."," .$data[$row][10]."),<br>";
+                                $sql.=  $deligation;
+                                $appraisal= "($empID,'$editDate','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."'
+                                ," .$data[$row][7].",'" .$data[$row][8]."'," .$data[$row][9]."," .$data[$row][10]."
+                                ," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."," .$data[$row][14]."),";
+                                
+                                //update employee
+                                $updateEmployeeData_sql = "UPDATE employee
+                                set currentExperience =" .$data[$row][7].",
+                                currentSpecialization = " .$data[$row][8].",
+                                currentRepresentation= " .$data[$row][9].",
+                                jobDescription =  '" .$data[$row][4]."'
+                                where ID = $empID";
+                                // echo  $updateEmployeeData_sql ;               
+                                $statement2 = $con->prepare($updateEmployeeData_sql);
+                                $statement2->execute(); 
+                                //update basic salary
+                                // $updatebasicSalary_sql = "UPDATE emp_basicsalary
+                                // set basicSalary =" .$data[$row][11].",
+                                // salaryDate =  '$editDate'
+                                // where emp_id = $empID";
+                                // echo  $updateEmployeeData_sql ;               
+                                // $statement2 = $con->prepare($updatebasicSalary_sql);
+                                // $statement2->execute(); 
+                            }else{
+
+                                //echo "emp not found";
+                            }
+                       
+                        }
+                        $insertDeligation_sql = 'INSERT INTO jobdeligation(emp_id,deligationDate,currentJob,deligationJob,deligationLevel,experienceBonus,
+                        	                                specializationBonus,representationBonus,productionIncentive) 
+                                                VALUES '. trim($sql,",");
+                        
+                        $statement = $con->prepare($insertDeligation_sql);
+                        // $statement->execute();
+                         echo $insertDeligation_sql;
+                        $message = '<div class="alert alert-success">Data Imported Successfully</div>';
+
+                    }else{
+                        $message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+                    }
+                }else{
+                    $message = '<div class="alert alert-danger">Please Select File</div>';
+                }
+
+                echo $message;
+            }else{
+                echo "you have to select date and choose file";
+            }
+
+        }
+    }
+    //============get all deligations =================
+    function getAllDeligations(){}
     //-------------update basic salary----------------------
     function updateBasicSalary(){
         $con = connect();

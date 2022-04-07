@@ -74,6 +74,10 @@
 
 		getAllAppraisals();
 	}
+	elseif($currentURL == 'deligations.php'){
+
+		getAllDeligations();
+	}
 	
 	
 	//elseif($currentURL == 'insertDedfromcredit.php'){

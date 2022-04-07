@@ -41,7 +41,10 @@
 							<li><a href="maritalstatus.php">الحالة الاجتماعية</a></li>
 							<li><a href="job.php">الوظــائف</a></li>
 							<li><a href="syndicates.php">النقــابات</a></li>
-							<li><a href="appraisals.php">الترقيات</a></li>
+							<li class="dropdown-header">الترقيات</li>
+							<li><a href="appraisals.php">ترقية</a></li>
+							<li><a href="deligations.php">ندب</a></li>
+
 						</ul>
 					</div>
 					<div class="dropdown">
