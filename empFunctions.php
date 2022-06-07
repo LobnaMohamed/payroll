@@ -551,20 +551,18 @@
                                 $empID = $stmt->fetchColumn();
                             }                    
                             if($empID){
-                                $deligation= "($empID,'$editDate','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."'," .$data[$row][7]."," .$data[$row][8]."," .$data[$row][9]."," .$data[$row][10]."),<br>";
+                                $deligation= "($empID,'$editDate','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."',
+                                " .$data[$row][7]."," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."),";
                                 $sql.=  $deligation;
-                                $appraisal= "($empID,'$editDate','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."'
-                                ," .$data[$row][7].",'" .$data[$row][8]."'," .$data[$row][9]."," .$data[$row][10]."
-                                ," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."," .$data[$row][14]."),";
                                 
                                 //update employee
                                 $updateEmployeeData_sql = "UPDATE employee
                                 set currentExperience =" .$data[$row][7].",
-                                currentSpecialization = " .$data[$row][8].",
-                                currentRepresentation= " .$data[$row][9].",
+                                currentSpecialization = " .$data[$row][11].",
+                                currentRepresentation= " .$data[$row][12].",
                                 jobDescription =  '" .$data[$row][4]."'
                                 where ID = $empID";
-                                // echo  $updateEmployeeData_sql ;               
+                                //echo  $updateEmployeeData_sql ;               
                                 $statement2 = $con->prepare($updateEmployeeData_sql);
                                 $statement2->execute(); 
                                 //update basic salary
@@ -581,13 +579,14 @@
                             }
                        
                         }
-                        $insertDeligation_sql = 'INSERT INTO jobdeligation(emp_id,deligationDate,currentJob,deligationJob,deligationLevel,experienceBonus,
+                        $insertDeligation_sql = "INSERT INTO jobdeligation(emp_id,deligationDate,currentJob,deligationJob,deligationLevel,experienceBonus,
                         	                                specializationBonus,representationBonus,productionIncentive) 
-                                                VALUES '. trim($sql,",");
+                                                VALUES ". trim($sql,",");
                         
-                        $statement = $con->prepare($insertDeligation_sql);
-                        // $statement->execute();
-                         echo $insertDeligation_sql;
+                     
+                         //echo $insertDeligation_sql;
+                         $statement = $con->prepare($insertDeligation_sql);
+                         $statement->execute();
                         $message = '<div class="alert alert-success">Data Imported Successfully</div>';
 
                     }else{
