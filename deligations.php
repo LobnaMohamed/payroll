@@ -69,7 +69,7 @@ require 'empFunctions.php';
 								</tr>
 							</thead>
 						<tbody id="empDatabody">
-							<?php getAllDeligations();?>
+							
 						</tbody>
 					</table>
 					<div id="endOfEmpData"></div>

@@ -671,9 +671,7 @@ $(document).ready(function() {
                     $('#empDatabody').html(data);
 
                 } else if (currentURL == 'deligations.php') {
-
                     $('#empDatabody').html(data);
-
                 }
             },
             error: function(error) {

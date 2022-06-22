@@ -604,7 +604,45 @@
         }
     }
     //============get all deligations =================
-    function getAllDeligations(){}
+    function getAllDeligations(){
+        $output="";
+		$con = connect();
+		$sql= '';		
+		$sql=" SELECT employee.currentCode,employee.empName,emp_id,deligationDate,jobdeligation.currentJob,deligationJob, 
+                    deligationLevel,experienceBonus,specializationBonus,representationBonus,productionIncentive 
+                from employee inner join jobdeligation  on employee.id = jobdeligation.emp_id
+                where  employee.is_deleted=0";
+
+            if (!empty($_POST['search'])) {
+                $sql .= " and (employee.currentCode like '%". $_POST['search'] ."%' 
+                                OR employee.empName like '%". $_POST['search'] ."%') ";
+            }
+            if (!empty($_POST['searchDateFrom'])) {
+                $sql .= " and (month(deligationDate) = month(".$_POST['searchDateFrom'].")";
+            }  
+  
+            $sql .=" ORDER BY employee.currentCode";              
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach($result as $row){
+			$output .= 
+			"<tr>
+				<td>".  $row['currentCode']. "</td>
+				<td>".  $row['empName']. "</td>
+				<td>".  $row['deligationDate']. "</td>
+				<td >".  $row['currentJob']. "</td>
+				<td>".  $row['deligationJob']. "</td>
+                <td>".  $row['deligationLevel']. "</td>
+				<td>".  $row['experienceBonus']. "</td>
+				<td>".  $row['specializationBonus']. "</td>
+				<td>".  $row['representationBonus']. "</td>
+				<td>".  $row['productionIncentive']. "</td>
+			</tr>";
+		}
+		echo $output;
+
+    }
     //-------------update basic salary----------------------
     function updateBasicSalary(){
         $con = connect();
