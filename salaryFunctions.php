@@ -1,4 +1,22 @@
 <?php
+//check for timesheet id in salary table:
+function checkForTSID_inSalary($con){
+    
+    $TS_ID = getTimesheetID($con);
+    $checkDateinSalary_sql = "select distinct TS_id from salary where TS_id = $TS_ID";
+    $stmt = $con->prepare($checkDateinSalary_sql);
+	$stmt->execute();
+    $result = $stmt->fetchColumn();
+    if($result){
+        return true;
+    }else {
+        //insert ts_id in salary table if not found:
+       // $insertDateIDinSalary_sql = "insert into salary (TS_ID)values( $TS_ID)";
+
+        return false;
+    }
+}
+//-----------------------------------------
 //--------getdeductions category------------------
 function getDeductionTypesCategory(){
     $con = connect();
@@ -1195,6 +1213,108 @@ function insertDeductions(){
     $DeductionID=$stmt->fetchColumn();
 
     //upload from excel sheet
+
+
+
+}
+//----------------upload deductions--------------------
+function uploadDeductions(){
+    //--------second option through upload--------------------
+    $con = connect();
+    $TS_ID = getTimesheetID($con);
+    checkForTSID_inSalary($con);
+    if(checkForTSID_inSalary($con)){ //true then update rows in salary
+        if(isset($_POST['upload_deductionsexcel'])){
+            //check if date was choosen
+            if(! empty($_POST['searchDateFrom']) && is_uploaded_file($_FILES['result_file']['tmp_name'])){
+                $editDate =$_POST['searchDateFrom'];
+                if($_FILES["result_file"]["name"] != ''){
+                    $allowed_extension = array('xls', 'csv', 'xlsx');
+                    $file_array = explode(".", $_FILES["result_file"]["name"]);
+                    $file_extension = end($file_array);
+    
+                    if(in_array($file_extension, $allowed_extension)){
+                        $file_name = time() . '.' . $file_extension;
+                        move_uploaded_file($_FILES['result_file']['tmp_name'], $file_name);
+                        $file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($file_name);
+                        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+                        $spreadsheet = $reader->load($file_name);
+                        unlink($file_name);
+                        // $worksheet = $spreadsheet->setActiveSheetIndex(0);
+                        // $highestRow = $worksheet->getHighestRow();
+                        $data = $spreadsheet->getActiveSheet()->toArray();
+                        $count = count($data);
+                        echo $count;
+                        $sql="";
+    
+                        for($row =1; $row < $count ; $row ++){
+                            if ($data[$row][1]) {
+                                $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][1] ."";
+                                $stmt = $con->prepare($getEmpID_sql);
+                                // echo $getEmpID_sql;
+                                $stmt->execute();
+                                $empID = $stmt->fetchColumn();
+                            }                    
+                            if($empID){
+                                //`pastPeriod`, `perimiumCard`, `familyHealthInsurance`, `otherDeduction`, `
+                                // petroleumSyndicate`, `sanctions`, `mobil`, `loan`, `empServiceFund`, `socialInsurances`, `etisalatNet`
+                                $totalDeductions = 
+                                $deductions= "($empID,'$TS_ID','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."',
+                                " .$data[$row][7]."," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."),";
+                                $sql.=  $deductions;
+
+                                $updateWithdeductions = "UPDATE salary 
+                                SET pastPeriod =" .$data[$row][3].",
+                                    perimiumCard =" .$data[$row][4].",
+                                    familyHealthInsurance =" .$data[$row][5].",
+                                    otherDeduction =" .$data[$row][6].", 
+                                    petroleumSyndicate =" .$data[$row][7].",
+                                    sanctions =" .$data[$row][8].",
+                                    mobil =" .$data[$row][9].",
+                                    loan =" .$data[$row][10].",
+                                    empServiceFund =" .$data[$row][11].",
+                                    etisalatNet =" .$data[$row][12].",
+
+                                where emp_id= $empID
+                                and TS_id =$TS_ID";
+                                 
+                            }else{
+    
+                                //echo "emp not found";
+                            }
+                       
+                        }
+                        // INSERT INTO `salary`(`TS_id`, `emp_id`, `salaryDescription`, `attendancePay`, `natureOfworkAllowance`, `socialAid`,
+                        //  `representation`, `occupationalAllowance`, `experience`, `specialBonus`, `overnightShift`, 
+                        // `laborDayGrant`, `tiffinAllowance`, `incentive`, `shift`, `specializationAllowance`, `manufacturingAllowance`, 
+                        // `otherDues`, `additionalIncentive`, `pastPeriod`, `perimiumCard`, `familyHealthInsurance`, `otherDeduction`, `
+                        // petroleumSyndicate`, `sanctions`, `mobil`, `loan`, `empServiceFund`, `socialInsurances`, `etisalatNet`, 
+                        // `totalBenefits`, `totalDeductions`, `netSalary`) 
+                        $insertDeduction_sql = "INSERT INTO salary(emp_id,) 
+                                                VALUES ". trim($sql,",");
+                        
+                     
+                         //echo $insertDeligation_sql;
+                         $statement = $con->prepare($insertDeduction_sql);
+                         $statement->execute();
+                        $message = '<div class="alert alert-success">Data Imported Successfully</div>';
+    
+                    }else{
+                        $message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
+                    }
+                }else{
+                    $message = '<div class="alert alert-danger">Please Select File</div>';
+                }
+    
+                echo $message;
+            }else{
+                echo "you have to select date and choose file";
+            }
+    
+        }
+
+    }
+    
 }
 //-------------update deductions----------------------
 function updateDeductions(){

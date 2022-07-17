@@ -221,7 +221,11 @@
 		}
 		elseif(isset($_POST["upload_deligationsexcel"])){
 			uploadDeligations();
-			//header("Location:deligations.php");
+			header("Location:deligations.php");
+		}
+		elseif(isset($_POST["upload_deductionsexcel"])){
+			uploadDeligations();
+			header("Location:allDeductions.php");
 		}
 		ob_end_flush();
 	?>
