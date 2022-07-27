@@ -1662,6 +1662,7 @@ function getWagesTotals(){
 //----------get wage details-----------------------------
 function viewWagesDetails(){
     $con = connect();
+    $output="";
     $sql = "select s.*,e.currentCode ,e.empName,empt.presence_days,t.sheetDate
             from employee e inner join  salary s on e.Id = s.emp_id  inner join empTimesheet empt 
                             on s.emp_id = empt.emp_id and s.TS_id = empt.TS_id
@@ -1672,216 +1673,221 @@ function viewWagesDetails(){
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll();
-    foreach($result as $row){
-        // 	<div class='mailtitle'>
-        // 	<div><img src='images/amoc2.png' align='left'
-        // 			style='max-width:100% ;'></div>
-        // 	<div id='mailcompany'>
-        // 		<h3>شركة الاسكندرية للزيوت المعدنية(أموك)</h3>
-        // 		<h3>الادارة العامة للشئون المالية</h3>
-        // 		<h4>قسيمة صرف مرتب</h4>
-        // 	</div>
-        // </div>
-        $output = "
-
-            <table class='mailTable'>
-                <tr>
-                    <th colspan='2'>رقم القيد </th>
-                    <th colspan='3'>الاســــــم</th>
-                    <th colspan='2'>التاريخ</th>
-                    <th colspan='2'>عدد الايام</th>
-                </tr>
-                <tr>
-                    <td colspan='2'>".$row['currentCode']."</td>
-                    <td colspan='3'>".$row['empName']."</td>
-                    <td colspan='2'>".$row['sheetDate']."</td>
-                    <td colspan='2'>".$row['presence_days']."</td>
-                </tr>
-                <tr>
-                    <th colspan='8'>الاستحقاقات</th>
-                    <th style='background-color:#3c3c3db7'>الرصيد</th>
-                </tr>
-                <tr>
-                    
-                    <td class='mailsubHeader'>المرتب</td>
-                    <td class='mailsubHeader'>أجر الحضور</td>
-                    <td class='mailsubHeader'>بدل طبيعة</td>
-                    <td class='mailsubHeader'>م.أجتماعيه</td>
-                    <td class='mailsubHeader'>حافز علمين</td>
-                    <td class='mailsubHeader'>تمثيل</td>
-                    <td class='mailsubHeader'>بدل مهنى</td>
-                    <td class='mailsubHeader'>خبرة</td>
-                    <td></td>
-                </tr>
-
-                <tr>
-                    <td>".$row['empName']."</td>
-                    <td>".$row['attendancePay']."</td>
-                    <td>".$row['natureOfworkAllowance']."</td>
-                    <td>".$row['socialAid']."</td>
-                    <td></td>
-                    <td>".$row['representation']."</td>
-                    <td>".$row['occupationalAllowance']."</td>
-                    <td>".$row['experience']."</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class='mailsubHeader'>علاوات خاصه</td>
-                    <td class='mailsubHeader'>نوباتجية</td>
-                    <td class='mailsubHeader'>منحة عيد العمال</td>
-                    <td class='mailsubHeader'>وجبات نقدية</td>
-                    <td class='mailsubHeader'>الحافز</td>
-                    <td class='mailsubHeader'>وردية</td>
-                    <td class='mailsubHeader'>بدل تخصص</td>
-                    <td class='mailsubHeader'>بدل تصنيع</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    
-                    <td>".$row['specialBonus']."</td>
-                    <td>".$row['overnightShift']."</td>
-                    <td>".$row['laborDayGrant']."</td>
-                    <td>".$row['tiffinAllowance']."</td>
-                    <td>".$row['incentive']."</td>
-                    <td>".$row['shift']."</td>
-                    <td>".$row['specializationAllowance']."</td>
-                    <td>".$row['manufacturingAllowance']."</td>
-                    <td></td>
-                </tr>
-
-                <tr>
-                    
-                    <td class='mailsubHeader'>استحقاق</td>
-                    <td class='mailsubHeader'>حافز إضافى</td>
-                    <td colspan='7'></td>
-                </tr>
-                <tr>
-                    
-                    <td>".$row['otherDues']."</td>
-                    <td>".$row['additionalIncentive']."</td>
-                    <td colspan='7'></td>
-                </tr>
-                <tr class='mailtotal'>
-                    
-                    <td colspan='8'>اجمالى الدخل</td>
-                    <td>".$row['totalBenefits']."</td>
-                </tr>
-                <tr>
-                    
-                    <th colspan='8'> الاستقطاعات</th>
-                    <td></td>
-                </tr>
-
-                <tr>
-                    
-                    <td class='mailsubHeader'>مدة سابقة</td>
-                    <td class='mailsubHeader'>كارت بريميوم</td>
-                    <td class='mailsubHeader'>علاج الأسر</td>
-                    <td class='mailsubHeader'>استقطاع أخر</td>
-                    <td class='mailsubHeader'>ن.بترول</td>
-                    <td class='mailsubHeader'>جزاءات</td>
-                    <td class='mailsubHeader'>موبايل</td>
-                    <td class='mailsubHeader'>قرض بنك NBE</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>".$row['pastPeriod']."</td>
-                    <td>".$row['perimiumCard']."</td>
-                    <td>".$row['familyHealthInsurance']."</td>
-                    <td>".$row['otherDeduction']."</td>
-                    <td>".$row['petroleumSyndicate']."</td>
-                    <td>".$row['sanctions']."</td>
-                    <td>".$row['mobil']."</td>
-                    <td>".$row['loan']."</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    
-                    <td class='mailsubHeader'>صندوق خدمات عاملين</td>
-                    <td class='mailsubHeader'>جنيهات مرحله</td>
-                    <td class='mailsubHeader'>التأمينات</td>
-                    <td class='mailsubHeader'>معاش تكميلى</td>
-                    <td class='mailsubHeader'>الضريبة</td>
-                    <td class='mailsubHeader'>اتصالات</td>
-                    <td class='mailsubHeader'>الدمغة</td>
-                    <td class='mailsubHeader'>بنك القاهرة</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>".$row['empServiceFund']."</td>
-                    <td></td>
-                    <td>".$row['socialInsurances']."</td>
-                    <td></td>
-                    <td></td>
-                    <td>".$row['etisalatNet']."</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    
-                    <th colspan='8'> الاستقطاعات من الرصيد</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    
-                    <td colspan='2' class='mailsubHeader'>بتروتريد</td>
-                    <td colspan='2' class='mailsubHeader'>	سلفة مدارس 2019</td>
-                    <td colspan='2' class='mailsubHeader'>إيهاب سنتر</td>
-                    <td colspan='2' class='mailsubHeader'>سلف عاملين</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    
-                    <td colspan='2' class='mailsubHeader'>رحلات</td>
-                    <td colspan='2' class='mailsubHeader'>أدوية</td>
-                    <td colspan='2' class='mailsubHeader'>سلفة اجتماعية</td>
-                    <td colspan='2' class='mailsubHeader'>رحلات نصف العام</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class='mailtotal'>
-                    
-                    <td colspan='8'>اجمالى الاستقطاع</td>
-                    <td>".$row['totalDeductions']."</td>
-                </tr>
-                <tr class='mailtotal'>
-                    
-                    <td colspan='8'>صافى الدخل</td>
-                    <td>".$row['netSalary']."</td>
-                </tr>
-            </table>
-            <div class='mailnotice'>
-                <h4>تنبيه:</h4>
-                <p>شيكات القبض المرسلة على البريد الالكتروني لا تعتبر مستند قانوني و ما هي إلا اشعار و في حالة الحاجة إلى مفردات المرتب يرجى التواصل مع الإدارة العامة للشئون المالية</p>
-            </div>
-            <hr>
-            <div style='text-align: right;'>
-                <p>قطاع الأجور - قطاع البرامج ونظم المعلومات</p>
-            </div>";
-
+    if($result){
+        foreach($result as $row){
+            // 	<div class='mailtitle'>
+            // 	<div><img src='images/amoc2.png' align='left'
+            // 			style='max-width:100% ;'></div>
+            // 	<div id='mailcompany'>
+            // 		<h3>شركة الاسكندرية للزيوت المعدنية(أموك)</h3>
+            // 		<h3>الادارة العامة للشئون المالية</h3>
+            // 		<h4>قسيمة صرف مرتب</h4>
+            // 	</div>
+            // </div>
+            $output = "
+    
+                <table class='mailTable'>
+                    <tr>
+                        <th colspan='2'>رقم القيد </th>
+                        <th colspan='3'>الاســــــم</th>
+                        <th colspan='2'>التاريخ</th>
+                        <th colspan='2'>عدد الايام</th>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>".$row['currentCode']."</td>
+                        <td colspan='3'>".$row['empName']."</td>
+                        <td colspan='2'>".$row['sheetDate']."</td>
+                        <td colspan='2'>".$row['presence_days']."</td>
+                    </tr>
+                    <tr>
+                        <th colspan='8'>الاستحقاقات</th>
+                        <th style='background-color:#3c3c3db7'>الرصيد</th>
+                    </tr>
+                    <tr>
+                        
+                        <td class='mailsubHeader'>المرتب</td>
+                        <td class='mailsubHeader'>أجر الحضور</td>
+                        <td class='mailsubHeader'>بدل طبيعة</td>
+                        <td class='mailsubHeader'>م.أجتماعيه</td>
+                        <td class='mailsubHeader'>حافز علمين</td>
+                        <td class='mailsubHeader'>تمثيل</td>
+                        <td class='mailsubHeader'>بدل مهنى</td>
+                        <td class='mailsubHeader'>خبرة</td>
+                        <td></td>
+                    </tr>
+    
+                    <tr>
+                        <td>".$row['empName']."</td>
+                        <td>".$row['attendancePay']."</td>
+                        <td>".$row['natureOfworkAllowance']."</td>
+                        <td>".$row['socialAid']."</td>
+                        <td></td>
+                        <td>".$row['representation']."</td>
+                        <td>".$row['occupationalAllowance']."</td>
+                        <td>".$row['experience']."</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class='mailsubHeader'>علاوات خاصه</td>
+                        <td class='mailsubHeader'>نوباتجية</td>
+                        <td class='mailsubHeader'>منحة عيد العمال</td>
+                        <td class='mailsubHeader'>وجبات نقدية</td>
+                        <td class='mailsubHeader'>الحافز</td>
+                        <td class='mailsubHeader'>وردية</td>
+                        <td class='mailsubHeader'>بدل تخصص</td>
+                        <td class='mailsubHeader'>بدل تصنيع</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        
+                        <td>".$row['specialBonus']."</td>
+                        <td>".$row['overnightShift']."</td>
+                        <td>".$row['laborDayGrant']."</td>
+                        <td>".$row['tiffinAllowance']."</td>
+                        <td>".$row['incentive']."</td>
+                        <td>".$row['shift']."</td>
+                        <td>".$row['specializationAllowance']."</td>
+                        <td>".$row['manufacturingAllowance']."</td>
+                        <td></td>
+                    </tr>
+    
+                    <tr>
+                        
+                        <td class='mailsubHeader'>استحقاق</td>
+                        <td class='mailsubHeader'>حافز إضافى</td>
+                        <td colspan='7'></td>
+                    </tr>
+                    <tr>
+                        
+                        <td>".$row['otherDues']."</td>
+                        <td>".$row['additionalIncentive']."</td>
+                        <td colspan='7'></td>
+                    </tr>
+                    <tr class='mailtotal'>
+                        
+                        <td colspan='8'>اجمالى الدخل</td>
+                        <td>".$row['totalBenefits']."</td>
+                    </tr>
+                    <tr>
+                        
+                        <th colspan='8'> الاستقطاعات</th>
+                        <td></td>
+                    </tr>
+    
+                    <tr>
+                        
+                        <td class='mailsubHeader'>مدة سابقة</td>
+                        <td class='mailsubHeader'>كارت بريميوم</td>
+                        <td class='mailsubHeader'>علاج الأسر</td>
+                        <td class='mailsubHeader'>استقطاع أخر</td>
+                        <td class='mailsubHeader'>ن.بترول</td>
+                        <td class='mailsubHeader'>جزاءات</td>
+                        <td class='mailsubHeader'>موبايل</td>
+                        <td class='mailsubHeader'>قرض بنك NBE</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>".$row['pastPeriod']."</td>
+                        <td>".$row['perimiumCard']."</td>
+                        <td>".$row['familyHealthInsurance']."</td>
+                        <td>".$row['otherDeduction']."</td>
+                        <td>".$row['petroleumSyndicate']."</td>
+                        <td>".$row['sanctions']."</td>
+                        <td>".$row['mobil']."</td>
+                        <td>".$row['loan']."</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        
+                        <td class='mailsubHeader'>صندوق خدمات عاملين</td>
+                        <td class='mailsubHeader'>جنيهات مرحله</td>
+                        <td class='mailsubHeader'>التأمينات</td>
+                        <td class='mailsubHeader'>معاش تكميلى</td>
+                        <td class='mailsubHeader'>الضريبة</td>
+                        <td class='mailsubHeader'>اتصالات</td>
+                        <td class='mailsubHeader'>الدمغة</td>
+                        <td class='mailsubHeader'>بنك القاهرة</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>".$row['empServiceFund']."</td>
+                        <td></td>
+                        <td>".$row['socialInsurances']."</td>
+                        <td></td>
+                        <td></td>
+                        <td>".$row['etisalatNet']."</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        
+                        <th colspan='8'> الاستقطاعات من الرصيد</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        
+                        <td colspan='2' class='mailsubHeader'>بتروتريد</td>
+                        <td colspan='2' class='mailsubHeader'>	سلفة مدارس 2019</td>
+                        <td colspan='2' class='mailsubHeader'>إيهاب سنتر</td>
+                        <td colspan='2' class='mailsubHeader'>سلف عاملين</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        
+                        <td colspan='2' class='mailsubHeader'>رحلات</td>
+                        <td colspan='2' class='mailsubHeader'>أدوية</td>
+                        <td colspan='2' class='mailsubHeader'>سلفة اجتماعية</td>
+                        <td colspan='2' class='mailsubHeader'>رحلات نصف العام</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class='mailtotal'>
+                        
+                        <td colspan='8'>اجمالى الاستقطاع</td>
+                        <td>".$row['totalDeductions']."</td>
+                    </tr>
+                    <tr class='mailtotal'>
+                        
+                        <td colspan='8'>صافى الدخل</td>
+                        <td>".$row['netSalary']."</td>
+                    </tr>
+                </table>
+                <div class='mailnotice'>
+                    <h4>تنبيه:</h4>
+                    <p>شيكات القبض المرسلة على البريد الالكتروني لا تعتبر مستند قانوني و ما هي إلا اشعار و في حالة الحاجة إلى مفردات المرتب يرجى التواصل مع الإدارة العامة للشئون المالية</p>
+                </div>
+                <hr>
+                <div style='text-align: right;'>
+                    <p>قطاع الأجور - قطاع البرامج ونظم المعلومات</p>
+                </div>";
+    
+        }
+    }else{
+        $output = "data is not completed yet";
     }
+
 
     echo $output;
 }

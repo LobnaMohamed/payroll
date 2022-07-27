@@ -53,13 +53,13 @@
                     <form method="POST" id="editdeductionTypeForm" action="fetch.php">	
                         <div class="form-group col-md-6">
                             
-                            <label for= "deductionTypeAmountEdit">البدل:</label>
+                            <label for= "deductionTypeAmountEdit">تصنيف الاستقطاع:</label>
                             <input type="text" class="form-control" id="deductionTypeAmountEdit" name="deductionTypeAmountEdit"> 
                        
                         </div>
                         <div class="form-group col-md-6">
                             <input type="hidden" name="deductionType_id" id="deductionType_id"> 
-                            <label for= "deductionTypeEdit">النقابة:</label>
+                            <label for= "deductionTypeEdit">الاستقطاع:</label>
                             <input type="text" class="form-control" id="deductionTypeEdit" name="deductionTypeEdit"> 
                         </div>
                         <div class="form-group col-md-12">
