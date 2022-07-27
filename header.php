@@ -65,9 +65,9 @@
 						<span class="caret"></span></button>
 						<ul class="dropdown-menu dropdown-menu-right">
 							<li class="dropdown-header">ادخالات الاستقطاعات</li>
-							<li><a href="deductions.php"> استقطاعات أخرى</a></li>
+							<li><a href="allDeductions.php">الاستقطاعات</a></li>
 							<!-- <li><a href="#">علاج أسر</a></li> -->
-							<li><a href="sanctions.php">جزاءات</a></li>
+							<!-- <li><a href="sanctions.php">جزاءات</a></li> -->
 							<li class="dropdown-header">الاستقطاعات من الرصيد</li>
 							<li><a href="deductiontype.php">أوجه الاستقطاع</a></li>
 							<li><a href="deductionfromcredit.php">الاستقطاع من الرصيد</a></li>

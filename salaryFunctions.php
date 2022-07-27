@@ -269,6 +269,78 @@ function getDeductions(){
     
     echo $output;
 }
+
+/**************************
+******************
+// get all deductions data-------
+********************
+**********/
+function getAllDeductions(){
+    $output="";	
+    $con = connect();
+    $sql= '';	
+    $getTSID_sql = "select ID  from timesheets where month(sheetDate) = month('".$_POST['dateFrom']."')
+												and year(sheetDate)= year('".$_POST['dateFrom']."') ";
+    $stmt = $con->prepare($getTSID_sql);
+    $stmt->execute();
+    $TS_ID = $stmt->fetchColumn();
+    if(!empty($_POST['dateFrom'])){
+        $sql="SELECT TS_id, emp_id,salaryDescription,pastPeriod,perimiumCard,familyHealthInsurance, 
+            otherDeduction,petroleumSyndicate,sanctions,mobil,loan,zamala,empServiceFund, 
+            socialInsurances, supplementaryPension, tax, etisalatNet,omra,cairoBank,vodafone, 
+            totalDeductions,currentCode,empName
+            FROM salary inner join employee on  salary.emp_id = employee.ID
+            WHERE TS_id =".$TS_ID."
+            and employee.is_deleted=0";
+    }
+    if(!empty($_POST['search'])){
+        $sql .= " and (employee.currentCode like '%". $_POST['search'] ."%' OR employee.empName like '%". $_POST['search'] ."%')";	
+    }
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+    if(! $result ){
+        $output = "
+        <tr>
+        <td colspan='13' class='alert alert-warning'> 
+        <strong>لا يوجد استقطاعات بهذا التاريخ..</strong><a href='timesheetinsertion.php'>here</a>
+        </td></tr>";
+    }else{
+        foreach($result as $row){
+            //$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
+            $output .=
+            "<tr>
+                <td>".  $row['currentCode']. "</td>
+                <td>".  $row['empName']. "</td>
+                <td>".  $row['pastPeriod']. "</td>
+                <td>".  $row['perimiumCard']. "</td>
+                <td>".  $row['familyHealthInsurance']. "</td>
+                <td>".  $row['otherDeduction']. "</td>
+                <td>".  $row['petroleumSyndicate']. "</td>
+                <td>".  $row['sanctions']. "</td>
+                <td>".  $row['mobil']. "</td>
+                <td>".  $row['zamala']. "</td>
+                <td>".  $row['empServiceFund']. "</td>
+                <td>".  $row['socialInsurances']. "</td>
+                <td>".  $row['supplementaryPension']. "</td>
+                <td>".  $row['tax']. "</td>
+                <td>".  $row['etisalatNet']. "</td>
+                <td>".  $row['omra']. "</td>
+                <td>".  $row['cairoBank']. "</td>
+                <td>".  $row['vodafone']. "</td>
+                <td>".  $row['totalDeductions']. "</td>
+
+                <td style='display:none;'  class='timesheet_ID'>" .  $row['TS_id']."</td>
+                <td><a class='btn btn-sm editdeductionsModal'  id=".$row['emp_id'].">
+                <i class='fa fa-edit fa-lg' data-toggle='modal' data-target='#editdeductionsModal'></i>
+                </a></td>
+            </tr>";
+        }
+    }
+
+    echo $output;
+
+}
 //---------------get deductions from credit--------------------------
 function getCreditDeductions(){
     $output ="";
@@ -1218,10 +1290,11 @@ function insertDeductions(){
 
 }
 //----------------upload deductions--------------------
-function uploadDeductions(){
+function uploadDeductions(){ //all deductions page
     //--------second option through upload--------------------
     $con = connect();
     $TS_ID = getTimesheetID($con);
+    echo $TS_ID ;
     checkForTSID_inSalary($con);
     if(checkForTSID_inSalary($con)){ //true then update rows in salary
         if(isset($_POST['upload_deductionsexcel'])){
@@ -1244,12 +1317,18 @@ function uploadDeductions(){
                         // $highestRow = $worksheet->getHighestRow();
                         $data = $spreadsheet->getActiveSheet()->toArray();
                         $count = count($data);
-                        echo $count;
+                        // echo $count;
                         $sql="";
-    
+                        for($row =1; $row <2; $row ++){
+                            for($i=0;$i<19;$i++){
+                                print_r($data[$row][$i]);
+
+                            }
+                        }
                         for($row =1; $row < $count ; $row ++){
-                            if ($data[$row][1]) {
-                                $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][1] ."";
+                            
+                            if ($data[$row][0]) {
+                                $getEmpID_sql ="select id from employee where currentCode = " . $data[$row][0] ."";
                                 $stmt = $con->prepare($getEmpID_sql);
                                 // echo $getEmpID_sql;
                                 $stmt->execute();
@@ -1258,30 +1337,38 @@ function uploadDeductions(){
                             if($empID){
                                 //`pastPeriod`, `perimiumCard`, `familyHealthInsurance`, `otherDeduction`, `
                                 // petroleumSyndicate`, `sanctions`, `mobil`, `loan`, `empServiceFund`, `socialInsurances`, `etisalatNet`
-                                $totalDeductions = 
-                                $deductions= "($empID,'$TS_ID','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."',
-                                " .$data[$row][7]."," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."),";
-                                $sql.=  $deductions;
+                                $totalDeductions = 0;
+                                for ($i=2; $i < 18; $i++) { 
+                                    $totalDeductions += $data[$row][$i];
+                                }
+                                
+                                // $deductions= "($empID,'$TS_ID','" .$data[$row][3]."','" .$data[$row][4]."','" .$data[$row][5]."',
+                                // " .$data[$row][7]."," .$data[$row][11]."," .$data[$row][12]."," .$data[$row][13]."),";
+                                // $sql.=  $deductions;
 
                                 $updateWithdeductions = "UPDATE salary 
-                                SET pastPeriod =" .$data[$row][3].",
-                                    perimiumCard =" .$data[$row][4].",
-                                    familyHealthInsurance =" .$data[$row][5].",
-                                    otherDeduction =" .$data[$row][6].", 
-                                    petroleumSyndicate =" .$data[$row][7].",
-                                    sanctions =" .$data[$row][8].",
-                                    mobil =" .$data[$row][9].",
-                                    loan =" .$data[$row][10].",
-                                    empServiceFund =" .$data[$row][11].",
-                                    etisalatNet =" .$data[$row][12].",
-
+                                SET pastPeriod =" .$data[$row][2].",
+                                    perimiumCard =" .$data[$row][3].",
+                                    familyHealthInsurance =" .$data[$row][4].",
+                                    otherDeduction =" .$data[$row][5].", 
+                                    petroleumSyndicate =" .$data[$row][6].",
+                                    sanctions =" .$data[$row][7].",
+                                    mobil =" .$data[$row][8].",
+                                    zamala =" .$data[$row][9].",
+                                    empServiceFund =" .$data[$row][10].",
+                                    socialInsurances =" .$data[$row][11].",
+                                    supplementaryPension =" .$data[$row][12].",
+                                    tax =" .$data[$row][13].",
+                                    etisalatNet =" .$data[$row][14].",
+                                    omra =" .$data[$row][15].",
+                                    cairoBank =" .$data[$row][16].",
+                                    vodafone =" .$data[$row][17].",
+                                    totalDeductions =". $totalDeductions."
                                 where emp_id= $empID
                                 and TS_id =$TS_ID";
-                                 
-                            }else{
-    
-                                //echo "emp not found";
                             }
+                            $statement = $con->prepare($updateWithdeductions);
+                            $statement->execute();
                        
                         }
                         // INSERT INTO `salary`(`TS_id`, `emp_id`, `salaryDescription`, `attendancePay`, `natureOfworkAllowance`, `socialAid`,
@@ -1290,14 +1377,14 @@ function uploadDeductions(){
                         // `otherDues`, `additionalIncentive`, `pastPeriod`, `perimiumCard`, `familyHealthInsurance`, `otherDeduction`, `
                         // petroleumSyndicate`, `sanctions`, `mobil`, `loan`, `empServiceFund`, `socialInsurances`, `etisalatNet`, 
                         // `totalBenefits`, `totalDeductions`, `netSalary`) 
-                        $insertDeduction_sql = "INSERT INTO salary(emp_id,) 
-                                                VALUES ". trim($sql,",");
+                        // $insertDeduction_sql = "INSERT INTO salary(emp_id,) 
+                        //                         VALUES ". trim($sql,",");
                         
                      
                          //echo $insertDeligation_sql;
-                         $statement = $con->prepare($insertDeduction_sql);
-                         $statement->execute();
-                        $message = '<div class="alert alert-success">Data Imported Successfully</div>';
+                        //  $statement = $con->prepare($insertDeduction_sql);
+                        //  $statement->execute();
+                         $message = '<div class="alert alert-success">Data Imported Successfully</div>';
     
                     }else{
                         $message = '<div class="alert alert-danger">Only .xls .csv or .xlsx file allowed</div>';
@@ -1306,17 +1393,23 @@ function uploadDeductions(){
                     $message = '<div class="alert alert-danger">Please Select File</div>';
                 }
     
-                echo $message;
+                echo json_encode($message) ;
             }else{
-                echo "you have to select date and choose file";
+                $message =   '<div class="alert alert-danger">you have to select date and choose file</div>';
+                // echo "you have to select date and choose file";
             }
     
         }
 
     }
     
+    else{
+        $message = "no timesheet found";
+    }
+    echo $message;
 }
 //-------------update deductions----------------------
+
 function updateDeductions(){
 
     $otherDeductionText = $_POST['otherDeductionText'];

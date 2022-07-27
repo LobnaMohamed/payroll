@@ -322,8 +322,9 @@
 	insert timesheet date and return the inserted id in a variable called lastID
 	*/
 	function getTimesheetID($con){
-		$checkDate_sql = "select distinct ID from timesheets where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
-																	and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
+		$checkDate_sql = "select distinct ID from timesheets 
+							where month(sheetDate) =month('" . $_POST['searchDateFrom'] ."') 
+							and year(sheetDate)= year('".$_POST['searchDateFrom']."')";
 		$timesheetDate =$_POST['searchDateFrom'];
 		//echo $timesheetDate;
 		$stmt = $con->prepare($checkDate_sql);
@@ -348,8 +349,6 @@
 			$stmt->execute();
 			$lastID = $stmt->fetchColumn();
 			//echo "last id :" . $lastID;
-
-
 		}
 		return $lastID;			
 	}

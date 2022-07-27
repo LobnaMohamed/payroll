@@ -13,7 +13,7 @@ require 'empFunctions.php';
 	    </header>
 			<div class="empdata-container row">
 				<!-- <div class="table-responsive row"> -->
-					<form class="navbar-form row " role="search" id="searchEmp" method="POST" action="fetch.php"
+					<form class="navbar-form row " role="search" id="allDeductions" method="POST" action="fetch.php"
 							enctype="multipart/form-data" onsubmit="return confirm('!سيتم التحديث  ..هل انت متأكد؟');">
 
 						<div class="col-sm-6 form-group">
@@ -27,10 +27,11 @@ require 'empFunctions.php';
 							</div>
 						</div>
 						<div class="col-sm-6 form-group">
+							<label for="searchDateFrom">التاريخ :</label>
+                            <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date" required>
                             <label for = "search">رقم القيد / الاسم :</label>
                             <input class="form-control" placeholder="ابحث.." name="search" id="search" type="text">
-                            <label for="searchDateFrom">التاريخ :</label>
-                            <input class="form-control"  name="searchDateFrom" id="searchDateFrom" type="date" required>
+                            
 						</div>
 
 
@@ -43,7 +44,6 @@ require 'empFunctions.php';
 								<tr>
 									<th>رقم القيد</th>
 									<th>الاسم</th>
-									<th>التاريخ</th>
                                     <th>مدة سابقة</th>
                                     <th>كارت بريميوم</th>
                                     <th>علاج الأسر</th>
@@ -53,7 +53,7 @@ require 'empFunctions.php';
                                     <th>موبايل</th>
                                     <th>نظام زمالة</th>
                                     <th>صندوق خدمات عاملين</th>
-                                    <th>جنيهات مرحله</th>
+                                    <!-- <th>جنيهات مرحله</th> -->
                                     <th>التأمينات</th>
                                     <th>معاش تكميلى</th>
                                     <th>الضريبة</th>
@@ -61,6 +61,10 @@ require 'empFunctions.php';
                                     <th>رحلة العمرة</th>
                                     <th>بنك القاهرة</th>
                                     <th>فودافون</th>
+                                    <th>اجمالى</th>
+                                    <th>تعديل</th>
+
+
 								</tr>
 							</thead>
 						<tbody id="deductionsbody">

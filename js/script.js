@@ -672,6 +672,8 @@ $(document).ready(function() {
 
                 } else if (currentURL == 'deligations.php') {
                     $('#empDatabody').html(data);
+                } else if (currentURL == 'allDeductions.php') {
+                    $('#deductionsbody').html(data);
                 }
             },
             error: function(error) {
@@ -715,6 +717,41 @@ $(document).ready(function() {
                     } else if (currentURL == 'timesheetinsertion.php') {
                         //console.log(data);
                         $('#timesheetbody').html(data);
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+    });
+    $('#allDeductions').on('submit', function() {
+        //   e.preventDefault();
+        var timesheet_date = $('#searchDateFrom').val();
+        if (!timesheet_date) {
+            alert("لم يتم ادخال تاريخ!");
+        } else {
+            //var emp = $('#search').val();
+            var currentURL = document.location.href.match(/[^\/]+$/)[0];
+            console.log(currentURL);
+            console.log(timesheet_date);
+            $.ajax({
+                url: 'fetch.php',
+                method: "POST",
+                data: //{//timesheetDate:timesheet_date,
+                //search:emp,
+                //pageurl:currentURL
+                    $('form#allDeductions').serialize()
+                    //	}
+                    ,
+                // dataType:"json",
+                success: function(data) {
+                    if (currentURL == 'allDeductions.php') {
+                        $('#deductionsbody').html(data);
+                        console.log(data);
+                        console.log(JSON($message));
+
                     }
                 },
                 error: function(error) {

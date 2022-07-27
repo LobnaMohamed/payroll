@@ -40,10 +40,8 @@
 
 	}
 	elseif(isset($_POST['insertcontract'])){
-		header("Location:contract.php");
-		
+		header("Location:contract.php");	
 		insertContract();
-	
 	}
 	
 		

@@ -78,6 +78,10 @@
 
 		getAllDeligations();
 	}
+	elseif($currentURL == 'allDeductions.php'){
+
+		getAllDeductions();
+	}
 	
 	
 	//elseif($currentURL == 'insertDedfromcredit.php'){
