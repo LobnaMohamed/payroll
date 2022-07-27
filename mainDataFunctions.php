@@ -484,7 +484,7 @@
 			}
 		}
 	}
-		/**
+	/**
 	 * function to edit existing marital status
 	 * 	
 	*/
@@ -513,4 +513,27 @@
 			}
 		}
 	}
+	/**
+	 * function to insert deduction types
+	 * 	
+	*/
+	function insertDeductionTypes(){
+		if(isset($_POST['insertdeductionType'])){
+			//assign variables
 
+			$deductionType= isset($_POST['deductionType'])? filter_var($_POST['deductionType'],FILTER_SANITIZE_STRING) : '';
+			$deductionCategory= isset($_POST['deductionCategory'])? filter_var($_POST['deductionCategory'],FILTER_SANITIZE_NUMBER_INT) : '';
+			if(empty($deductionType) ){
+				//$formErrors[] = 'username must be larger than  chars';
+				echo " deduction Type cant be empty";
+				// print_r($formErrors) ;
+			} else {
+				
+				$con = connect();
+				$sql= "INSERT INTO deductiontypes(deductionType,deductionCategory) 
+						VALUES ('".$deductionType."','".$deductionCategory."')" ;
+				$stmt = $con->prepare($sql);
+				$stmt->execute();
+			}
+		}
+	}

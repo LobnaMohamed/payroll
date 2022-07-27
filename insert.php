@@ -43,7 +43,10 @@
 		header("Location:contract.php");	
 		insertContract();
 	}
-	
+	elseif(isset($_POST['insertdeductionType'])){
+		header("Location:deductiontype.php");	
+		insertDeductionTypes();
+	}
 		
 	include 'footer.php';
 	ob_end_flush();

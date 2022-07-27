@@ -24,8 +24,8 @@
                         <label for= "deductionCategory">تصنيف الاستقطاع:</label>
                         <select class="form-control" id="deductionCategory" name="deductionCategory">
                         <?php  
-                            echo"<option selected value='استقطاع'>استقطاع</option>"; 
-                            echo"<option value='استقطاع من رصيد'>استقطاع من رصيد</option>";	
+                            echo"<option selected value=1>استقطاع من رصيد</option>";	
+                            echo"<option  value=2>استقطاع</option>"; 
 						?>
                         </select>
                     </div>	
