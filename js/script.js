@@ -855,6 +855,63 @@ $(document).ready(function() {
             }
         });
     });
+
+    //--------------get data into edit deductions modal---------------------
+    /**********************************************************************
+     * 
+     *    $(document).on('click', '.editdeductionsData', function() {
+        var currentURL = document.location.href.match(/[^\/]+$/)[0];
+        var employee_id = $(this).attr("id");
+        var timesheet_id = $(this).closest('tr').find('td.timesheet_ID').html();
+        console.log(timesheet_id);
+        console.log(employee_id);
+        $.ajax({
+            url: "fetch.php",
+            method: "POST",
+            data: {
+                editDeduction_empID: employee_id,
+                editDeduction_ID: timesheet_id
+            },
+            dataType: "json",
+            success: function(data) {
+                //console.log(data);
+                $('#emp_id').val(data.emp_id);
+                $('#sheetID').val(data.TS_id);
+                $('#emp_currentCode').val(data.currentCode);
+                $('#empName').val(data.empName);
+                var d = new Date(data.sheetDate);
+                var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+                var year = d.getFullYear();
+                var dateStr = month + " / " + year;
+                $('#sheetDate').val(dateStr);
+                $('#presenceDaysEdit').val(data.presence_days);
+                $('#deductionDaysEdit').val(data.deduction_days);
+                $('#absenceDaysEdit').val(data.absence_days);
+                $('#sickLeaveDaysEdit').val(data.sickLeave_days);
+                $('#manufacturingDaysEdit').val(data.manufacturing_days);
+                $('#evaluationPercentEdit').val(data.manufacturing_days);
+
+                $('#overnightDaysEdit').val(data.overnight_days);
+                $('#shiftDaysEdit').val(data.shift_days);
+                $('#annualDaysEdit').val(data.annual_days);
+                $('#casualDaysEdit').val(data.casual_days);
+                $('#notesEdit').val(data.notes);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+
     //--------------onsubmit edit form-----------------------------
     $(document).on('submit', '#editTimesheetForm', function() {
         alert("سيتم تعديل البيانات...هل انت متأكد؟");

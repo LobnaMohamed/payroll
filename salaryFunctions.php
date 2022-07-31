@@ -284,7 +284,7 @@ function getAllDeductions(){
     $stmt = $con->prepare($getTSID_sql);
     $stmt->execute();
     $TS_ID = $stmt->fetchColumn();
-    if(!empty($_POST['dateFrom'])){
+    if($TS_ID>0){
         $sql="SELECT TS_id, emp_id,salaryDescription,pastPeriod,perimiumCard,familyHealthInsurance, 
             otherDeduction,petroleumSyndicate,sanctions,mobil,loan,zamala,empServiceFund, 
             socialInsurances, supplementaryPension, tax, etisalatNet,omra,cairoBank,vodafone, 
@@ -292,51 +292,53 @@ function getAllDeductions(){
             FROM salary inner join employee on  salary.emp_id = employee.ID
             WHERE TS_id =".$TS_ID."
             and employee.is_deleted=0";
-    }
-    if(!empty($_POST['search'])){
-        $sql .= " and (employee.currentCode like '%". $_POST['search'] ."%' OR employee.empName like '%". $_POST['search'] ."%')";	
-    }
-    $stmt = $con->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-    if(! $result ){
+        if(!empty($_POST['search'])){
+            $sql .= " and (employee.currentCode like '%". $_POST['search'] ."%' OR employee.empName like '%". $_POST['search'] ."%')";	
+        }
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
+        if($result ){
+            foreach($result as $row){
+                //$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
+                $output .=
+                "<tr>
+                    <td>".  $row['currentCode']. "</td>
+                    <td>".  $row['empName']. "</td>
+                    <td>".  $row['pastPeriod']. "</td>
+                    <td>".  $row['perimiumCard']. "</td>
+                    <td>".  $row['familyHealthInsurance']. "</td>
+                    <td>".  $row['otherDeduction']. "</td>
+                    <td>".  $row['petroleumSyndicate']. "</td>
+                    <td>".  $row['sanctions']. "</td>
+                    <td>".  $row['mobil']. "</td>
+                    <td>".  $row['zamala']. "</td>
+                    <td>".  $row['empServiceFund']. "</td>
+                    <td>".  $row['socialInsurances']. "</td>
+                    <td>".  $row['supplementaryPension']. "</td>
+                    <td>".  $row['tax']. "</td>
+                    <td>".  $row['etisalatNet']. "</td>
+                    <td>".  $row['omra']. "</td>
+                    <td>".  $row['cairoBank']. "</td>
+                    <td>".  $row['vodafone']. "</td>
+                    <td>".  $row['totalDeductions']. "</td>
+    
+                    <td style='display:none;'  class='timesheet_ID'>" .  $row['TS_id']."</td>
+                    <td><a class='btn btn-sm editdeductionsData'  id=".$row['emp_id'].">
+                    <i class='fa fa-edit fa-lg' data-toggle='modal' data-target='#editdeductionsModal'></i>
+                    </a></td>
+                </tr>";
+            }
+        }
+    }else{
         $output = "
         <tr>
-        <td colspan='13' class='alert alert-warning'> 
+        <td colspan='20' class='alert alert-warning'> 
         <strong>لا يوجد استقطاعات بهذا التاريخ..</strong><a href='timesheetinsertion.php'>here</a>
         </td></tr>";
-    }else{
-        foreach($result as $row){
-            //$output .= "<tr><td>".  $row['sheetDate']. "</td></tr>";
-            $output .=
-            "<tr>
-                <td>".  $row['currentCode']. "</td>
-                <td>".  $row['empName']. "</td>
-                <td>".  $row['pastPeriod']. "</td>
-                <td>".  $row['perimiumCard']. "</td>
-                <td>".  $row['familyHealthInsurance']. "</td>
-                <td>".  $row['otherDeduction']. "</td>
-                <td>".  $row['petroleumSyndicate']. "</td>
-                <td>".  $row['sanctions']. "</td>
-                <td>".  $row['mobil']. "</td>
-                <td>".  $row['zamala']. "</td>
-                <td>".  $row['empServiceFund']. "</td>
-                <td>".  $row['socialInsurances']. "</td>
-                <td>".  $row['supplementaryPension']. "</td>
-                <td>".  $row['tax']. "</td>
-                <td>".  $row['etisalatNet']. "</td>
-                <td>".  $row['omra']. "</td>
-                <td>".  $row['cairoBank']. "</td>
-                <td>".  $row['vodafone']. "</td>
-                <td>".  $row['totalDeductions']. "</td>
-
-                <td style='display:none;'  class='timesheet_ID'>" .  $row['TS_id']."</td>
-                <td><a class='btn btn-sm editdeductionsModal'  id=".$row['emp_id'].">
-                <i class='fa fa-edit fa-lg' data-toggle='modal' data-target='#editdeductionsModal'></i>
-                </a></td>
-            </tr>";
-        }
     }
+
 
     echo $output;
 
