@@ -857,24 +857,21 @@ $(document).ready(function() {
     });
 
     //--------------get data into edit deductions modal---------------------
-    /**********************************************************************
-     * 
-     *    $(document).on('click', '.editdeductionsData', function() {
+    $(document).on('click', '.editdeductionsData', function() {
         var currentURL = document.location.href.match(/[^\/]+$/)[0];
         var employee_id = $(this).attr("id");
         var timesheet_id = $(this).closest('tr').find('td.timesheet_ID').html();
-        console.log(timesheet_id);
-        console.log(employee_id);
+        // console.log(timesheet_id);
+        // console.log(employee_id);
         $.ajax({
             url: "fetch.php",
             method: "POST",
             data: {
                 editDeduction_empID: employee_id,
-                editDeduction_ID: timesheet_id
+                editDeductionforTS_ID: timesheet_id
             },
             dataType: "json",
             success: function(data) {
-                //console.log(data);
                 $('#emp_id').val(data.emp_id);
                 $('#sheetID').val(data.TS_id);
                 $('#emp_currentCode').val(data.currentCode);
@@ -884,37 +881,35 @@ $(document).ready(function() {
                 var year = d.getFullYear();
                 var dateStr = month + " / " + year;
                 $('#sheetDate').val(dateStr);
-                $('#presenceDaysEdit').val(data.presence_days);
-                $('#deductionDaysEdit').val(data.deduction_days);
-                $('#absenceDaysEdit').val(data.absence_days);
-                $('#sickLeaveDaysEdit').val(data.sickLeave_days);
-                $('#manufacturingDaysEdit').val(data.manufacturing_days);
-                $('#evaluationPercentEdit').val(data.manufacturing_days);
+                $('#pastPeriodEdit').val(data.pastPeriod);
+                $('#perimiumEdit').val(data.perimiumCard);
+                $('#familyInsuranceEdit').val(data.familyHealthInsurance);
+                $('#otherDeductionEdit').val(data.otherDeduction);
+                $('#petroluemSyndicateEdit').val(data.petroleumSyndicate);
+                $('#sanctionEdit').val(data.sanctions);
+                $('#mobilEdit').val(data.mobil);
+                $('#zamalaEdit').val(data.zamala);
+                $('#empServiceFundEdit').val(data.empServiceFund);
+                $('#socialInsurancesEdit').val(data.socialInsurances);
+                $('#supplemntaryPensionEdit').val(data.supplementaryPension);
+                $('#taxEdit').val(data.tax);
+                $('#etisalatEdit').val(data.etisalatNet);
+                $('#omraEdit').val(data.omra);
+                $('#cairoBankEdit').val(data.cairoBank);
+                $('#vodafoneEdit').val(data.vodafone);
+                $('#totalDeductionsEdit').val(data.totalDeductions);
 
-                $('#overnightDaysEdit').val(data.overnight_days);
-                $('#shiftDaysEdit').val(data.shift_days);
-                $('#annualDaysEdit').val(data.annual_days);
-                $('#casualDaysEdit').val(data.casual_days);
-                $('#notesEdit').val(data.notes);
             },
             error: function(error) {
                 console.log(error);
             }
         });
     });
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     */
+
 
     //--------------onsubmit edit form-----------------------------
     $(document).on('submit', '#editTimesheetForm', function() {
-        alert("سيتم تعديل البيانات...هل انت متأكد؟");
+        confirm("سيتم تعديل البيانات...هل انت متأكد؟");
         //e.preventDefault();
         //var $form = $('#editTimesheetForm');
         //console.log( $( this ).serialize() );
@@ -938,6 +933,38 @@ $(document).ready(function() {
             }
         });
     });
+
+    //--------------onsubmit edit deduction form- for one emp ----------------------------
+    $(document).on('submit', '#editdeductionsForm', function() {
+        confirm("سيتم تعديل البيانات...هل انت متأكد؟");
+        //e.preventDefault();
+        //var $form = $('#editTimesheetForm');
+        //console.log( $( this ).serialize() );
+        var $element = $(this);
+
+        var data = $element.serialize();
+        console.log(data);
+        $.ajax({
+            url: "fetch.php",
+            method: "POST",
+            data: data,
+            //dataType:"json",
+            success: function(data) {
+                console.log(data);
+                console.log('success');
+                //e.preventDefault();
+                $("#editdeductionsModal").modal('hide');
+                // $('#editdeductionsModal').on('hidden.bs.modal', function() {
+                //     location.reload();
+                // })
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+    });
+
+
     //-------------------submit deductions form--------------
     $(document).on('submit', '#deductioninsertion', function() {
         $.ajax({

@@ -1512,6 +1512,43 @@ function updateDeductions(){
 
     
 }
+
+//edit  deductions using modal for each employee
+
+
+
+function editDeductions(){
+    $total = $_POST['empServiceFundEdit'] +$_POST['etisalatEdit'] + $_POST['mobilEdit']+$_POST['pastPeriodEdit']+
+    $_POST['petroluemSyndicateEdit']+$_POST['perimiumEdit']+$_POST['otherDeductionEdit']+
+    $_POST['socialInsurancesEdit'] + $_POST['sanctionEdit']+ $_POST['supplemntaryPensionEdit']+$_POST['vodafoneEdit'] +
+    $_POST['zamalaEdit']+$_POST['omraEdit']+ $_POST['familyInsuranceEdit']+$_POST['taxEdit']+ $_POST['cairoBankEdit'];
+    $sql = "UPDATE salary
+				SET 
+                empServiceFund = " . $_POST['empServiceFundEdit'] .",
+                etisalatNet = " . $_POST['etisalatEdit'] .",
+                mobil = " . $_POST['mobilEdit'] .",
+                pastPeriod = " . $_POST['pastPeriodEdit'] .",
+                petroleumSyndicate =  " . $_POST['petroluemSyndicateEdit'] .",
+                perimiumCard =  " . $_POST['perimiumEdit'] .",
+                otherDeduction = " . $_POST['otherDeductionEdit'] .",
+                socialInsurances = " . $_POST['socialInsurancesEdit'] .",
+                sanctions = " . $_POST['sanctionEdit'] .",
+                supplementaryPension = " . $_POST['supplemntaryPensionEdit'] .",
+                vodafone = " . $_POST['vodafoneEdit'] .",
+                zamala = " . $_POST['zamalaEdit'] .",
+                omra = " . $_POST['omraEdit'] .",
+                familyHealthInsurance=" . $_POST['familyInsuranceEdit'] .",
+                tax=" . $_POST['taxEdit'] .",
+                cairoBank=" . $_POST['cairoBankEdit'] .",
+                totalDeductions = " . $total ."
+				WHERE TS_id =" . $_POST['sheetID']."
+				 and emp_id =" .$_POST['emp_id'] ."";
+
+		$con = connect();
+		$stmt = $con->prepare($sql);
+		$stmt->execute();
+		//echo json_encode(array("response"=>"done")) ;
+}
 //-------------update Benefits----------------------
 function updateBenefits(){
 

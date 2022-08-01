@@ -93,6 +93,10 @@ require 'empFunctions.php';
 									<input id="empName" disabled>
 									<label for= "sheetDate"> التاريخ </label>
 									<input id="sheetDate" disabled>
+									<input class="form-control" type="hidden" id="emp_id" name="emp_id" >
+									<input class="form-control" type="hidden" id="sheetID" name="sheetID" >
+
+
 								</div>
 
 								<div class="form-group col-md-3">
@@ -106,7 +110,6 @@ require 'empFunctions.php';
 									<input class="form-control" id="otherDeductionEdit" name="otherDeductionEdit">
 								</div>
 								<div class="form-group col-md-3">
-									<input class="form-control" type="hidden" id="sheetID" name="sheetID" >
 									<label for= "petroluemSyndicateEdit"> ن.بترول</label>
 									<input class="form-control" id="petroluemSyndicateEdit" name="petroluemSyndicateEdit">
 									<label for= "sanctionEdit">جزاءات</label>
@@ -117,7 +120,6 @@ require 'empFunctions.php';
 									<input class="form-control" id="zamalaEdit" name="zamalaEdit">
 								</div>
 								<div class="form-group col-md-3">
-									<input class="form-control" type="hidden" id="emp_id" name="emp_id" >
 									<label for= "empServiceFundEdit"> صندوق خدمات عاملين</label>
 									<input class="form-control" id="empServiceFundEdit" name="empServiceFundEdit" type="number">
 									<label for= "socialInsurancesEdit">التأمينات</label>
@@ -128,7 +130,6 @@ require 'empFunctions.php';
 									<input class="form-control" id="taxEdit" name="taxEdit">
 								</div>
 								<div class="form-group col-md-3">
-									<input class="form-control" type="hidden" id="emp_id" name="emp_id" >
 									<label for= "etisalatEdit"> اتصالات</label>
 									<input class="form-control" id="etisalatEdit" name="etisalatEdit" type="number">
 									<label for= "omraEdit">رحلة العمرة</label>

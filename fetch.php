@@ -168,10 +168,34 @@
 			echo json_encode($result); 
 
 		}
+		//edit deductions modal:
+		elseif(isset($_POST["editDeduction_empID"]) && isset($_POST["editDeductionforTS_ID"]) )  
+		{  
+			//show data in timsheet edit modal
+			$con = connect();			
+			$sql= "select s.*,e.currentCode,e.empName,t.sheetDate
+					from employee e inner join salary s on e.ID = s.emp_id
+									inner join timesheets t on s.TS_id = t.ID
+					where s.emp_id = '".$_POST["editDeduction_empID"]."'
+					and s.TS_id ='".$_POST["editDeductionforTS_ID"]."' ";  
+					
+			$stmt = $con->prepare($sql);
+			$stmt->execute(array($_POST["editDeduction_empID"], $_POST["editDeductionforTS_ID"]));
+			$result = $stmt->fetch(); //PDO::FETCH_ASSOC
+			//print_r($result) ;
+			echo json_encode($result); 
+
+		}
 		elseif(isset($_POST["UpdateTimesheet"])){
 			editTimesheet();
 			header("Location:timesheet.php");
-		//	getTimesheet();
+		}// update deduction for each emp through modal
+		elseif(isset($_POST["UpdateDeductions"])){
+			editDeductions();
+			//getAllDeductions();
+
+			header("Location:allDeductions.php");
+		
 		}
 		elseif(isset($_POST["wagesDetailsEmpID"]) && isset($_POST["wagesDetailssheetID"])){
 			viewWagesDetails();
