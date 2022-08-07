@@ -750,7 +750,7 @@ $(document).ready(function() {
                     if (currentURL == 'allDeductions.php') {
                         $('#deductionsbody').html(data);
                         console.log(data);
-                        console.log(JSON($message));
+                        // console.log(JSON($message));
 
                     }
                 },
@@ -927,6 +927,7 @@ $(document).ready(function() {
                 console.log('success');
 
                 $("#edittimsesheetModal").modal('hide');
+
             },
             error: function(error) {
                 alert(error);
@@ -935,28 +936,26 @@ $(document).ready(function() {
     });
 
     //--------------onsubmit edit deduction form- for one emp ----------------------------
-    $(document).on('submit', '#editdeductionsForm', function() {
+    $(document).on('click', '#UpdateDeductions', function() {
         confirm("سيتم تعديل البيانات...هل انت متأكد؟");
-        //e.preventDefault();
         //var $form = $('#editTimesheetForm');
         //console.log( $( this ).serialize() );
         var $element = $(this);
 
         var data = $element.serialize();
+
         console.log(data);
         $.ajax({
             url: "fetch.php",
             method: "POST",
             data: data,
-            //dataType:"json",
+            //dataType: "json",
             success: function(data) {
                 console.log(data);
                 console.log('success');
                 //e.preventDefault();
                 $("#editdeductionsModal").modal('hide');
-                // $('#editdeductionsModal').on('hidden.bs.modal', function() {
-                //     location.reload();
-                // })
+                $('#deductionsbody').html(data);
             },
             error: function(error) {
                 alert(error);

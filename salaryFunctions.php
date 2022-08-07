@@ -1547,7 +1547,13 @@ function editDeductions(){
 		$con = connect();
 		$stmt = $con->prepare($sql);
 		$stmt->execute();
-		//echo json_encode(array("response"=>"done")) ;
+        //getAllDeductions();
+        $sql="select * from salary where TS_id = " . $_POST['sheetID']."";
+        $stmt = $con->prepare($sql);
+		$stmt->execute();
+        // echo $sql;
+        $result = $stmt->fetch();
+		echo json_encode( $result) ;
 }
 //-------------update Benefits----------------------
 function updateBenefits(){

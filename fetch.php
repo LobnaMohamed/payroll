@@ -192,9 +192,9 @@
 		}// update deduction for each emp through modal
 		elseif(isset($_POST["UpdateDeductions"])){
 			editDeductions();
-			//getAllDeductions();
 
-			header("Location:allDeductions.php");
+			//header("Location:allDeductions.php");
+			//getAllDeductions();
 		
 		}
 		elseif(isset($_POST["wagesDetailsEmpID"]) && isset($_POST["wagesDetailssheetID"])){

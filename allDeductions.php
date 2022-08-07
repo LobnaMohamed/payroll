@@ -38,42 +38,40 @@ require 'empFunctions.php';
 						<button id="scroll_down" class="btn btn-lg btn-default form-control" type="button"><i class='fa fa-2x fa-angle-double-down '></i></button>
 						<button id="scroll_up" class="btn btn-lg btn-default form-control hide" type="button"><i class='fa fa-2x fa-angle-double-up '></i></button>
 
-
+					</form>
 					<table id="empData" class="table table-striped table-bordered  table-responsive">
-							<thead >
-								<tr>
-									<th>رقم القيد</th>
-									<th>الاسم</th>
-                                    <th>مدة سابقة</th>
-                                    <th>كارت بريميوم</th>
-                                    <th>علاج الأسر</th>
-                                    <th>استقطاع أخر</th>
-									<th>ن.بترول</th>
-                                    <th>جزاءات</th>
-                                    <th>موبايل</th>
-                                    <th>نظام زمالة</th>
-                                    <th>صندوق خدمات عاملين</th>
-                                    <!-- <th>جنيهات مرحله</th> -->
-                                    <th>التأمينات</th>
-                                    <th>معاش تكميلى</th>
-                                    <th>الضريبة</th>
-                                    <th>اتصالات</th>
-                                    <th>رحلة العمرة</th>
-                                    <th>بنك القاهرة</th>
-                                    <th>فودافون</th>
-                                    <th>اجمالى</th>
-                                    <th>تعديل</th>
-
-
-								</tr>
-							</thead>
+						<thead >
+							<tr>
+								<th>رقم القيد</th>
+								<th>الاسم</th>
+								<th>مدة سابقة</th>
+								<th>كارت بريميوم</th>
+								<th>علاج الأسر</th>
+								<th>استقطاع أخر</th>
+								<th>ن.بترول</th>
+								<th>جزاءات</th>
+								<th>موبايل</th>
+								<th>نظام زمالة</th>
+								<th>صندوق خدمات عاملين</th>
+								<!-- <th>جنيهات مرحله</th> -->
+								<th>التأمينات</th>
+								<th>معاش تكميلى</th>
+								<th>الضريبة</th>
+								<th>اتصالات</th>
+								<th>رحلة العمرة</th>
+								<th>بنك القاهرة</th>
+								<th>فودافون</th>
+								<th>اجمالى</th>
+								<th>تعديل</th>
+							</tr>
+						</thead>
 						<tbody id="deductionsbody">
-
+								<!-- <php getAllDeductions(); ?> -->
 						</tbody>
 					</table>
-					<!-- <div id="endOfEmpData"></div> -->
-                    </form>
-				<!-- </div> -->
+								<!-- <div id="endOfEmpData"></div> -->
+                    
+							<!-- </div> -->
 
 				<!-- Edit Modal -->
 				<div id="editdeductionsModal" class="modal fade" role="dialog">
@@ -145,7 +143,7 @@ require 'empFunctions.php';
 								</div>
 
 								<div class="form-group col-md-3 col-md-offset-4 ">
-									<input type="submit" name="UpdateDeductions" class="btn btn-success" id ="UpdateDeductions"  value="حفـــــظ" >
+									<input type="button" name="UpdateDeductions" class="btn btn-success" id ="UpdateDeductions"  value="حفـــــظ" >
 								</div>
 							</form>
 						</div>
